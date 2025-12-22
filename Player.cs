@@ -17,11 +17,12 @@
             playerHand.Remove(card);
         }
         public void ShowHand()
-        {                
+        {
+            Console.WriteLine("Your Hand: ");
             int index = 0;
             foreach(Card card in playerHand)
             {
-                Console.WriteLine($"{index + 1}) {card}");
+                Console.WriteLine($"   {index + 1}) {card}");
                 index++;
             }
         }
