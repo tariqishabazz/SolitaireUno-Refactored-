@@ -1,5 +1,11 @@
 ﻿namespace SolitaireUno
 {
+    /// <summary>
+    /// Represents the main game logic and flow for a card game between a human player and the computer.
+    /// </summary>
+    /// <remarks>The Game class manages the initialization of players and the deck, handles turn-based
+    /// gameplay, and determines the win condition. It provides the entry point for starting and running a complete game
+    /// session via the Main method. User interaction is performed through the console.</remarks>
     public class Game
     {
         Player player = new Player();
@@ -31,6 +37,8 @@
             while (player.playerHand.Count > 0 && computer.computerHand.Count > 0)
             {                    
                 bool playerChoiceValid = false;
+
+      /* --------------------------- PLAYERS TURN ---------------------------- */
 
                 while (!playerChoiceValid)
                 {
@@ -119,6 +127,9 @@
                         }
                     }
                 }
+                
+       /* ------------------------- COMPUTERS TURN ------------------------- */
+
                 Card? potentialComputerPlay = computer.MakeMove(currentCard);
                 
                 if(potentialComputerPlay != null)
@@ -155,6 +166,9 @@
                     }
                 }
             }
+
+     /* --------------------- WIN CONDITION ---------------------- */
+
             Console.WriteLine("\nGame Over!\n");
 
             if(computer.computerHand.Count == 0)
