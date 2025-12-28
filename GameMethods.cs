@@ -34,7 +34,8 @@ namespace SolitaireUno
             {
                 return true; 
             }
-
+            // if a card is a wild/action card, then it is immediately valid
+            
             return false;
         }
 
