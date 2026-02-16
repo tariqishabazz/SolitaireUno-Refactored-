@@ -76,14 +76,16 @@ namespace SolitaireUno
             
             else // if the deck isn't empty...
             {
-                int lastIndex = deckCards.Count - 1; // ... it takes the last index, which is the last card in the deck, hence deckCard.Count - 1
-                Card lastCard = deckCards[lastIndex]; // it then takes the actual card from the deck and stores it into lastCard
-                deckCards.RemoveAt(lastIndex); // we then remove the card at that last index
-                
-                return lastCard; // lastly, we return the newly removed card
+                Card topCard = deckCards[0];
+                deckCards.Remove(topCard);
+                return topCard; 
             }
         }
 
+        public Deck(List<Card> preMadeDeck)
+        {
+            deckCards = preMadeDeck;
+        }
     }
 }
 

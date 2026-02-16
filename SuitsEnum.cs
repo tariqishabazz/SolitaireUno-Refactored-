@@ -5,5 +5,5 @@
     /// </summary>
     /// <remarks>Use this enumeration to represent or compare the suit of a playing card in card game
     /// applications.</remarks>
-    public enum Suits { Diamonds, Clubs, Spades, Hearts }
+    public enum Suits { Clubs, Diamonds, Hearts, Spades }
 }

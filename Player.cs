@@ -7,7 +7,7 @@
     /// It serves as the primary interface for interacting with a player's cards during gameplay.</remarks>
     public class Player 
     {
-        public List<Card> playerHand = new List<Card>(); // creates a new, empty list, representing the players hand of cards
+        public List<Card> Hand = new List<Card>(); // creates a new, empty list, representing the players hand of cards
         public Player() //empty constructor... for now
         {
 
@@ -19,7 +19,7 @@
         /// <param name="card">The card to add to the player's hand. Cannot be null.</param>
         public void PickupCard(Card card) //it takes a Card object as a parameter
         {
-            playerHand.Add(card); //... and adds that card to the hand
+            Hand.Add(card); //... and adds that card to the hand
         }
 
         /// <summary>
@@ -28,7 +28,7 @@
         /// <param name="card">The card to be played and removed from the player's hand. Cannot be null.</param>
         public void PlayCard(Card card) // this also takes a Card object
         {
-            playerHand.Remove(card); // to play the card, it must remove it from the deck, indicating a move.
+            Hand.Remove(card); // to play the card, it must remove it from the deck, indicating a move.
         }
 
         /// <summary>
@@ -40,7 +40,7 @@
         {
             Console.WriteLine("Your Hand: ");    // Title showing the player's hand
             int index = 0;                       // index to keep track of iteration
-            foreach(Card card in playerHand)     // a foreach loop that goes through every Card object in the players hand (which is in memory before being shown)
+            foreach(Card card in Hand)     // a foreach loop that goes through every Card object in the players hand (which is in memory before being shown)
             {
                 Console.WriteLine($"   {index + 1}) {card}"); // "For each" card, it properly formats to be more pleasing, starting at 1, 1) Value of Suit
                 index++;                                      // increment to properly number every card

@@ -30,12 +30,22 @@ namespace SolitaireUno
             {
                 return true;  
             }
+            
             else if(potentialPlay.Value == Values.King && currentlyShown.Value == Values.Ace) 
             {
                 return true; 
             }
 
             return false;
+        }
+
+        public static int GetPenaltyCount(Card dealtCard, Card penaltyCard)
+        {
+            if(dealtCard.IsEqual(penaltyCard))
+            {
+                return 5;
+            }
+            return 0;
         }
 
     }

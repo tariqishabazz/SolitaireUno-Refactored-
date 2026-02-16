@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36705.20 d17.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireUno", "SolitaireUno.csproj", "{7239F9FB-D34E-4206-A241-1FCA02C30350}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireUno.Tests", "..\SolitaireUno.Tests\SolitaireUno.Tests.csproj", "{8C9F09E8-1F41-45CA-A6DF-B540D6287A3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7239F9FB-D34E-4206-A241-1FCA02C30350}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7239F9FB-D34E-4206-A241-1FCA02C30350}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7239F9FB-D34E-4206-A241-1FCA02C30350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C9F09E8-1F41-45CA-A6DF-B540D6287A3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C9F09E8-1F41-45CA-A6DF-B540D6287A3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C9F09E8-1F41-45CA-A6DF-B540D6287A3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C9F09E8-1F41-45CA-A6DF-B540D6287A3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
