@@ -1,0 +1,1 @@
+[![.NET Core Check](https://github.com/tariqishabazz/SolitaireUno-Refactored-/actions/workflows/dotnet.yml/badge.svg)](https://github.com/tariqishabazz/SolitaireUno-Refactored-/actions/workflows/dotnet.yml)
