@@ -7,7 +7,7 @@
     /// It serves as the primary interface for interacting with a player's cards during gameplay.</remarks>
     public class Player 
     {
-        public List<Card> Hand = new List<Card>(); // creates a new, empty list, representing the players hand of cards
+        public List<Card> Hand = []; // creates a new, empty list, representing the players hand of cards
         public Player() //empty constructor... for now
         {
 
@@ -38,7 +38,7 @@
         /// applications and may not be suitable for other user interfaces.</remarks>
         public void ShowHand()
         {
-            Console.WriteLine("Your Hand: ");    // Title showing the player's hand
+            Console.WriteLine("\nYour Hand: ");    // Title showing the player's hand
             int index = 0;                       // index to keep track of iteration
             foreach(Card card in Hand)     // a foreach loop that goes through every Card object in the players hand (which is in memory before being shown)
             {

@@ -13,6 +13,8 @@
         Deck gameDeck = new();
         Card currentCard;
 
+        public static string PlayerGameModeChoice;
+
         private readonly IInputProvider _input;
 
         public Game(IInputProvider input, Deck deck)
@@ -37,7 +39,7 @@
         
         public Player? StartGame()
         {
-            Card penaltyCard = new Card(Suits.Spades, Values.Queen); // setting the penalty card
+            Card penaltyCard = new(Suits.Spades, Values.Queen); // setting the penalty card
 
             while (player.Hand.Count > 0 && computer.Hand.Count > 0)
             {                    
@@ -47,20 +49,21 @@
 
                 while (!playerChoiceValid)
                 {
+                    Console.WriteLine("---------------------------------------------------------------------");
                     player.ShowHand();
-                    Console.WriteLine($"\n            The Current Card is... {currentCard}\n");
+                    Console.WriteLine($"\n            The Current Card is... {currentCard}");
 
 
                     if (gameDeck.Length() > 0)
                     {
-                        Console.WriteLine($"\nThere are {gameDeck.Length()} cards in the deck!");
+                        Console.WriteLine($"\n                There are {gameDeck.Length()} cards in the deck!");
                     }
                     else
                     {
                         Console.WriteLine("\nThere are no more cards in the deck!");
                     }
 
-                    Console.WriteLine("\nPlay a Card (1 - # of Cards in Hand), Pick-Up (p.u), or Pass(p)");
+                    Console.Write("\nPlay a Card (1 - # of Cards in Hand), Pick-Up (p.u), or Pass(p) >> ");
                     string playerDecision = _input.GetInput().ToLower();
                     
                     if (playerDecision != null)
@@ -76,17 +79,20 @@
                                     player.PlayCard(potentialCard);
                                     currentCard = potentialCard;
 
-                                    Console.WriteLine($"\nYou played {potentialCard}, so...");
+                                    Console.WriteLine("\n---------------------------------------------------------------------");
+                                    Console.WriteLine($"You played {potentialCard}, so...");
                                     playerChoiceValid = true;
                                 }
                                 else
                                 {
-                                    Console.WriteLine("\nThat is not a valid play, please choose again\n");
+                                    Console.WriteLine("\n---------------------------------------------------------------------");
+                                    Console.WriteLine("That is not a valid play, please choose again");
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("\nSorry, that is an invalid input based on your current cards, please choose again.\n");
+                                Console.WriteLine("\n---------------------------------------------------------------------");
+                                Console.WriteLine("That is an invalid input based on your current cards, please choose again.");
                             }
                         }
 
@@ -97,19 +103,20 @@
                                 Card card = gameDeck.DealCard()!;
                                 player.PickupCard(card);
 
-                                int potentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard);
-                                
-                                if(potentialPenaltyCount > 0)
+                                int playerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard);
+                                if(playerPotentialPenaltyCount > 0)
                                 {
-                                    Console.WriteLine("\nYou decided to pick up and recieved the Queen of Spades! HAHAHAHA");
-                                    Console.WriteLine("You recieved 5 additional cards because... why not...\n");
+                                    Console.WriteLine("\n---------------------------------------------------------------------");
+                                    Console.WriteLine("You decided to pick up and recieved the Queen of Spades! HAHAHAHA");
+                                    Console.WriteLine("You recieved 5 additional cards because... why not...");
                                 }
                                 else
                                 {
-                                    Console.WriteLine("\nYou decided to pick up!");
+                                    Console.WriteLine("\n---------------------------------------------------------------------");
+                                    Console.WriteLine("You decided to pick up!");
                                 }
 
-                                for (int i = 0; i < potentialPenaltyCount; i++)
+                                for (int i = 0; i < playerPotentialPenaltyCount; i++)
                                 {
                                     player.PickupCard(gameDeck.DealCard()!);
                                 }
@@ -118,7 +125,8 @@
                             }
                             else
                             {
-                                Console.WriteLine("\nThere are no more cards in the deck! Either play or pass!\n");
+                                Console.WriteLine("\n---------------------------------------------------------------------");
+                                Console.WriteLine("There are no more cards in the deck! Either play or pass!");
                             }
                         }
 
@@ -126,7 +134,8 @@
                         {
                             if (gameDeck.Length() > 0)
                             {
-                                Console.WriteLine("\nThere are still cards in the deck, either play or pick up!\n");
+                                Console.WriteLine("\n---------------------------------------------------------------------");
+                                Console.WriteLine("There are still cards in the deck, either play or pick up!");
                             }
                             else
                             {
@@ -134,10 +143,10 @@
                             }
                         }
                     }
-
                     else
                     {
-                        Console.WriteLine("\nYou did not make a decision, please try again\n");
+                        Console.WriteLine("\n---------------------------------------------------------------------");
+                        Console.WriteLine("You did not make a decision, please try again");
                     }
                 }
                 
@@ -148,34 +157,34 @@
                 if(potentialComputerPlay != null)
                 {
                     currentCard = potentialComputerPlay;
-                    Console.WriteLine($"\nComputer played: {potentialComputerPlay}\n");
+                    Console.WriteLine($"\nComputer played: {potentialComputerPlay}");
                 }
                 else
                 {
                     if (gameDeck.Length() > 0)
                     {
-                        Card card = gameDeck.DealCard();
-
+                        Card card = gameDeck.DealCard()!;
                         computer.PickupCard(card);
 
-                        if (card.IsEqual(penaltyCard))
+                        int computerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard);
+                        if (computerPotentialPenaltyCount > 0)
                         {
                             Console.WriteLine("\nThe computer decided to pick up and recieved the Queen of Spades!");
-                            Console.WriteLine("It recieved 5 additional cards because... why not...\n");
+                            Console.WriteLine("It recieved 5 additional cards because... why not...");
 
-                            for (int i = 0; i < 5; i++)
+                            for (int i = 0; i < computerPotentialPenaltyCount; i++)
                             {
                                 computer.PickupCard(gameDeck.DealCard()!);
                             }
                         }
                         else
                         {
-                            Console.WriteLine("\nComputer couldn't make a move... and picked up\n");
+                            Console.WriteLine("\nComputer couldn't make a move... and picked up");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("\nComputer couldn't play a move and couldn't pick up... so it passed\n");
+                        Console.WriteLine("\nComputer couldn't play a move and couldn't pick up... so it passed");
                     }
                 }
             }
@@ -201,7 +210,7 @@
         /* --------------------- INTRO CONVERSATION ---------------------- */
         static void Main(string[] args)
         {
-            Console.WriteLine("Are you ready to play...");
+            Console.Write("Are you ready to play >> ");
             string playerChoice = Console.ReadLine().ToLower();
 
             if(playerChoice == "yes" || playerChoice == "y")
@@ -209,14 +218,14 @@
                 bool validModeChoice = false;
                 while (!validModeChoice)
                 {
-                    Console.WriteLine("\nNow... would you like to play the cards in ascending (a) or descending (d) order...?");
-                    string playerGameModeChoice = Console.ReadLine().ToLower();
+                    Console.Write("\nNow... would you like to play the cards in ascending (a) or descending (d) order? >> ");
+                    PlayerGameModeChoice = Console.ReadLine().ToLower();
 
 
-                    if (playerGameModeChoice.Equals("ascending") || playerGameModeChoice.Equals("descending")
-                            || playerGameModeChoice.Equals("a") || playerGameModeChoice.Equals("d"))
+                    if (PlayerGameModeChoice.Equals("ascending") || PlayerGameModeChoice.Equals("descending")
+                            || PlayerGameModeChoice.Equals("a") || PlayerGameModeChoice.Equals("d"))
                     {
-                        if (playerGameModeChoice.Equals("ascending") || playerGameModeChoice.Equals("a"))
+                        if (PlayerGameModeChoice.Equals("ascending") || PlayerGameModeChoice.Equals("a"))
                         {
                             Console.WriteLine("\nAscending it is!");
                             validModeChoice = true;
@@ -229,10 +238,10 @@
                     }
                     else 
                     {
-                        Console.WriteLine("Please answer again, there may have been a mistake");
+                        Console.WriteLine("Please answer again, there may have been a mistake in your response");
                     }
                 }
-                Console.WriteLine("Let's Gooooooooooooooo!\n");
+                Console.WriteLine("Let's Gooooooooooooooo!");
 
                 IInputProvider realInput = new ConsoleInput();
                 Deck normalDeck = new();
@@ -253,3 +262,7 @@
         }
     }
 }
+
+// Add new game modes/card types?
+// Fix Queen of Spades penalty bug?
+// Add new GameMethods test for new logic?

@@ -22,7 +22,7 @@ namespace SolitaireUno
         /// played.</returns>
         public Card? MakeMove(Card currentCard) // this method takes a Card object... 
         {
-            List<Card> validMoves = new();
+            List<Card> validMoves = [];
 
             foreach(Card card in Hand) // it also starts a foreach loop to run through all the computer's cards
             {
