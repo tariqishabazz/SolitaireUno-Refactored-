@@ -8,12 +8,12 @@
     /// session via the Main method. User interaction is performed through the console.</remarks>
     public class Game
     {
-        Player player = new Player();
-        Computer computer = new Computer();
-        Deck gameDeck = new Deck();
+        Player player = new();
+        Computer computer = new();
+        Deck gameDeck = new();
         Card currentCard;
 
-        private IInputProvider _input;
+        private readonly IInputProvider _input;
 
         public Game(IInputProvider input, Deck deck)
         {
@@ -198,7 +198,7 @@
             return null;
         }
 
-
+        /* --------------------- INTRO CONVERSATION ---------------------- */
         static void Main(string[] args)
         {
             Console.WriteLine("Are you ready to play...");
@@ -206,14 +206,38 @@
 
             if(playerChoice == "yes" || playerChoice == "y")
             {
-                Console.WriteLine("Let's gooooooooooooooo!\n");
+                bool validModeChoice = false;
+                while (!validModeChoice)
+                {
+                    Console.WriteLine("\nNow... would you like to play the cards in ascending (a) or descending (d) order...?");
+                    string playerGameModeChoice = Console.ReadLine().ToLower();
+
+
+                    if (playerGameModeChoice.Equals("ascending") || playerGameModeChoice.Equals("descending")
+                            || playerGameModeChoice.Equals("a") || playerGameModeChoice.Equals("d"))
+                    {
+                        if (playerGameModeChoice.Equals("ascending") || playerGameModeChoice.Equals("a"))
+                        {
+                            Console.WriteLine("\nAscending it is!");
+                            validModeChoice = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nDescending it is!");
+                            validModeChoice = true;
+                        }
+                    }
+                    else 
+                    {
+                        Console.WriteLine("Please answer again, there may have been a mistake");
+                    }
+                }
+                Console.WriteLine("Let's Gooooooooooooooo!\n");
 
                 IInputProvider realInput = new ConsoleInput();
-
-                Deck normalDeck = new Deck();
+                Deck normalDeck = new();
                 
-                Game newGame = new Game(realInput, normalDeck);
-                
+                Game newGame = new(realInput, normalDeck);
                 newGame.StartGame();
             }
             
@@ -224,7 +248,7 @@
 
             else
             {
-                Console.WriteLine("What?");
+                Console.WriteLine("What? GoodBye");
             }
         }
     }
