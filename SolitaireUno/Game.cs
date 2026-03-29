@@ -51,6 +51,7 @@
                 {
                     Console.WriteLine("---------------------------------------------------------------------");
                     player.ShowHand();
+                    computer.ShowHand();
                     Console.WriteLine($"\n            The Current Card is... {currentCard}");
 
 
@@ -167,6 +168,7 @@
                         computer.PickupCard(card);
 
                         int computerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard);
+                        
                         if (computerPotentialPenaltyCount > 0)
                         {
                             Console.WriteLine("\nThe computer decided to pick up and recieved the Queen of Spades!");
@@ -248,6 +250,7 @@
                 
                 Game newGame = new(realInput, normalDeck);
                 newGame.StartGame();
+
             }
             
             else if(playerChoice == "no" || playerChoice == "n")
@@ -264,5 +267,4 @@
 }
 
 // Add new game modes/card types?
-// Fix Queen of Spades penalty bug?
 // Add new GameMethods test for new logic?

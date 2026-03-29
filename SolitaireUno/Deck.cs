@@ -19,7 +19,7 @@ namespace SolitaireUno
             
             InHouseShuffle(); // to prevent unfairness, cards are randomized each round
 
-            Card penaltyCard = new Card(Suits.Spades, Values.Queen); // one new card object is set as the penalty card
+            Card penaltyCard = new (Suits.Spades, Values.Queen); // one new card object is set as the penalty card
             
             int index = 0; // setting an index to track loop iteration 
             foreach (Card card in deckCards) // For each card in the deck...
@@ -33,7 +33,7 @@ namespace SolitaireUno
 
             deckCards.RemoveAt(index); // once it is found, we then use the index the card was located, and remove the element at that position, that being the Queen of Spades
             
-            int randomPosition = random.Next(5, 27); // we then create a random position the removed card will be placed back into, it can be towards the start of the deck or the end, ensuring additional randomness.
+            int randomPosition = random.Next(21, 28); // we then create a random position the removed card will be placed back into, it can be towards the start of the deck or the end, ensuring additional randomness.
             deckCards.Insert(randomPosition, penaltyCard); // this places the card at the random position
         }
         

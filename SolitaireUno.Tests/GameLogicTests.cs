@@ -3,10 +3,38 @@ using SolitaireUno; // Giving access to SolitaireUno Code
 
 namespace SolitaireUno.Tests
 {
-    public class GameMethodsTests
+    public class GameLogicTests
     {
+        [Fact]
+        public void AscendingGameModeFunctional()
+        {
+            // Arrange
+
+
+            // Act
+
+
+            // Assert
+
+
+        }
+
+        [Fact]
+        public void DescendingGameModeFunctional()
+        {
+            // Arrange
+
+
+            // Act
+
+
+            // Assert
+
+
+        }
+
         [Fact] // A "Fact" is a test that is always true, like facts irl
-        public void ValidCard_ReturnsTrue_WhenCardIsOneValueLower()
+        public void ValidCard_ReturnsTrue_WhenCardIsOneValueLowerInDescendingMode()
         {
             // Arrange (Setting up the scenario)
             var cardInPlay = new Card(Suits.Hearts, Values.Four);
@@ -20,7 +48,7 @@ namespace SolitaireUno.Tests
         }
 
         [Fact]
-        public void ValidCard_ReturnsTrue_WhenKingPlayedOnAce()
+        public void ValidCard_ReturnsTrue_WhenKingPlayedOnAceInDescendingMode()
         {
             // Arrange
             var cardInPlay = new Card(Suits.Spades, Values.Ace);
@@ -34,7 +62,7 @@ namespace SolitaireUno.Tests
         }
 
         [Fact]
-        public void ValidCard_ReturnsFalse_WhenCardIsHigher()
+        public void ValidCard_ReturnsFalse_WhenCardIsHigherInDescendingMode()
         {
             // Arrange
             var cardInPlay = new Card(Suits.Spades, Values.Nine);
