@@ -6,73 +6,99 @@ namespace SolitaireUno.Tests
     public class GameLogicTests
     {
         [Fact]
-        public void AscendingGameModeFunctional()
+        public void ValidCardTrue_CardOneValueHigherInAscendingMode()
         {
             // Arrange
+            Game.PlayerGameModeChoice = "ascending";
 
+            Card cardInPlay = new(Suits.Hearts, Values.Four);
+            Card cardToPlay = new(Suits.Spades, Values.Five);
 
             // Act
-
+            bool result = GameMethods.ValidCard(cardToPlay, cardInPlay);
 
             // Assert
-
-
+            Assert.True(result);
         }
-
+        
         [Fact]
-        public void DescendingGameModeFunctional()
+        public void VaidCardFalse_CardOneValueLowerInAscendingMode()
         {
             // Arrange
+            Game.PlayerGameModeChoice = "ascending";
 
+            Card cardToPlay = new(Suits.Diamonds, Values.Seven);
+            Card cardInPlay = new(Suits.Clubs, Values.Eight);
 
             // Act
-
+            bool result = GameMethods.ValidCard(cardToPlay, cardInPlay);
 
             // Assert
+            Assert.False(result);
+        }
+        
+        [Fact]
+        public void ValidCardTrue_AcePlayedOnKingInAscendingMode()
+        {
+            // Arrange
+            Game.PlayerGameModeChoice = "ascending";
 
+            Card cardInPlay = new(Suits.Hearts, Values.King);
+            Card cardToPlay = new(Suits.Diamonds, Values.Ace);
 
+            // Act
+            bool result = GameMethods.ValidCard(cardToPlay, cardInPlay);
+
+            // Assert
+            Assert.True(result);
         }
 
         [Fact] // A "Fact" is a test that is always true, like facts irl
-        public void ValidCard_ReturnsTrue_WhenCardIsOneValueLowerInDescendingMode()
+        public void ValidCardTrue_CardOneValueLowerInDescendingMode()
         {
             // Arrange (Setting up the scenario)
-            var cardInPlay = new Card(Suits.Hearts, Values.Four);
+            Game.PlayerGameModeChoice = "descending";
+
             var cardToPlay = new Card(Suits.Clubs, Values.Three); // 3 on 4
+            var cardInPlay = new Card(Suits.Hearts, Values.Four);
 
             // Act (Running the method)
             bool result = GameMethods.ValidCard(cardToPlay, cardInPlay);
 
             // Assert (Verifying the result)
-            Assert.True(result, "PLaying a 3 on a 4 should be valid");
+            Assert.True(result);
         }
 
         [Fact]
-        public void ValidCard_ReturnsTrue_WhenKingPlayedOnAceInDescendingMode()
+        public void ValidCardTrue_KingPlayedOnAceInDescendingMode()
         {
             // Arrange
-            var cardInPlay = new Card(Suits.Spades, Values.Ace);
+            Game.PlayerGameModeChoice = "descending";
+
             var cardToPlay = new Card(Suits.Diamonds, Values.King); // King on Ace
+            var cardInPlay = new Card(Suits.Spades, Values.Ace);
 
             // Act
             bool result = GameMethods.ValidCard(cardToPlay, cardInPlay);
 
             // Assert
-            Assert.True(result, "Playing a King on an Ace should be valid");
+            Assert.True(result);
         }
 
         [Fact]
-        public void ValidCard_ReturnsFalse_WhenCardIsHigherInDescendingMode()
+        public void ValidCardFalse_CardIsHigherInDescendingMode()
         {
             // Arrange
-            var cardInPlay = new Card(Suits.Spades, Values.Nine);
-            var cardToPlay = new Card(Suits.Clubs, Values.Ten);
+            Game.PlayerGameModeChoice = "descending";
+
+            Card cardToPlay = new Card(Suits.Clubs, Values.Ten);
+            Card cardInPlay = new Card(Suits.Spades, Values.Nine);
 
             // Act
             bool result = GameMethods.ValidCard(cardToPlay, cardInPlay);
 
             // Assert
-            Assert.False(result, "Playing a 10 on a 9 should be invalid");
+            Assert.False(result);
         }
         [Fact]
         public void GetPenaltyCount_DealtCardEqualsPenaltyCard()

@@ -7,10 +7,11 @@ namespace SolitaireUno.Tests
     public class ComputerTests
     {
         [Fact]
-        public void MakeMove_PlaysValidCard_WhenOneExists()
+        public void ComputerPlaysValidCardIfExistsInDescending()
         {
             // --- ARRANGE (Set the scene) ---
             Computer bot = new Computer();
+            Game.PlayerGameModeChoice = "descending";
 
             // We give the bot a specific card: A 4 of Hearts
             Card winningCard = new Card(Suits.Hearts, Values.Four);
@@ -32,16 +33,17 @@ namespace SolitaireUno.Tests
         }
 
         [Fact]
-        public void MakeMove_ReturnsNull_WhenNoValidMovesExist()
+        public void MakeMove_ReturnsNull_WhenNoValidMovesExist_InDescending()
         {
             // --- ARRANGE ---
-            Computer bot = new Computer();
+            Computer bot = new();
+            Game.PlayerGameModeChoice = "descending";
 
             // Give the bot a 2 of Hearts (This cannot be played on a 5)
-            Card badCard = new Card(Suits.Hearts, Values.Two);
+            Card badCard = new(Suits.Hearts, Values.Two);
             bot.PickupCard(badCard);
 
-            Card tableCard = new Card(Suits.Spades, Values.Five);
+            Card tableCard = new(Suits.Spades, Values.Five);
 
             // --- ACT ---
             Card? result = bot.MakeMove(tableCard);
@@ -55,11 +57,12 @@ namespace SolitaireUno.Tests
         }
 
         [Fact]
-        public void MakeMove_finds_CorrectCard_Among_Many()
+        public void ComputerFindsCorrectCardAmongManyInDescending()
         {
             // --- ARRANGE ---
             // Let's test if it skips bad cards to find the good one.
             Computer bot = new Computer();
+            Game.PlayerGameModeChoice = "descending";
 
             Card badCard = new Card(Suits.Hearts, Values.Two);
             Card goodCard = new Card(Suits.Hearts, Values.Four); // Valid on a 5
@@ -84,9 +87,11 @@ namespace SolitaireUno.Tests
         }
 
         [Fact]
-        public void ComputerMakesMoveBased_OnHigherValue()
+        public void ComputerMakesMove_BasedOnHigherValueInDescending()
         {
             // arrange
+            Game.PlayerGameModeChoice = "descending";
+
             Computer bot = new();
 
             Card card1 = new(Suits.Hearts, Values.Nine);
