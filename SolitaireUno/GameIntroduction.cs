@@ -21,6 +21,7 @@ namespace SolitaireUno
             IOutputProvider realOutput = new ConsoleOutput(); // Output provider for user output
 
             string PlayerGameModeChoice; // Stores the user's game mode choice
+            GameMode gameMode;
 
             realOutput.Write("Are you ready to play >> "); // Prompt user to start
             string playerChoice = realInput.GetInput().ToLower(); // Get user response
@@ -40,18 +41,39 @@ namespace SolitaireUno
                         {
                             realOutput.WriteLine("\nAscending it is!"); // Confirm ascending
                             validModeChoice = true;
-                            realOutput.WriteLine("Let's Gooooooooooooooo!"); // Excitement!
+
+                            gameMode = GameMode.Ascending;
+
                         }
                         else
                         {
                             realOutput.WriteLine("\nDescending it is!"); // Confirm descending
                             validModeChoice = true;
-                            realOutput.WriteLine("Let's Gooooooooooooooo!"); // Excitement!
+
+                            gameMode = GameMode.Descending;
+
                         }
+
+                        realOutput.WriteLine("And how many players are there? Only up to five max");
+                        string playerCount = realInput.GetInput();
+
+
+                        if (int.TryParse(playerCount, out int playerCountAsNumber))
+                        {
+                            if (playerCountAsNumber > 1 && playerCountAsNumber <= 5)
+                            {
+                                realOutput.WriteLine("Have fun!\n");
+                                realOutput.WriteLine("Let's Gooooooooooooooo!"); // Excitement!
+                            }
+                        }
+
                         // Start the game with the chosen mode
                         Deck normalDeck = new(); // Create a new deck
-                        MainGame newGame = new(realInput, realOutput, normalDeck, PlayerGameModeChoice); // Create game instance
+
+                        MainGame newGame = new(realInput, realOutput, normalDeck, gameMode, (AmountOfPlayers)playerCountAsNumber); // Create game instance
+                        
                         newGame.StartGame(); // Start the game
+                        
                         return PlayerGameModeChoice; // Return the mode for reference
                     }
                     else

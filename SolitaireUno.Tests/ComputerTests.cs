@@ -6,12 +6,18 @@ namespace SolitaireUno.Tests
 {
     public class ComputerTests
     {
+        private readonly IInputProvider input;
+
+
+        MainGame testGame = new(input, output, GameConfiguration.Descending, penaltyCard);
+        
         [Fact]
         public void ComputerPlaysValidCardIfExistsInDescending()
         {
             // --- ARRANGE (Set the scene) ---
+            
+            
             Computer bot = new Computer();
-            MainGame.PlayerGameModeChoice = "descending";
 
             // We give the bot a specific card: A 4 of Hearts
             Card winningCard = new Card(Suits.Hearts, Values.Four);
@@ -36,8 +42,9 @@ namespace SolitaireUno.Tests
         public void MakeMove_ReturnsNull_WhenNoValidMovesExist_InDescending()
         {
             // --- ARRANGE ---
+            MainGame.GameModeChoice = GameConfiguration.Descending;
+
             Computer bot = new();
-            MainGame.PlayerGameModeChoice = "descending";
 
             // Give the bot a 2 of Hearts (This cannot be played on a 5)
             Card badCard = new(Suits.Hearts, Values.Two);
@@ -61,8 +68,9 @@ namespace SolitaireUno.Tests
         {
             // --- ARRANGE ---
             // Let's test if it skips bad cards to find the good one.
+            MainGame.GameModeChoice = GameConfiguration.Descending;
+
             Computer bot = new Computer();
-            MainGame.PlayerGameModeChoice = "descending";
 
             Card badCard = new Card(Suits.Hearts, Values.Two);
             Card goodCard = new Card(Suits.Hearts, Values.Four); // Valid on a 5
@@ -90,7 +98,7 @@ namespace SolitaireUno.Tests
         public void ComputerMakesMove_BasedOnHigherValueInDescending()
         {
             // arrange
-            MainGame.PlayerGameModeChoice = "descending";
+            MainGame.GameModeChoice = GameConfiguration.Descending;
 
             Computer bot = new();
 

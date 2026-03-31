@@ -20,7 +20,8 @@
         private readonly PlayerTurnHandler _playerTurnHandler; // Encapsulates all logic for handling a human player's turn
         private readonly ComputerTurnHandler _computerTurnHandler; // Encapsulates all logic for handling the computer's turn
 
-        internal static string _gameModeChoice; // Stores the user's selected game mode (e.g., ascending/descending), used for move validation
+        internal readonly GameMode GameModeChoice; // Stores the user's selected game mode (e.g., ascending/descending), used for move validation
+        private readonly AmountOfPlayers PlayerCount;
 
         /// <summary>
         /// Initializes a new instance of the MainGame class with input/output providers, deck, and game mode.
@@ -30,12 +31,13 @@
         /// <param name="output">The output provider for displaying messages (e.g., ConsoleOutput).</param>
         /// <param name="deck">The deck to use for the game session, shuffled and ready.</param>
         /// <param name="gameModeChoice">The user's selected game mode (e.g., ascending/descending), used for move validation.</param>
-        public MainGame(IInputProvider input, IOutputProvider output, Deck deck, string gameModeChoice)
+        public MainGame(IInputProvider input, IOutputProvider output, Deck deck, GameMode gameModeChoice, AmountOfPlayers playerCount)
         {
             _input = input; // Assign the input provider for user actions
             _output = output; // Assign the output provider for displaying messages
             gameDeck = deck; // Assign the provided deck to the game instance
-            _gameModeChoice = gameModeChoice; // Store the user's game mode choice for later use
+            GameModeChoice = gameModeChoice; // Store the user's game mode choice for later use
+            PlayerCount = playerCount;
 
             _playerTurnHandler = new(player, gameDeck, _input, _output); // Create the handler for the player's turn logic
             _computerTurnHandler = new(computer, gameDeck, _output); // Create the handler for the computer's turn logic
@@ -49,8 +51,7 @@
         /// </summary>
         /// <returns>The winning player (human or computer), or null if no winner (should not occur).</returns>
         public Player? StartGame()
-        {
-            Card penaltyCard = new(Suits.Spades, Values.Queen); // Define the penalty card (Queen of Spades) for special penalty logic
+        { 
             
             currentCard = gameDeck.DealCard()!; // Deal the first card from the deck to start the game
 
@@ -110,6 +111,3 @@
         }
     }
 }
-
-// Add new game modes/card types?
-// Add new GameMethods test for new logic?

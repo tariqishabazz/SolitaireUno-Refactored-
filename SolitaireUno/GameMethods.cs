@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,8 @@ namespace SolitaireUno
     /// </remarks>
     public class GameMethods
     {
+        private const int PenaltyCardCount = 5;
+        
         /// <summary>
         /// Determines whether the specified card can be legally played on top of the currently shown card according to
         /// game rules and the selected game mode.
@@ -24,33 +27,34 @@ namespace SolitaireUno
         /// <param name="currentlyShown">The card that is currently shown and on which a new card may be played.</param>
         /// <param name="playerChoice">The user's selected game mode (ascending/descending).</param>
         /// <returns>true if the potential play is valid based on the current card and mode; otherwise, false.</returns>
-        public static bool ValidCard(Card potentialPlay, Card currentlyShown, string playerChoice)
+        public static bool ValidCard(Card potentialPlay, Card currentlyShown, GameConfiguration gameMode)
         {
-            // If descending mode, check if the card is one less than the current or King on Ace
-            if (playerChoice.Equals("descending") || playerChoice.Equals("d"))
-            {
-                if ((int)potentialPlay.Value == (int)currentlyShown.Value - 1) // Card is one less
-                {
-                    return true;
-                }
-                else if (potentialPlay.Value == Values.King && currentlyShown.Value == Values.Ace) // King on Ace
-                {
-                    return true;
-                }
-                return false; // Not a valid move in descending mode
-            }
-            else // Ascending mode
-            {
-                if ((int)potentialPlay.Value == (int)currentlyShown.Value + 1) // Card is one more
-                {
-                    return true;
-                }
-                else if (potentialPlay.Value == Values.Ace && currentlyShown.Value == Values.King) // Ace on King
-                {
-                    return true;
-                }
-                return false; // Not a valid move in ascending mode
-            }
+            return gameMode == GameConfiguration.Descending ? IsValidDescending(potentialPlay, currentlyShown) : IsValidAscending(potentialPlay, currentlyShown);
+        }
+
+        private static bool IsValidDescending(Card potentialPlay, Card currentlyShown)
+        {
+            if((int)potentialPlay.Value == (int)currentlyShown.Value - 1)
+                return true;
+
+            return IsWrapAround(potentialPlay, currentlyShown, GameConfiguration.Descending);
+        }
+
+        private static bool IsValidAscending(Card potentialPlay, Card currentlyShown)
+        {
+            if ((int)potentialPlay.Value == (int)currentlyShown.Value + 1)
+                return true;
+
+            return IsWrapAround(potentialPlay, currentlyShown, GameConfiguration.Ascending);
+        }
+
+
+        private static bool IsWrapAround(Card potentalPlay, Card currentlyShown, GameConfiguration gameMode)
+        {
+            if (gameMode == GameConfiguration.Descending)
+                return potentalPlay.Value == Values.King && currentlyShown.Value == Values.Ace;
+            else
+                return potentalPlay.Value == Values.Ace && currentlyShown.Value == Values.King;
         }
 
         /// <summary>
@@ -61,11 +65,7 @@ namespace SolitaireUno
         /// <returns>The number of penalty cards to add (e.g., 5 for Queen of Spades), or 0 if no penalty.</returns>
         public static int GetPenaltyCount(Card dealtCard, Card penaltyCard)
         {
-            if(dealtCard.IsEqual(penaltyCard)) // If the dealt card matches the penalty card
-            {
-                return 5; // Apply penalty (e.g., 5 extra cards)
-            }
-            return 0; // No penalty
+            return dealtCard.IsEqual(penaltyCard) ? PenaltyCardCount : 0;
         }
     }
 }

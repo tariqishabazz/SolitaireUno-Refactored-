@@ -67,7 +67,7 @@ namespace SolitaireUno
                         {
                             Card potentialCard = _player.Hand[decisionAsNumber - 1]; // Get selected card
 
-                            if (GameMethods.ValidCard(potentialCard, currentCard, MainGame._gameModeChoice)) // Validate move
+                            if (GameMethods.ValidCard(potentialCard, currentCard, )) // Validate move
                             {
                                 _player.PlayCard(potentialCard); // Play the card
                                 currentCard = potentialCard; // Update current card

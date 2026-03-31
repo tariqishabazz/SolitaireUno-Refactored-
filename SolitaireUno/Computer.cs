@@ -29,7 +29,7 @@ namespace SolitaireUno
 
             foreach (Card card in Hand) // Check each card in the computer's hand
             {
-                if (GameMethods.ValidCard(card, currentCard, MainGame._gameModeChoice)) // If the card is a valid move
+                if (GameMethods.ValidCard(card, currentCard, MainGame.GameModeChoice)) // If the card is a valid move
                 {
                     validMoves.Add(card); // Add to valid moves
                 }
