@@ -1,90 +1,101 @@
-﻿
-namespace SolitaireUno
+﻿namespace SolitaireUno
 {
+    /// <summary>
+    /// Represents a standard deck of playing cards, supporting shuffling, dealing, and special penalty card logic.
+    /// </summary>
+    /// <remarks>
+    /// The Deck class builds a full deck, shuffles it, and ensures the penalty card (Queen of Spades) is inserted
+    /// at a random position between indexes 20 and 45 to avoid early draws by either player.
+    /// </remarks>
     public class Deck
     {
-        Random random = new Random(); // creating random object for random number generation
-        
-        List<Card> deckCards = new List<Card>(); // creating a new, list object to hold all the deck cards
+        Random random = new Random(); // Random number generator for shuffling and penalty card placement
+        List<Card> deckCards = new List<Card>(); // List to hold all cards in the deck
 
-        public Deck() // the deck constructor essentially builds the card deck 
+        /// <summary>
+        /// Constructs a new deck, shuffles it, and inserts the penalty card (Queen of Spades) at a random safe position.
+        /// </summary>
+        public Deck()
         {
-            foreach (Values value in Enum.GetValues<Values>()) // it loops through all the values... 
+            // Build the deck: add every combination of value and suit
+            foreach (Values value in Enum.GetValues<Values>())
             {
-                foreach (Suits suit in Enum.GetValues<Suits>()) // and all the suits... to create unique cards for every value/suit
+                foreach (Suits suit in Enum.GetValues<Suits>())
                 {
-                    deckCards.Add(new Card(suit, value)); // it then takes every card and adds it to our deck list 
+                    deckCards.Add(new Card(suit, value)); // Add each unique card
                 }
             }
             
-            InHouseShuffle(); // to prevent unfairness, cards are randomized each round
+            InHouseShuffle(); // Shuffle the deck to randomize order
 
-            Card penaltyCard = new (Suits.Spades, Values.Queen); // one new card object is set as the penalty card
+            Card penaltyCard = new (Suits.Spades, Values.Queen); // Define the penalty card (Queen of Spades)
             
-            int index = 0; // setting an index to track loop iteration 
-            foreach (Card card in deckCards) // For each card in the deck...
+            // Find the index of the penalty card in the shuffled deck
+            int index = 0;
+            foreach (Card card in deckCards)
             {
-                if(card.IsEqual(penaltyCard)) // this checks to see if THAT specific card is equal to our previously set penalty card
+                if(card.IsEqual(penaltyCard)) // If this card is the penalty card
                 { 
-                    break; //... if it is, we break the loop
+                    break; // Stop searching
                 }
-                index++; // increments the index
+                index++; // Move to next card
             }
 
-            deckCards.RemoveAt(index); // once it is found, we then use the index the card was located, and remove the element at that position, that being the Queen of Spades
+            deckCards.RemoveAt(index); // Remove the penalty card from its current position
             
-            int randomPosition = random.Next(20, 45); // we then create a random position the removed card will be placed back into, it can be towards the start of the deck or the end, ensuring additional randomness.
-            deckCards.Insert(randomPosition, penaltyCard); // this places the card at the random position
+            // Insert the penalty card at a random position between 20 and 45
+            // This ensures neither player can draw it during the initial deal
+            int randomPosition = random.Next(20, 45); // Pick a safe random index
+            deckCards.Insert(randomPosition, penaltyCard); // Insert penalty card at the chosen position
         }
         
         /// <summary>
         /// Randomizes the order of the cards in the deck using an in-place shuffle algorithm.
         /// </summary>
-        /// <remarks>This method modifies the current deck by rearranging its cards in a random order. The
-        /// shuffle is performed in-place and affects the underlying collection directly. Call this method to ensure the
-        /// deck is randomized before dealing or drawing cards.</remarks>
         public void InHouseShuffle()
         {
-            for(int i = deckCards.Count - 1; i > 0; i--) // to shuffle each card, we use a for loop, this one starts at the end of the deck and works towards the beginning
+            for(int i = deckCards.Count - 1; i > 0; i--)
             {
-                int randomIndex = random.Next(0, i + 1); // takes a random number between 0 and i + 1
-
-                Card temp = deckCards[i]; // this sets a temp Card variable to whatever Card is at index i
-                deckCards[i] = deckCards[randomIndex]; // whatever Card is at i, will be switched to whatever Card is at the randomIndex previously stored
-                deckCards[randomIndex] = temp; // then the Card at the randomIndex will be switched to the temp Card
-
+                int randomIndex = random.Next(0, i + 1); // Pick a random index
+                Card temp = deckCards[i]; // Store the card at i
+                deckCards[i] = deckCards[randomIndex]; // Swap with card at randomIndex
+                deckCards[randomIndex] = temp; // Complete the swap
             }
         }
         
-        public int Length() // a custom method to display the length of the deck 
+        /// <summary>
+        /// Returns the number of cards remaining in the deck.
+        /// </summary>
+        public int Length()
         {
-            return deckCards.Count;
+            return deckCards.Count; // Return the count of cards left
         }
 
         /// <summary>
         /// Removes and returns the top card from the deck. If the deck is empty, returns null.
         /// </summary>
-        /// <remarks>Each call to this method reduces the number of cards in the deck by one. The method
-        /// returns cards in last-in, first-out order, with the most recently added card dealt first.</remarks>
-        /// <returns>The dealt <see cref="Card"/> object representing the top card of the deck, or null if the deck is empty.</returns>
-        public Card? DealCard() // this method deals a single card ...
+        /// <returns>The dealt card, or null if the deck is empty.</returns>
+        public Card? DealCard()
         {
-            if(deckCards.Count == 0) // but IF the deck is empty, it can't
+            if(deckCards.Count == 0) // If the deck is empty
             {
-                return null; // ... so it returns null
+                return null; // No card to deal
             }
-            
-            else // if the deck isn't empty...
+            else
             {
-                Card topCard = deckCards[0];
-                deckCards.Remove(topCard);
-                return topCard; 
+                Card topCard = deckCards[0]; // Get the top card
+                deckCards.Remove(topCard); // Remove it from the deck
+                return topCard; // Return the dealt card
             }
         }
 
+        /// <summary>
+        /// Constructs a deck from a pre-made list of cards (used for testing or custom setups).
+        /// </summary>
+        /// <param name="preMadeDeck">A list of cards to use as the deck.</param>
         public Deck(List<Card> preMadeDeck)
         {
-            deckCards = preMadeDeck;
+            deckCards = preMadeDeck; // Use the provided list as the deck
         }
     }
 }

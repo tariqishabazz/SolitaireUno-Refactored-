@@ -6,79 +6,71 @@ using System.Threading.Tasks;
 
 namespace SolitaireUno
 {
+    /// <summary>
+    /// Provides the introduction and setup sequence for the game, including user prompts and mode selection.
+    /// </summary>
     public class GameIntroduction
     {
+        /// <summary>
+        /// Runs the introduction, prompts the user for game mode, and starts the game if the user agrees.
+        /// </summary>
+        /// <returns>The user's selected game mode (e.g., ascending/descending), or exits if declined.</returns>
         public static string ShowGameIntroduction()
         {
-            IInputProvider realInput = new ConsoleInput();
-            IOutputProvider realOutput = new ConsoleOutput();
+            IInputProvider realInput = new ConsoleInput(); // Input provider for user input
+            IOutputProvider realOutput = new ConsoleOutput(); // Output provider for user output
 
-            string PlayerGameModeChoice;
+            string PlayerGameModeChoice; // Stores the user's game mode choice
 
-            realOutput.Write("Are you ready to play >> ");
-            string playerChoice = realInput.GetInput().ToLower();
+            realOutput.Write("Are you ready to play >> "); // Prompt user to start
+            string playerChoice = realInput.GetInput().ToLower(); // Get user response
 
-            if (playerChoice == "yes" || playerChoice == "y")
+            if (playerChoice == "yes" || playerChoice == "y") // If user wants to play
             {
-                bool validModeChoice = false;
+                bool validModeChoice = false; // Tracks if a valid mode was chosen
                 while (!validModeChoice)
                 {
-                    realOutput.Write("\nNow... would you like to play the cards in ascending (a) or descending (d) order? >> ");
-                    PlayerGameModeChoice = realInput.GetInput().ToLower();
+                    realOutput.Write("\nNow... would you like to play the cards in ascending (a) or descending (d) order? >> "); // Prompt for mode
+                    PlayerGameModeChoice = realInput.GetInput().ToLower(); // Get mode choice
 
-
+                    // Validate mode choice
                     if (PlayerGameModeChoice.Equals("ascending") || PlayerGameModeChoice.Equals("descending") || PlayerGameModeChoice.Equals("a") || PlayerGameModeChoice.Equals("d"))
                     {
                         if (PlayerGameModeChoice.Equals("ascending") || PlayerGameModeChoice.Equals("a"))
                         {
-                            realOutput.WriteLine("\nAscending it is!");
+                            realOutput.WriteLine("\nAscending it is!"); // Confirm ascending
                             validModeChoice = true;
-
-                            realOutput.WriteLine("Let's Gooooooooooooooo!");
-
-
-                            Deck normalDeck = new();
-                            MainGame newGame = new(realInput, realOutput, normalDeck, PlayerGameModeChoice);
-                            newGame.StartGame();
-
-                            return PlayerGameModeChoice;
+                            realOutput.WriteLine("Let's Gooooooooooooooo!"); // Excitement!
                         }
                         else
                         {
-                            realOutput.WriteLine("\nDescending it is!");
+                            realOutput.WriteLine("\nDescending it is!"); // Confirm descending
                             validModeChoice = true;
-
-                            realOutput.WriteLine("Let's Gooooooooooooooo!");
-
-
-                            Deck normalDeck = new();
-                            MainGame newGame = new(realInput, realOutput, normalDeck, PlayerGameModeChoice);
-                            newGame.StartGame();
-
-                            return PlayerGameModeChoice;
+                            realOutput.WriteLine("Let's Gooooooooooooooo!"); // Excitement!
                         }
+                        // Start the game with the chosen mode
+                        Deck normalDeck = new(); // Create a new deck
+                        MainGame newGame = new(realInput, realOutput, normalDeck, PlayerGameModeChoice); // Create game instance
+                        newGame.StartGame(); // Start the game
+                        return PlayerGameModeChoice; // Return the mode for reference
                     }
-                    
                     else
                     {
-                        realOutput.WriteLine("Please answer again, there may have been a mistake in your response");
+                        realOutput.WriteLine("Please answer again, there may have been a mistake in your response"); // Invalid input
                     }
                 }
             }
-
-            else if (playerChoice == "no" || playerChoice == "n")
+            else if (playerChoice == "no" || playerChoice == "n") // User declines
             {
-                realOutput.WriteLine("I understand, come back when you are ready");
-                Environment.Exit(0);
+                realOutput.WriteLine("I understand, come back when you are ready"); // Farewell message
+                Environment.Exit(0); // Exit the program
             }
-
-            else
+            else // Any other input
             {
-                realOutput.WriteLine("What? GoodBye");
-                Environment.Exit(0);
+                realOutput.WriteLine("What? GoodBye"); // Unrecognized input
+                Environment.Exit(0); // Exit the program
             }
-            
-            return string.Empty;
+            return string.Empty; // Fallback return (should not be reached)
         }
     }
 }
