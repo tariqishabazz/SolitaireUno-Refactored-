@@ -11,7 +11,7 @@ namespace SolitaireUno.Tests
         {
             // --- ARRANGE (Set the scene) ---
             Computer bot = new Computer();
-            Game.PlayerGameModeChoice = "descending";
+            MainGame.PlayerGameModeChoice = "descending";
 
             // We give the bot a specific card: A 4 of Hearts
             Card winningCard = new Card(Suits.Hearts, Values.Four);
@@ -37,7 +37,7 @@ namespace SolitaireUno.Tests
         {
             // --- ARRANGE ---
             Computer bot = new();
-            Game.PlayerGameModeChoice = "descending";
+            MainGame.PlayerGameModeChoice = "descending";
 
             // Give the bot a 2 of Hearts (This cannot be played on a 5)
             Card badCard = new(Suits.Hearts, Values.Two);
@@ -62,7 +62,7 @@ namespace SolitaireUno.Tests
             // --- ARRANGE ---
             // Let's test if it skips bad cards to find the good one.
             Computer bot = new Computer();
-            Game.PlayerGameModeChoice = "descending";
+            MainGame.PlayerGameModeChoice = "descending";
 
             Card badCard = new Card(Suits.Hearts, Values.Two);
             Card goodCard = new Card(Suits.Hearts, Values.Four); // Valid on a 5
@@ -90,7 +90,7 @@ namespace SolitaireUno.Tests
         public void ComputerMakesMove_BasedOnHigherValueInDescending()
         {
             // arrange
-            Game.PlayerGameModeChoice = "descending";
+            MainGame.PlayerGameModeChoice = "descending";
 
             Computer bot = new();
 

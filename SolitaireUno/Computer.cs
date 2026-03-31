@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 
 namespace SolitaireUno
 {
@@ -9,7 +10,7 @@ namespace SolitaireUno
     /// based on the current state of play. It is intended to be used as part of a card game where automated opponents
     /// are required.</remarks>
     public class Computer : Player
-    {        
+    {
 
         /// <summary>
         /// Attempts to play a valid card from the computer's hand based on the specified current card.
@@ -24,15 +25,15 @@ namespace SolitaireUno
         {
             List<Card> validMoves = [];
 
-            foreach(Card card in Hand) // it also starts a foreach loop to run through all the computer's cards
+            foreach (Card card in Hand) // it also starts a foreach loop to run through all the computer's cards
             {
-                if(GameMethods.ValidCard(card, currentCard)) // using our ValidCard method, if it returns true... 
+                if (GameMethods.ValidCard(card, currentCard)) // using our ValidCard method, if it returns true... 
                 {
                     validMoves.Add(card);
                 }
             }
-            
-            if(validMoves.Count > 0)
+
+            if (validMoves.Count > 0)
             {
                 Card bestCard = validMoves.OrderByDescending(card => (int)card.Suit).First();
                 PlayCard(bestCard);
@@ -42,5 +43,4 @@ namespace SolitaireUno
             return null; // if the computer couldn't find a good play, this returns null
         }
     }
-
 }

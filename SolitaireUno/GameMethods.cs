@@ -25,10 +25,9 @@ namespace SolitaireUno
         /// <param name="currentlyShown">The card that is currently shown and on which a new card may be played.</param>
         /// <returns>true if the potential play is valid based on the current card; otherwise, false.</returns>
 
-
         public static bool ValidCard(Card potentialPlay, Card currentlyShown)
         {
-            if (Game.PlayerGameModeChoice.Equals("descending") || Game.PlayerGameModeChoice.Equals("d"))
+            if (MainGame._gameModeChoice.Equals("descending") || MainGame._gameModeChoice.Equals("d"))
             {
                 if ((int)potentialPlay.Value == (int)currentlyShown.Value - 1) // casted the Value enums to represent int numbers for comparison
                 {

@@ -9,7 +9,7 @@ namespace SolitaireUno.Tests
         public void ValidCardTrue_CardOneValueHigherInAscendingMode()
         {
             // Arrange
-            Game.PlayerGameModeChoice = "ascending";
+            MainGame.PlayerGameModeChoice = "ascending";
 
             Card cardInPlay = new(Suits.Hearts, Values.Four);
             Card cardToPlay = new(Suits.Spades, Values.Five);
@@ -25,7 +25,7 @@ namespace SolitaireUno.Tests
         public void VaidCardFalse_CardOneValueLowerInAscendingMode()
         {
             // Arrange
-            Game.PlayerGameModeChoice = "ascending";
+            MainGame.PlayerGameModeChoice = "ascending";
 
             Card cardToPlay = new(Suits.Diamonds, Values.Seven);
             Card cardInPlay = new(Suits.Clubs, Values.Eight);
@@ -41,7 +41,7 @@ namespace SolitaireUno.Tests
         public void ValidCardTrue_AcePlayedOnKingInAscendingMode()
         {
             // Arrange
-            Game.PlayerGameModeChoice = "ascending";
+            MainGame.PlayerGameModeChoice = "ascending";
 
             Card cardInPlay = new(Suits.Hearts, Values.King);
             Card cardToPlay = new(Suits.Diamonds, Values.Ace);
@@ -57,7 +57,7 @@ namespace SolitaireUno.Tests
         public void ValidCardTrue_CardOneValueLowerInDescendingMode()
         {
             // Arrange (Setting up the scenario)
-            Game.PlayerGameModeChoice = "descending";
+            MainGame.PlayerGameModeChoice = "descending";
 
             var cardToPlay = new Card(Suits.Clubs, Values.Three); // 3 on 4
             var cardInPlay = new Card(Suits.Hearts, Values.Four);
@@ -73,7 +73,7 @@ namespace SolitaireUno.Tests
         public void ValidCardTrue_KingPlayedOnAceInDescendingMode()
         {
             // Arrange
-            Game.PlayerGameModeChoice = "descending";
+            MainGame.PlayerGameModeChoice = "descending";
 
             var cardToPlay = new Card(Suits.Diamonds, Values.King); // King on Ace
             var cardInPlay = new Card(Suits.Spades, Values.Ace);
@@ -89,7 +89,7 @@ namespace SolitaireUno.Tests
         public void ValidCardFalse_CardIsHigherInDescendingMode()
         {
             // Arrange
-            Game.PlayerGameModeChoice = "descending";
+            MainGame.PlayerGameModeChoice = "descending";
 
             Card cardToPlay = new Card(Suits.Clubs, Values.Ten);
             Card cardInPlay = new Card(Suits.Spades, Values.Nine);
@@ -100,6 +100,7 @@ namespace SolitaireUno.Tests
             // Assert
             Assert.False(result);
         }
+        
         [Fact]
         public void GetPenaltyCount_DealtCardEqualsPenaltyCard()
         {
@@ -113,6 +114,7 @@ namespace SolitaireUno.Tests
             // Assert
             Assert.Equal(5, result);
         }
+        
         [Fact]
         public void GetPenaltyCount_DealtCardIsNotPenaltyCard()
         {
@@ -126,6 +128,7 @@ namespace SolitaireUno.Tests
             // Assert
             Assert.Equal(0, result);
         }
+        
         [Fact]
         public void ControllingDeck()
         {
@@ -142,6 +145,7 @@ namespace SolitaireUno.Tests
             // assert
             Assert.Equal(card1, result);
         }
+        
         [Fact]
         public void MockInputReturns_ScriptedMoves()
         {
@@ -153,6 +157,29 @@ namespace SolitaireUno.Tests
             Assert.Equal("p.u", robot.GetInput());
             Assert.Equal("1", robot.GetInput());
             Assert.Equal("pass", robot.GetInput());
+        }
+
+        [Fact]
+        public void FullGamePlayedInAscending()
+        {
+            // Arrange
+            MainGame.PlayerGameModeChoice = "ascending";
+            
+            Computer player1 = new();
+            Computer player2 = new();
+
+            Deck gameDeck = new();
+            Card currentCard;
+
+            int turnCounter = 0;
+            int maxTurns = 100;
+
+            // Act
+
+
+            // Assert
+
+
         }
     }
 }

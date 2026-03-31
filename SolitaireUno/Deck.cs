@@ -33,7 +33,7 @@ namespace SolitaireUno
 
             deckCards.RemoveAt(index); // once it is found, we then use the index the card was located, and remove the element at that position, that being the Queen of Spades
             
-            int randomPosition = random.Next(21, 28); // we then create a random position the removed card will be placed back into, it can be towards the start of the deck or the end, ensuring additional randomness.
+            int randomPosition = random.Next(20, 45); // we then create a random position the removed card will be placed back into, it can be towards the start of the deck or the end, ensuring additional randomness.
             deckCards.Insert(randomPosition, penaltyCard); // this places the card at the random position
         }
         
