@@ -12,7 +12,6 @@
         Player player = new(); // The human player object, manages the player's hand and actions
         Computer computer = new(); // The computer-controlled player, inherits from Player and adds AI logic
         Deck gameDeck = new(); // The deck of cards used for dealing and drawing during the game
-        Card currentCard; // The card currently in play, updated after each valid move
 
         private readonly IInputProvider _input; // Interface for handling user input (e.g., from console or other sources)
         private readonly IOutputProvider _output; // Interface for handling output to the user (e.g., console or GUI)
@@ -20,8 +19,8 @@
         private readonly PlayerTurnHandler _playerTurnHandler; // Encapsulates all logic for handling a human player's turn
         private readonly ComputerTurnHandler _computerTurnHandler; // Encapsulates all logic for handling the computer's turn
 
-        internal readonly GameMode GameModeChoice; // Stores the user's selected game mode (e.g., ascending/descending), used for move validation
-        private readonly AmountOfPlayers PlayerCount;
+        internal static GameMode GameModeChoice { get; set; } // Stores the user's selected game mode (e.g., ascending/descending), used for move validation
+        //private readonly AmountOfPlayers PlayerCount;
 
         /// <summary>
         /// Initializes a new instance of the MainGame class with input/output providers, deck, and game mode.
@@ -31,13 +30,13 @@
         /// <param name="output">The output provider for displaying messages (e.g., ConsoleOutput).</param>
         /// <param name="deck">The deck to use for the game session, shuffled and ready.</param>
         /// <param name="gameModeChoice">The user's selected game mode (e.g., ascending/descending), used for move validation.</param>
-        public MainGame(IInputProvider input, IOutputProvider output, Deck deck, GameMode gameModeChoice, AmountOfPlayers playerCount)
+        public MainGame(IInputProvider input, IOutputProvider output, Deck deck, GameMode gameModeChoice)
         {
             _input = input; // Assign the input provider for user actions
             _output = output; // Assign the output provider for displaying messages
             gameDeck = deck; // Assign the provided deck to the game instance
             GameModeChoice = gameModeChoice; // Store the user's game mode choice for later use
-            PlayerCount = playerCount;
+            //PlayerCount = playerCount;
 
             _playerTurnHandler = new(player, gameDeck, _input, _output); // Create the handler for the player's turn logic
             _computerTurnHandler = new(computer, gameDeck, _output); // Create the handler for the computer's turn logic
@@ -51,9 +50,10 @@
         /// </summary>
         /// <returns>The winning player (human or computer), or null if no winner (should not occur).</returns>
         public Player? StartGame()
-        { 
+        {
+            RegularCard penaltyCard = new(Suits.Spades, Values.Queen); 
             
-            currentCard = gameDeck.DealCard()!; // Deal the first card from the deck to start the game
+            RegularCard currentCard = gameDeck.DealCard()!; // Deal the first card from the deck to start the game
 
             // Main game loop: continue until either the player or computer runs out of cards
             while (player.Hand.Count > 0 && computer.Hand.Count > 0)
@@ -103,7 +103,7 @@
             _output.WriteLine("\nYour Hand: "); // Print a header for the hand display
 
             int index = 0; // Initialize card index for display
-            foreach (Card card in player.Hand) // Loop through each card in the player's hand
+            foreach (RegularCard card in player.Hand) // Loop through each card in the player's hand
             {
                 _output.WriteLine($"   {index + 1}) {card}"); // Print the card with its position (1-based index)
                 index++; // Move to the next card index

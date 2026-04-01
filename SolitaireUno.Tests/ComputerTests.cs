@@ -20,14 +20,14 @@ namespace SolitaireUno.Tests
             Computer bot = new Computer();
 
             // We give the bot a specific card: A 4 of Hearts
-            Card winningCard = new Card(Suits.Hearts, Values.Four);
+            RegularCard winningCard = new RegularCard(Suits.Hearts, Values.Four);
             bot.PickupCard(winningCard);
 
             // We set the table card to a 5 of Spades (So a 4 is a valid move)
-            Card tableCard = new Card(Suits.Spades, Values.Five);
+            RegularCard tableCard = new RegularCard(Suits.Spades, Values.Five);
 
             // --- ACT (Run the logic) ---
-            Card? result = bot.MakeMove(tableCard);
+            RegularCard? result = bot.MakeMove(tableCard);
 
             // --- ASSERT (Check the result) ---
             // 1. Did it return the card we expected?
@@ -47,13 +47,13 @@ namespace SolitaireUno.Tests
             Computer bot = new();
 
             // Give the bot a 2 of Hearts (This cannot be played on a 5)
-            Card badCard = new(Suits.Hearts, Values.Two);
+            RegularCard badCard = new(Suits.Hearts, Values.Two);
             bot.PickupCard(badCard);
 
-            Card tableCard = new(Suits.Spades, Values.Five);
+            RegularCard tableCard = new(Suits.Spades, Values.Five);
 
             // --- ACT ---
-            Card? result = bot.MakeMove(tableCard);
+            RegularCard? result = bot.MakeMove(tableCard);
 
             // --- ASSERT ---
             // 1. It should return null because it can't play
@@ -72,17 +72,17 @@ namespace SolitaireUno.Tests
 
             Computer bot = new Computer();
 
-            Card badCard = new Card(Suits.Hearts, Values.Two);
-            Card goodCard = new Card(Suits.Hearts, Values.Four); // Valid on a 5
+            RegularCard badCard = new RegularCard(Suits.Hearts, Values.Two);
+            RegularCard goodCard = new RegularCard(Suits.Hearts, Values.Four); // Valid on a 5
 
             // Add them in order: Bad, then Good
             bot.PickupCard(badCard);
             bot.PickupCard(goodCard);
 
-            Card tableCard = new Card(Suits.Spades, Values.Five);
+            RegularCard tableCard = new RegularCard(Suits.Spades, Values.Five);
 
             // --- ACT ---
-            Card? result = bot.MakeMove(tableCard);
+            RegularCard? result = bot.MakeMove(tableCard);
 
             // --- ASSERT ---
             // It should have skipped the 2 and found the 4
@@ -102,18 +102,18 @@ namespace SolitaireUno.Tests
 
             Computer bot = new();
 
-            Card card1 = new(Suits.Hearts, Values.Nine);
-            Card card2 = new(Suits.Diamonds, Values.Five);
-            Card card3 = new(Suits.Spades, Values.Nine);
+            RegularCard card1 = new(Suits.Hearts, Values.Nine);
+            RegularCard card2 = new(Suits.Diamonds, Values.Five);
+            RegularCard card3 = new(Suits.Spades, Values.Nine);
             
-            Card currentCard = new(Suits.Clubs, Values.Ten);
+            RegularCard currentCard = new(Suits.Clubs, Values.Ten);
 
             bot.Hand.Add(card1);
             bot.Hand.Add(card2);
             bot.Hand.Add(card3);
 
             // act
-            Card result = bot.MakeMove(currentCard)!;
+            RegularCard result = bot.MakeMove(currentCard)!;
 
             // assert
             Assert.Equal(Suits.Spades, result.Suit);

@@ -9,8 +9,10 @@
     /// </remarks>
     public class Deck
     {
-        Random random = new Random(); // Random number generator for shuffling and penalty card placement
-        List<Card> deckCards = new List<Card>(); // List to hold all cards in the deck
+        Random random = new(); // Random number generator for shuffling and penalty card placement
+        
+        List<RegularCard> deckCards = []; // List to hold all cards in the deck
+        List<SpecialCard> specialCards = [];
 
         /// <summary>
         /// Constructs a new deck, shuffles it, and inserts the penalty card (Queen of Spades) at a random safe position.
@@ -22,17 +24,24 @@
             {
                 foreach (Suits suit in Enum.GetValues<Suits>())
                 {
-                    deckCards.Add(new Card(suit, value)); // Add each unique card
+                    deckCards.Add(new RegularCard(suit, value)); // Add each unique card
                 }
             }
             
+            foreach(SpecialCardType specialCard in Enum.GetValues<SpecialCardType>())
+            {
+                specialCards.Add(new SpecialCard(specialCard));
+            }
+
+            deckCards.AddRange(specialCards);
+
             InHouseShuffle(); // Shuffle the deck to randomize order
 
-            Card penaltyCard = new (Suits.Spades, Values.Queen); // Define the penalty card (Queen of Spades)
+            RegularCard penaltyCard = new (Suits.Spades, Values.Queen); // Define the penalty card (Queen of Spades)
             
             // Find the index of the penalty card in the shuffled deck
             int index = 0;
-            foreach (Card card in deckCards)
+            foreach (RegularCard card in deckCards)
             {
                 if(card.IsEqual(penaltyCard)) // If this card is the penalty card
                 { 
@@ -57,7 +66,7 @@
             for(int i = deckCards.Count - 1; i > 0; i--)
             {
                 int randomIndex = random.Next(0, i + 1); // Pick a random index
-                Card temp = deckCards[i]; // Store the card at i
+                RegularCard temp = deckCards[i]; // Store the card at i
                 deckCards[i] = deckCards[randomIndex]; // Swap with card at randomIndex
                 deckCards[randomIndex] = temp; // Complete the swap
             }
@@ -75,7 +84,7 @@
         /// Removes and returns the top card from the deck. If the deck is empty, returns null.
         /// </summary>
         /// <returns>The dealt card, or null if the deck is empty.</returns>
-        public Card? DealCard()
+        public RegularCard? DealCard()
         {
             if(deckCards.Count == 0) // If the deck is empty
             {
@@ -83,7 +92,7 @@
             }
             else
             {
-                Card topCard = deckCards[0]; // Get the top card
+                RegularCard topCard = deckCards[0]; // Get the top card
                 deckCards.Remove(topCard); // Remove it from the deck
                 return topCard; // Return the dealt card
             }
@@ -93,7 +102,7 @@
         /// Constructs a deck from a pre-made list of cards (used for testing or custom setups).
         /// </summary>
         /// <param name="preMadeDeck">A list of cards to use as the deck.</param>
-        public Deck(List<Card> preMadeDeck)
+        public Deck(List<RegularCard> preMadeDeck)
         {
             deckCards = preMadeDeck; // Use the provided list as the deck
         }

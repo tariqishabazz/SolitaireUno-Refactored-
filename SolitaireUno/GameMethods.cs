@@ -27,31 +27,31 @@ namespace SolitaireUno
         /// <param name="currentlyShown">The card that is currently shown and on which a new card may be played.</param>
         /// <param name="playerChoice">The user's selected game mode (ascending/descending).</param>
         /// <returns>true if the potential play is valid based on the current card and mode; otherwise, false.</returns>
-        public static bool ValidCard(Card potentialPlay, Card currentlyShown, GameConfiguration gameMode)
+        public static bool ValidCard(RegularCard potentialPlay, RegularCard currentlyShown, GameMode gameMode)
         {
-            return gameMode == GameConfiguration.Descending ? IsValidDescending(potentialPlay, currentlyShown) : IsValidAscending(potentialPlay, currentlyShown);
+            return gameMode == GameMode.Descending ? IsValidDescending(potentialPlay, currentlyShown) : IsValidAscending(potentialPlay, currentlyShown);
         }
 
-        private static bool IsValidDescending(Card potentialPlay, Card currentlyShown)
+        private static bool IsValidDescending(RegularCard potentialPlay, RegularCard currentlyShown)
         {
             if((int)potentialPlay.Value == (int)currentlyShown.Value - 1)
                 return true;
 
-            return IsWrapAround(potentialPlay, currentlyShown, GameConfiguration.Descending);
+            return IsWrapAround(potentialPlay, currentlyShown, GameMode.Descending);
         }
 
-        private static bool IsValidAscending(Card potentialPlay, Card currentlyShown)
+        private static bool IsValidAscending(RegularCard potentialPlay, RegularCard currentlyShown)
         {
             if ((int)potentialPlay.Value == (int)currentlyShown.Value + 1)
                 return true;
 
-            return IsWrapAround(potentialPlay, currentlyShown, GameConfiguration.Ascending);
+            return IsWrapAround(potentialPlay, currentlyShown, GameMode.Ascending);
         }
 
 
-        private static bool IsWrapAround(Card potentalPlay, Card currentlyShown, GameConfiguration gameMode)
+        private static bool IsWrapAround(RegularCard potentalPlay, RegularCard currentlyShown, GameMode gameMode)
         {
-            if (gameMode == GameConfiguration.Descending)
+            if (gameMode == GameMode.Descending)
                 return potentalPlay.Value == Values.King && currentlyShown.Value == Values.Ace;
             else
                 return potentalPlay.Value == Values.Ace && currentlyShown.Value == Values.King;
@@ -63,7 +63,7 @@ namespace SolitaireUno
         /// <param name="dealtCard">The card that was just dealt.</param>
         /// <param name="penaltyCard">The penalty card to compare against.</param>
         /// <returns>The number of penalty cards to add (e.g., 5 for Queen of Spades), or 0 if no penalty.</returns>
-        public static int GetPenaltyCount(Card dealtCard, Card penaltyCard)
+        public static int GetPenaltyCount(RegularCard dealtCard, RegularCard penaltyCard)
         {
             return dealtCard.IsEqual(penaltyCard) ? PenaltyCardCount : 0;
         }

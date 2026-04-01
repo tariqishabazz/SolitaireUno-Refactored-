@@ -34,9 +34,9 @@ namespace SolitaireUno
         /// </summary>
         /// <param name="currentCard">Reference to the current card in play (may be updated).</param>
         /// <param name="penaltyCard">The penalty card for special rules.</param>
-        public void HandleTurn(ref Card currentCard, Card penaltyCard)
+        public void HandleTurn(ref RegularCard currentCard, RegularCard penaltyCard)
         {
-            Card? potentialComputerPlay = _computer.MakeMove(currentCard); // Let the computer try to play a card
+            RegularCard? potentialComputerPlay = _computer.MakeMove(currentCard); // Let the computer try to play a card
 
             if (potentialComputerPlay != null) // If a valid move was made
             {
@@ -47,7 +47,7 @@ namespace SolitaireUno
             {
                 if (_deck.Length() > 0)
                 {
-                    Card card = _deck.DealCard()!; // Draw a card
+                    RegularCard card = _deck.DealCard()!; // Draw a card
                     _computer.PickupCard(card); // Add to computer's hand
 
                     int computerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard); // Check penalty

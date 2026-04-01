@@ -5,21 +5,15 @@
     /// </summary>
     /// <remarks>A Card is immutable and uniquely identified by its suit and value. Instances of this class
     /// can be compared for equality using the IsEqual method.</remarks>
-    public class Card
+    /// <remarks>
+    /// Initializes a new instance of the Card class with the specified suit and value.
+    /// </remarks>
+    /// <param name="suit">The suit of the card to assign.</param>
+    /// <param name="value">The value of the card to assign.</param>
+    public class RegularCard(Suits suit, Values value)
     {
-        public Suits Suit { get; } // a field to represent a Card's suit (Diamond, Hearts)
-        public Values Value { get; } // a field to represent a Card's Value (Ace, Two, Jack)
-
-        /// <summary>
-        /// Initializes a new instance of the Card class with the specified suit and value.
-        /// </summary>
-        /// <param name="suit">The suit of the card to assign.</param>
-        /// <param name="value">The value of the card to assign.</param>
-        public Card(Suits suit, Values value)
-        {
-            Suit = suit;
-            Value = value;
-        }
+        public Suits Suit { get; } = suit;
+        public Values Value { get; } = value;
 
         /// <summary>
         /// Returns a string that represents the value and suit of the card.
@@ -35,7 +29,7 @@
         /// </summary>
         /// <param name="otherCard">The card to compare with the current card. Can be null.</param>
         /// <returns>true if both cards have the same value and suit; otherwise, false.</returns>
-        public bool IsEqual(Card otherCard) // compares two Card objects, determining if they are equal 
+        public bool IsEqual(RegularCard otherCard) // compares two Card objects, determining if they are equal 
         { 
             if (otherCard != null) // if the other card isn't null in memory... 
             {

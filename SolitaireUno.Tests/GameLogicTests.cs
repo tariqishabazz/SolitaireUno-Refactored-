@@ -9,8 +9,8 @@ namespace SolitaireUno.Tests
         public void ValidCardTrue_CardOneValueHigherInAscendingMode()
         {
             // Arrange
-            Card cardInPlay = new(Suits.Hearts, Values.Four);
-            Card cardToPlay = new(Suits.Spades, Values.Five);
+            RegularCard cardInPlay = new(Suits.Hearts, Values.Four);
+            RegularCard cardToPlay = new(Suits.Spades, Values.Five);
 
             // Act
             bool result = GameMethods.ValidCard(cardToPlay, cardInPlay, GameConfiguration.Ascending);
@@ -24,8 +24,8 @@ namespace SolitaireUno.Tests
         {
             // Arrange
 
-            Card cardToPlay = new(Suits.Diamonds, Values.Seven);
-            Card cardInPlay = new(Suits.Clubs, Values.Eight);
+            RegularCard cardToPlay = new(Suits.Diamonds, Values.Seven);
+            RegularCard cardInPlay = new(Suits.Clubs, Values.Eight);
 
             // Act
             bool result = GameMethods.ValidCard(cardToPlay, cardInPlay, GameConfiguration.Ascending);
@@ -39,8 +39,8 @@ namespace SolitaireUno.Tests
         {
             // Arrange
 
-            Card cardInPlay = new(Suits.Hearts, Values.King);
-            Card cardToPlay = new(Suits.Diamonds, Values.Ace);
+            RegularCard cardInPlay = new(Suits.Hearts, Values.King);
+            RegularCard cardToPlay = new(Suits.Diamonds, Values.Ace);
 
             // Act
             bool result = GameMethods.ValidCard(cardToPlay, cardInPlay, GameConfiguration.Ascending);
@@ -54,8 +54,8 @@ namespace SolitaireUno.Tests
         {
             // Arrange (Setting up the scenario)
 
-            var cardToPlay = new Card(Suits.Clubs, Values.Three); // 3 on 4
-            var cardInPlay = new Card(Suits.Hearts, Values.Four);
+            var cardToPlay = new RegularCard(Suits.Clubs, Values.Three); // 3 on 4
+            var cardInPlay = new RegularCard(Suits.Hearts, Values.Four);
 
             // Act (Running the method)
             bool result = GameMethods.ValidCard(cardToPlay, cardInPlay, GameConfiguration.Descending);
@@ -69,8 +69,8 @@ namespace SolitaireUno.Tests
         {
             // Arrange
 
-            var cardToPlay = new Card(Suits.Diamonds, Values.King); // King on Ace
-            var cardInPlay = new Card(Suits.Spades, Values.Ace);
+            var cardToPlay = new RegularCard(Suits.Diamonds, Values.King); // King on Ace
+            var cardInPlay = new RegularCard(Suits.Spades, Values.Ace);
 
             // Act
             bool result = GameMethods.ValidCard(cardToPlay, cardInPlay, GameConfiguration.Descending);
@@ -84,8 +84,8 @@ namespace SolitaireUno.Tests
         {
             // Arrange
 
-            Card cardToPlay = new Card(Suits.Clubs, Values.Ten);
-            Card cardInPlay = new Card(Suits.Spades, Values.Nine);
+            RegularCard cardToPlay = new RegularCard(Suits.Clubs, Values.Ten);
+            RegularCard cardInPlay = new RegularCard(Suits.Spades, Values.Nine);
 
             // Act
             bool result = GameMethods.ValidCard(cardToPlay, cardInPlay, GameConfiguration.Descending);
@@ -98,8 +98,8 @@ namespace SolitaireUno.Tests
         public void GetPenaltyCount_DealtCardEqualsPenaltyCard()
         {
             // Arrange
-            var penaltyCard = new Card(Suits.Spades, Values.Queen);
-            var dealtCard = new Card(Suits.Spades, Values.Queen);
+            var penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
+            var dealtCard = new RegularCard(Suits.Spades, Values.Queen);
 
             // Act
             int result = GameMethods.GetPenaltyCount(dealtCard, penaltyCard);
@@ -112,8 +112,8 @@ namespace SolitaireUno.Tests
         public void GetPenaltyCount_DealtCardIsNotPenaltyCard()
         {
             // Arrange
-            var penaltyCard = new Card(Suits.Spades, Values.Queen);
-            var dealtCard = new Card(Suits.Clubs, Values.Two);
+            var penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
+            var dealtCard = new RegularCard(Suits.Clubs, Values.Two);
 
             // Act
             int result = GameMethods.GetPenaltyCount(dealtCard, penaltyCard);
@@ -126,14 +126,14 @@ namespace SolitaireUno.Tests
         public void ControllingDeck()
         {
             // arrange
-            var card1 = new Card(Suits.Spades, Values.Ace);
-            var card2 = new Card(Suits.Hearts, Values.Two);
+            var card1 = new RegularCard(Suits.Spades, Values.Ace);
+            var card2 = new RegularCard(Suits.Hearts, Values.Two);
 
-            List < Card > cards = new List<Card> { card1, card2 };
+            List < RegularCard > cards = new List<RegularCard> { card1, card2 };
 
             // act
             Deck myDeck = new(cards);
-            Card result = myDeck.DealCard()!;
+            RegularCard result = myDeck.DealCard()!;
 
             // assert
             Assert.Equal(card1, result);
@@ -161,7 +161,7 @@ namespace SolitaireUno.Tests
             Computer player2 = new();
 
             Deck gameDeck = new();
-            Card currentCard;
+            RegularCard currentCard;
 
             int turnCounter = 0;
             int maxTurns = 100;

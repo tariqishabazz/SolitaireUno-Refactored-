@@ -19,18 +19,14 @@ namespace SolitaireUno
         /// <param name="deck">The deck to deal cards from.</param>
         public static void SetupGame(Player player, Computer computer, Deck deck)
         {
-            // Deal 10 cards to the human player
+            // Deal 10 cards to the human and computer players
             for (int i = 0; i < 10; i++)
             {
-                Card card = deck.DealCard()!; // Deal a card from the deck
-                player.PickupCard(card); // Add the card to the player's hand
-            }
+                RegularCard playerCard = deck.DealCard()!; // Deal a card from the deck
+                player.PickupCard(playerCard); // Add the card to the player's hand
 
-            // Deal 10 cards to the computer player
-            for (int i = 0; i < 10; i++)
-            {
-                Card card = deck.DealCard()!; // Deal a card from the deck
-                computer.PickupCard(card); // Add the card to the computer's hand
+                RegularCard computerCard = deck.DealCard()!; // Deal a card from the deck
+                computer.PickupCard(computerCard); // Add the card to the computer's hand
             }
         }
     }

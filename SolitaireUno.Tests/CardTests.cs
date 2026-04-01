@@ -12,8 +12,8 @@ namespace SolitaireUno.Tests
         public void IsEqual_ReturnsTrue_ForIndenticalCards()
         {
             // Arrange
-            var card1 = new Card(Suits.Spades, Values.Queen);
-            var card2 = new Card(Suits.Spades, Values.Queen);
+            var card1 = new RegularCard(Suits.Spades, Values.Queen);
+            var card2 = new RegularCard(Suits.Spades, Values.Queen);
 
             // Act
             bool areEqual = card1.IsEqual(card2);
@@ -26,8 +26,8 @@ namespace SolitaireUno.Tests
         public void IsEqual_ReturnsFalse_DifferentSuits()
         {
             // Arrange
-            var card1 = new Card(Suits.Spades, Values.Queen);
-            var card2 = new Card(Suits.Diamonds, Values.Queen);
+            var card1 = new RegularCard(Suits.Spades, Values.Queen);
+            var card2 = new RegularCard(Suits.Diamonds, Values.Queen);
 
             // Act 
             bool areEqual = card1.IsEqual(card2);

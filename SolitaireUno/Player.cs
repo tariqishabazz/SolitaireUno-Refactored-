@@ -14,7 +14,7 @@ namespace SolitaireUno
     /// </remarks>
     public class Player
     {
-        public List<Card> Hand = []; // The player's hand of cards
+        public List<RegularCard> Hand = []; // The player's hand of cards
 
         /// <summary>
         /// Initializes a new instance of the Player class.
@@ -27,7 +27,7 @@ namespace SolitaireUno
         /// Adds the specified card to the player's hand.
         /// </summary>
         /// <param name="card">The card to add to the player's hand. Cannot be null.</param>
-        public void PickupCard(Card card)
+        public void PickupCard(RegularCard card)
         {
             Hand.Add(card); // Add the card to the player's hand
         }
@@ -36,7 +36,7 @@ namespace SolitaireUno
         /// Removes the specified card from the player's hand, representing the action of playing that card.
         /// </summary>
         /// <param name="card">The card to be played and removed from the player's hand. Cannot be null.</param>
-        public void PlayCard(Card card)
+        public void PlayCard(RegularCard card)
         {
             Hand.Remove(card); // Remove the card from the player's hand
         }

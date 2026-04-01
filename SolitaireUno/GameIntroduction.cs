@@ -15,13 +15,15 @@ namespace SolitaireUno
         /// Runs the introduction, prompts the user for game mode, and starts the game if the user agrees.
         /// </summary>
         /// <returns>The user's selected game mode (e.g., ascending/descending), or exits if declined.</returns>
-        public static string ShowGameIntroduction()
+        public static void ShowGameIntroduction()
         {
             IInputProvider realInput = new ConsoleInput(); // Input provider for user input
             IOutputProvider realOutput = new ConsoleOutput(); // Output provider for user output
 
             string PlayerGameModeChoice; // Stores the user's game mode choice
             GameMode gameMode;
+           // int playerCountAsNumber = 0 ;
+
 
             realOutput.Write("Are you ready to play >> "); // Prompt user to start
             string playerChoice = realInput.GetInput().ToLower(); // Get user response
@@ -43,7 +45,6 @@ namespace SolitaireUno
                             validModeChoice = true;
 
                             gameMode = GameMode.Ascending;
-
                         }
                         else
                         {
@@ -51,30 +52,40 @@ namespace SolitaireUno
                             validModeChoice = true;
 
                             gameMode = GameMode.Descending;
-
                         }
-
-                        realOutput.WriteLine("And how many players are there? Only up to five max");
-                        string playerCount = realInput.GetInput();
-
-
-                        if (int.TryParse(playerCount, out int playerCountAsNumber))
+                        
+                        /*
+                        bool validPlayerAmount = false;
+                        while (!validPlayerAmount)
                         {
-                            if (playerCountAsNumber > 1 && playerCountAsNumber <= 5)
+                            realOutput.WriteLine("And how many players are there? Up to five max");
+                            string playerCount = realInput.GetInput();
+
+                            if (int.TryParse(playerCount, out playerCountAsNumber))
                             {
-                                realOutput.WriteLine("Have fun!\n");
-                                realOutput.WriteLine("Let's Gooooooooooooooo!"); // Excitement!
+                                if (playerCountAsNumber > 1 && playerCountAsNumber <= 5)
+                                {
+                                    validPlayerAmount = true;
+                                    realOutput.WriteLine("Have fun!\n");
+                                    realOutput.WriteLine("Let's Gooooooooooooooo!"); // Excitement!                             
+                                }
+                                else
+                                {
+                                    realOutput.WriteLine("Sorry, that is not a valid input, please try again");
+                                }
                             }
-                        }
+                            else
+                            {
+                                realOutput.WriteLine("Sorry, that is not a valid input, please try again");
+                            }
+                        } 
+                        */
 
                         // Start the game with the chosen mode
                         Deck normalDeck = new(); // Create a new deck
 
-                        MainGame newGame = new(realInput, realOutput, normalDeck, gameMode, (AmountOfPlayers)playerCountAsNumber); // Create game instance
-                        
+                        MainGame newGame = new(realInput, realOutput, normalDeck, gameMode); // Create game instance
                         newGame.StartGame(); // Start the game
-                        
-                        return PlayerGameModeChoice; // Return the mode for reference
                     }
                     else
                     {
@@ -85,14 +96,11 @@ namespace SolitaireUno
             else if (playerChoice == "no" || playerChoice == "n") // User declines
             {
                 realOutput.WriteLine("I understand, come back when you are ready"); // Farewell message
-                Environment.Exit(0); // Exit the program
             }
             else // Any other input
             {
                 realOutput.WriteLine("What? GoodBye"); // Unrecognized input
-                Environment.Exit(0); // Exit the program
             }
-            return string.Empty; // Fallback return (should not be reached)
         }
     }
 }
