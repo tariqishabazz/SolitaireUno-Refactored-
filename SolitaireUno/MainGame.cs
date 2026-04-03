@@ -53,7 +53,7 @@
         {
             RegularCard penaltyCard = new(Suits.Spades, Values.Queen); 
             
-            RegularCard currentCard = gameDeck.DealCard()!; // Deal the first card from the deck to start the game
+            Card currentCard = gameDeck.DealCard()!; // Deal the first card from the deck to start the game
 
             // Main game loop: continue until either the player or computer runs out of cards
             while (player.Hand.Count > 0 && computer.Hand.Count > 0)

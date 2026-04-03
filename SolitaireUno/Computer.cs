@@ -23,11 +23,11 @@ namespace SolitaireUno
         /// </remarks>
         /// <param name="currentCard">The card currently in play. Used to determine which cards in the computer's hand are valid to play.</param>
         /// <returns>The card played from the computer's hand if a valid move is found; otherwise, null if no valid card can be played.</returns>
-        public RegularCard? MakeMove(RegularCard currentCard)
+        public Card? MakeMove(Card currentCard)
         {
-            List<RegularCard> validMoves = []; // List to store valid moves
+            List<Card> validMoves = []; // List to store valid moves
 
-            foreach (RegularCard card in Hand) // Check each card in the computer's hand
+            foreach (Card card in Hand) // Check each card in the computer's hand
             {
                 if (GameMethods.ValidCard(card, currentCard, MainGame.GameModeChoice)) // If the card is a valid move
                 {
@@ -37,7 +37,7 @@ namespace SolitaireUno
 
             if (validMoves.Count > 0) // If there are valid moves
             {
-                RegularCard bestCard = validMoves.OrderByDescending(card => (int)card.Suit).First(); // Choose the best card (highest suit)
+                Card bestCard = validMoves.OrderByDescending(card => (int)card.Suit).First(); // Choose the best card (highest suit)
                 PlayCard(bestCard); // Play the chosen card
                 return bestCard; // Return the card played
             }

@@ -10,7 +10,7 @@
     /// </remarks>
     /// <param name="suit">The suit of the card to assign.</param>
     /// <param name="value">The value of the card to assign.</param>
-    public class RegularCard(Suits suit, Values value)
+    public class RegularCard(Suits suit, Values value) : Card
     {
         public Suits Suit { get; } = suit;
         public Values Value { get; } = value;
@@ -29,13 +29,12 @@
         /// </summary>
         /// <param name="otherCard">The card to compare with the current card. Can be null.</param>
         /// <returns>true if both cards have the same value and suit; otherwise, false.</returns>
-        public bool IsEqual(RegularCard otherCard) // compares two Card objects, determining if they are equal 
+        public bool IsEqual(Card otherCard) // compares two Card objects, determining if they are equal 
         { 
-            if (otherCard != null) // if the other card isn't null in memory... 
+            if (otherCard != null && otherCard is RegularCard regularCard) // if the other card isn't null in memory... 
             {
-                return this.Value == otherCard.Value && this.Suit == otherCard.Suit; // return the result IF the card in THIS instance has the same Value and Suit as another card
-            }
-            
+                return this.Value == regularCard.Value && this.Suit == regularCard.Suit; // return the result IF the card in THIS instance has the same Value and Suit as another card
+            }  
             return false; // return false IF cards are not the same.
         }
     }

@@ -22,10 +22,10 @@ namespace SolitaireUno
             // Deal 10 cards to the human and computer players
             for (int i = 0; i < 10; i++)
             {
-                RegularCard playerCard = deck.DealCard()!; // Deal a card from the deck
+                Card playerCard = deck.DealCard()!; // Deal a card from the deck
                 player.PickupCard(playerCard); // Add the card to the player's hand
 
-                RegularCard computerCard = deck.DealCard()!; // Deal a card from the deck
+                Card computerCard = deck.DealCard()!; // Deal a card from the deck
                 computer.PickupCard(computerCard); // Add the card to the computer's hand
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace SolitaireUno
+﻿using System.Collections.Generic;
+
+namespace SolitaireUno
 {
     /// <summary>
     /// Represents a standard deck of playing cards, supporting shuffling, dealing, and special penalty card logic.
@@ -11,8 +13,9 @@
     {
         Random random = new(); // Random number generator for shuffling and penalty card placement
         
-        List<RegularCard> deckCards = []; // List to hold all cards in the deck
-        List<SpecialCard> specialCards = [];
+        //List<RegularCard> regularCards = []; // List to hold all cards in the deck
+       // List<SpecialCard> specialCards = [];
+        List<Card> gameDeck = [];
 
         /// <summary>
         /// Constructs a new deck, shuffles it, and inserts the penalty card (Queen of Spades) at a random safe position.
@@ -24,16 +27,14 @@
             {
                 foreach (Suits suit in Enum.GetValues<Suits>())
                 {
-                    deckCards.Add(new RegularCard(suit, value)); // Add each unique card
+                    gameDeck.Add(new RegularCard(suit, value)); // Add each unique card
                 }
             }
             
             foreach(SpecialCardType specialCard in Enum.GetValues<SpecialCardType>())
             {
-                specialCards.Add(new SpecialCard(specialCard));
+                gameDeck.Add(new SpecialCard(specialCard));
             }
-
-            deckCards.AddRange(specialCards);
 
             InHouseShuffle(); // Shuffle the deck to randomize order
 
@@ -41,7 +42,7 @@
             
             // Find the index of the penalty card in the shuffled deck
             int index = 0;
-            foreach (RegularCard card in deckCards)
+            foreach (Card card in gameDeck)
             {
                 if(card.IsEqual(penaltyCard)) // If this card is the penalty card
                 { 
@@ -50,12 +51,12 @@
                 index++; // Move to next card
             }
 
-            deckCards.RemoveAt(index); // Remove the penalty card from its current position
+            gameDeck.RemoveAt(index); // Remove the penalty card from its current position
             
             // Insert the penalty card at a random position between 20 and 45
             // This ensures neither player can draw it during the initial deal
             int randomPosition = random.Next(20, 45); // Pick a safe random index
-            deckCards.Insert(randomPosition, penaltyCard); // Insert penalty card at the chosen position
+            gameDeck.Insert(randomPosition, penaltyCard); // Insert penalty card at the chosen position
         }
         
         /// <summary>
@@ -63,12 +64,10 @@
         /// </summary>
         public void InHouseShuffle()
         {
-            for(int i = deckCards.Count - 1; i > 0; i--)
+            for(int i = gameDeck.Count - 1; i > 0; i--)
             {
                 int randomIndex = random.Next(0, i + 1); // Pick a random index
-                RegularCard temp = deckCards[i]; // Store the card at i
-                deckCards[i] = deckCards[randomIndex]; // Swap with card at randomIndex
-                deckCards[randomIndex] = temp; // Complete the swap
+                (gameDeck[randomIndex], gameDeck[i]) = (gameDeck[i], gameDeck[randomIndex]); // Store the card at i
             }
         }
         
@@ -77,23 +76,23 @@
         /// </summary>
         public int Length()
         {
-            return deckCards.Count; // Return the count of cards left
+            return gameDeck.Count; // Return the count of cards left
         }
 
         /// <summary>
         /// Removes and returns the top card from the deck. If the deck is empty, returns null.
         /// </summary>
         /// <returns>The dealt card, or null if the deck is empty.</returns>
-        public RegularCard? DealCard()
+        public Card? DealCard()
         {
-            if(deckCards.Count == 0) // If the deck is empty
+            if(gameDeck.Count == 0) // If the deck is empty
             {
                 return null; // No card to deal
             }
             else
             {
-                RegularCard topCard = deckCards[0]; // Get the top card
-                deckCards.Remove(topCard); // Remove it from the deck
+                Card topCard = gameDeck[0]; // Get the top card
+                gameDeck.Remove(topCard); // Remove it from the deck
                 return topCard; // Return the dealt card
             }
         }
@@ -102,9 +101,9 @@
         /// Constructs a deck from a pre-made list of cards (used for testing or custom setups).
         /// </summary>
         /// <param name="preMadeDeck">A list of cards to use as the deck.</param>
-        public Deck(List<RegularCard> preMadeDeck)
+        public Deck(List<Card> preMadeDeck)
         {
-            deckCards = preMadeDeck; // Use the provided list as the deck
+            gameDeck = preMadeDeck; // Use the provided list as the deck
         }
     }
 }
