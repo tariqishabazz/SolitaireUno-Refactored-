@@ -33,7 +33,7 @@ namespace SolitaireUno
                 return gameMode == GameMode.Descending ? IsValidDescending(potentialPlay, currentlyShown)
                    : IsValidAscending(potentialPlay, currentlyShown);
             else
-                return IsSpecialCard(potentialPlay, currentlyShown, gameMode);
+                return IsSpecialCard(potentialPlay);
         }
 
         private static bool IsValidDescending(Card potentialPlay, Card currentlyShown)
@@ -54,7 +54,6 @@ namespace SolitaireUno
             return IsWrapAround(potentialPlay, currentlyShown, GameMode.Ascending);
         }
 
-
         private static bool IsWrapAround(Card potentalPlay, Card currentlyShown, GameMode gameMode)
         {
             if (potentalPlay is RegularCard potentialCard && currentlyShown is RegularCard currentCard)
@@ -66,39 +65,7 @@ namespace SolitaireUno
                 return false;
         }
 
-        private static bool IsSpecialCard(Card potentialPlay, Card currentCard, GameMode gameMode)
-        {
-            if (potentialPlay is SpecialCard specialCard)
-                    SpecialCardAction();
-                    
-            return true;
-
-
-            return true;
-        }
-
-        private static bool SpecialCardAction(SpecialCard specialCard)
-        {
-            switch(specialCard.CardType)
-            {
-                case SpecialCardType.Skip:
-                    return true;
-                case SpecialCardType.DrawTwo:
-                    
-                    return true;
-                case SpecialCardType.DrawFour:
-
-                    return true;
-                case SpecialCardType.ChangeOrder:
-
-                    return true;
-            }
-            
-
-
-
-
-        }
+        public static bool IsSpecialCard(Card potentialPlay) =>  potentialPlay is SpecialCard;
 
         /// <summary>
         /// Determines the penalty count for a dealt card based on a penalty card.

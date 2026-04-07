@@ -24,7 +24,7 @@ namespace SolitaireUno
         /// </summary>
         /// <param name="currentCard">Reference to the current card in play (may be updated).</param>
         /// <param name="penaltyCard">The penalty card for special rules.</param>
-        public void HandleTurn(ref RegularCard currentCard, RegularCard penaltyCard)
+        public void HandleTurn(ref Card currentCard, Card penaltyCard)
         {
             bool playerChoiceValid = false; // Tracks if the player made a valid move
 
@@ -52,7 +52,7 @@ namespace SolitaireUno
                     {
                         if (decisionAsNumber > 0 && decisionAsNumber <= player.Hand.Count) // Valid card index
                         {
-                            RegularCard potentialCard = player.Hand[decisionAsNumber - 1]; // Get selected card
+                            Card potentialCard = player.Hand[decisionAsNumber - 1]; // Get selected card
 
                             if (GameMethods.ValidCard(potentialCard, currentCard, MainGame.GameModeChoice)) // Validate move
                             {
@@ -79,7 +79,7 @@ namespace SolitaireUno
                     {
                         if (deck.Length() > 0)
                         {
-                            RegularCard card = deck.DealCard()!; // Draw a card
+                            Card card = deck.DealCard()!; // Draw a card
                             player.PickupCard(card); // Add to hand
 
                             int playerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard); // Check penalty

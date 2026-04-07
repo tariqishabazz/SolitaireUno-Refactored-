@@ -103,7 +103,7 @@
             _output.WriteLine("\nYour Hand: "); // Print a header for the hand display
 
             int index = 0; // Initialize card index for display
-            foreach (RegularCard card in player.Hand) // Loop through each card in the player's hand
+            foreach (Card card in player.Hand) // Loop through each card in the player's hand
             {
                 _output.WriteLine($"   {index + 1}) {card}"); // Print the card with its position (1-based index)
                 index++; // Move to the next card index

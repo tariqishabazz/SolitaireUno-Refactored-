@@ -15,18 +15,12 @@ namespace SolitaireUno
         /// Writes a string to the console without a newline.
         /// </summary>
         /// <param name="message">The message to write.</param>
-        public void Write(string message)
-        {
-            Console.Write(message); // Write message to the console (no newline)
-        }
+        public void Write(string message) => Console.Write(message); // Write message to the console (no newline)
 
         /// <summary>
         /// Writes a string to the console followed by a newline.
         /// </summary>
         /// <param name="message">The message to write.</param>
-        public void WriteLine(string message)
-        {
-            Console.WriteLine(message); // Write message to the console (with newline)
-        }
+        public void WriteLine(string message) => Console.WriteLine(message); // Write message to the console (with newline)
     }
 }

@@ -13,9 +13,8 @@ namespace SolitaireUno
     {
         Random random = new(); // Random number generator for shuffling and penalty card placement
         
-        //List<RegularCard> regularCards = []; // List to hold all cards in the deck
-       // List<SpecialCard> specialCards = [];
-        List<Card> gameDeck = [];
+        private readonly List<Card>? gameDeck = [];
+        private readonly Stack<Card> transformedDeck = [];
 
         /// <summary>
         /// Constructs a new deck, shuffles it, and inserts the penalty card (Queen of Spades) at a random safe position.
@@ -36,20 +35,19 @@ namespace SolitaireUno
                 gameDeck.Add(new SpecialCard(specialCard));
             }
 
-            InHouseShuffle(); // Shuffle the deck to randomize order
-
             RegularCard penaltyCard = new (Suits.Spades, Values.Queen); // Define the penalty card (Queen of Spades)
             
             // Find the index of the penalty card in the shuffled deck
             int index = 0;
             foreach (Card card in gameDeck)
             {
-                if(card.IsEqual(penaltyCard)) // If this card is the penalty card
-                { 
-                    break; // Stop searching
-                }
+                if (card is RegularCard regularCard)
+                    if (regularCard.IsEqual(penaltyCard))
+                        break;            
                 index++; // Move to next card
             }
+            
+            InHouseShuffle(); // Shuffle the deck to randomize order
 
             gameDeck.RemoveAt(index); // Remove the penalty card from its current position
             
@@ -57,27 +55,33 @@ namespace SolitaireUno
             // This ensures neither player can draw it during the initial deal
             int randomPosition = random.Next(20, 45); // Pick a safe random index
             gameDeck.Insert(randomPosition, penaltyCard); // Insert penalty card at the chosen position
+
+            foreach(Card card in gameDeck)
+                transformedDeck.Push(card);
+
+            gameDeck = null; // the list verson of deck no longer needed
         }
-        
+
         /// <summary>
         /// Randomizes the order of the cards in the deck using an in-place shuffle algorithm.
         /// </summary>
         public void InHouseShuffle()
         {
-            for(int i = gameDeck.Count - 1; i > 0; i--)
+            if (gameDeck is not null)
             {
-                int randomIndex = random.Next(0, i + 1); // Pick a random index
-                (gameDeck[randomIndex], gameDeck[i]) = (gameDeck[i], gameDeck[randomIndex]); // Store the card at i
+                for (int i = gameDeck.Count - 1; i > 0; i--)
+                {
+                    int randomIndex = random.Next(0, i + 1); // Pick a random index
+                    (gameDeck[randomIndex], gameDeck[i]) = (gameDeck[i], gameDeck[randomIndex]); // Store the card at i
+                }
             }
         }
-        
+
+
         /// <summary>
         /// Returns the number of cards remaining in the deck.
         /// </summary>
-        public int Length()
-        {
-            return gameDeck.Count; // Return the count of cards left
-        }
+        public int Length() => transformedDeck.Count;
 
         /// <summary>
         /// Removes and returns the top card from the deck. If the deck is empty, returns null.
@@ -85,25 +89,19 @@ namespace SolitaireUno
         /// <returns>The dealt card, or null if the deck is empty.</returns>
         public Card? DealCard()
         {
-            if(gameDeck.Count == 0) // If the deck is empty
-            {
-                return null; // No card to deal
-            }
+            if (transformedDeck.Count != 0) // If the deck isn't empty
+                return transformedDeck.Pop(); // return a card
             else
-            {
-                Card topCard = gameDeck[0]; // Get the top card
-                gameDeck.Remove(topCard); // Remove it from the deck
-                return topCard; // Return the dealt card
-            }
+                return null; // else return null
         }
 
         /// <summary>
         /// Constructs a deck from a pre-made list of cards (used for testing or custom setups).
         /// </summary>
         /// <param name="preMadeDeck">A list of cards to use as the deck.</param>
-        public Deck(List<Card> preMadeDeck)
+        public Deck(Stack<Card> preMadeDeck)
         {
-            gameDeck = preMadeDeck; // Use the provided list as the deck
+            transformedDeck = preMadeDeck; // Use the provided list as the deck
         }
     }
 }

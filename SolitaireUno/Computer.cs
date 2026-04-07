@@ -34,12 +34,12 @@ namespace SolitaireUno
                     validMoves.Add(card); // Add to valid moves
                 }
             }
-
             if (validMoves.Count > 0) // If there are valid moves
             {
-                Card bestCard = validMoves.OrderByDescending(card => (int)card.Suit).First(); // Choose the best card (highest suit)
-                PlayCard(bestCard); // Play the chosen card
-                return bestCard; // Return the card played
+                Random random = new();
+                Card randomValidMove = validMoves[random.Next(validMoves.Count)];
+
+                return randomValidMove;              
             }
             return null; // No valid move found
         }

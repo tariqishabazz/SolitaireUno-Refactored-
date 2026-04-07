@@ -34,7 +34,7 @@ namespace SolitaireUno
         /// </summary>
         /// <param name="currentCard">Reference to the current card in play (may be updated).</param>
         /// <param name="penaltyCard">The penalty card for special rules.</param>
-        public void HandleTurn(ref Card currentCard, RegularCard penaltyCard)
+        public void HandleTurn(ref Card currentCard, Card penaltyCard)
         {
             Card? potentialComputerPlay = _computer.MakeMove(currentCard); // Let the computer try to play a card
 
