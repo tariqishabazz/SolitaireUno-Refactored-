@@ -34,14 +34,24 @@ namespace SolitaireUno
         /// </summary>
         /// <param name="currentCard">Reference to the current card in play (may be updated).</param>
         /// <param name="penaltyCard">The penalty card for special rules.</param>
-        public void HandleTurn(ref Card currentCard, Card penaltyCard)
+        public Card? HandleTurn(ref Card currentCard, Card penaltyCard)
         {
+
             Card? potentialComputerPlay = _computer.MakeMove(currentCard); // Let the computer try to play a card
 
             if (potentialComputerPlay != null) // If a valid move was made
             {
-                currentCard = potentialComputerPlay; // Update the current card
+                if (potentialComputerPlay is RegularCard)
+                    currentCard = potentialComputerPlay; // Update the current card
+               // else
+               //     return potentialComputerPlay;
+
                 _output.WriteLine($"\nComputer played: {potentialComputerPlay}"); // Announce the move
+                _computer.PlayCard(potentialComputerPlay);
+
+                _output.WriteLine($"\nThe Computer now has {_computer.Hand.Count} cards");
+
+                return potentialComputerPlay;
             }
             else // No valid move, must pick up or pass
             {
@@ -71,6 +81,10 @@ namespace SolitaireUno
                 {
                     _output.WriteLine("\nComputer couldn't play a move and couldn't pick up... so it passed"); // No cards left to pick up
                 }
+                
+                _output.WriteLine($"\nThe Computer now has {_computer.Hand.Count} cards");
+
+                return null;
             }
         }
     }

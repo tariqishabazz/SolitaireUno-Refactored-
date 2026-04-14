@@ -24,7 +24,7 @@ namespace SolitaireUno
         /// </summary>
         /// <param name="currentCard">Reference to the current card in play (may be updated).</param>
         /// <param name="penaltyCard">The penalty card for special rules.</param>
-        public void HandleTurn(ref Card currentCard, Card penaltyCard)
+        public Card? HandleTurn(ref Card currentCard, Card penaltyCard)
         {
             bool playerChoiceValid = false; // Tracks if the player made a valid move
 
@@ -57,11 +57,17 @@ namespace SolitaireUno
                             if (GameMethods.ValidCard(potentialCard, currentCard, MainGame.GameModeChoice)) // Validate move
                             {
                                 player.PlayCard(potentialCard); // Play the card
-                                currentCard = potentialCard; // Update current card
 
+                                if (potentialCard is RegularCard)
+                                    currentCard = potentialCard; // Update current card
+                              //  else
+                                 //   return potentialCard;
+                                
                                 output.WriteLine("\n---------------------------------------------------------------------");
                                 output.WriteLine($"You played {potentialCard}, so...");
                                 playerChoiceValid = true; // End turn
+
+                                return potentialCard;
                             }
                             else
                             {
@@ -83,17 +89,20 @@ namespace SolitaireUno
                             player.PickupCard(card); // Add to hand
 
                             int playerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard); // Check penalty
-                            
                             if (playerPotentialPenaltyCount > 0)
                             {
                                 output.WriteLine("\n---------------------------------------------------------------------");
                                 output.WriteLine("You decided to pick up and recieved the Queen of Spades! HAHAHAHA");
                                 output.WriteLine("You recieved 5 additional cards because... why not...");
+                                output.WriteLine("\n---------------------------------------------------------------------");
+
                             }
                             else
                             {
                                 output.WriteLine("\n---------------------------------------------------------------------");
                                 output.WriteLine("You decided to pick up!");
+                                output.WriteLine("---------------------------------------------------------------------"); // Print turn separator
+
                             }
 
                             for (int i = 0; i < playerPotentialPenaltyCount; i++) // Add penalty cards
@@ -102,6 +111,7 @@ namespace SolitaireUno
                             }
 
                             playerChoiceValid = true; // End turn
+                            return null;
                         }
                         else
                         {
@@ -120,7 +130,9 @@ namespace SolitaireUno
                         {
                             output.WriteLine("\n---------------------------------------------------------------------");
                             output.WriteLine("You decided to pass!");
+                            
                             playerChoiceValid = true; // End turn
+                            return null;
                         }
                     }
                 }
@@ -130,6 +142,7 @@ namespace SolitaireUno
                     output.WriteLine("You did not make a decision, please try again"); // No input
                 }
             }
+            return null;
         }
     }
 }

@@ -49,38 +49,120 @@
         /// Handles the penalty card logic and updates the current card after each move.
         /// </summary>
         /// <returns>The winning player (human or computer), or null if no winner (should not occur).</returns>
-        public Player? StartGame()
+        public void StartGame()
         {
             RegularCard penaltyCard = new(Suits.Spades, Values.Queen); 
             
             Card currentCard = gameDeck.DealCard()!; // Deal the first card from the deck to start the game
 
+            bool isPlayerTurn = true; 
+            
             // Main game loop: continue until either the player or computer runs out of cards
             while (player.Hand.Count > 0 && computer.Hand.Count > 0)
             {
-                ShowHand(); // Display the player's current hand and card positions
-                _playerTurnHandler.HandleTurn(ref currentCard, penaltyCard); // Execute the player's turn, updating the current card
-                _computerTurnHandler.HandleTurn(ref currentCard, penaltyCard); // Execute the computer's turn, updating the current card
+                if (isPlayerTurn)
+                    ShowHand();
+                
+                if (isPlayerTurn)
+                {
+                    Card? cardPlayed = _playerTurnHandler.HandleTurn(ref currentCard, penaltyCard); // Execute the player's turn, updating the current card
+                    if (cardPlayed != null)
+                    {
+                        ActionInstruction message = GameMethods.SpecialCardAction(cardPlayed);
+                        switch (message)
+                        {
+                            case ActionInstruction.DoNothing:
+                                isPlayerTurn = false;
+                                break;
+
+                            case ActionInstruction.ChangeOrder:
+                                GameModeChoice = GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
+                                _output.WriteLine($"\nThe game mode is now {GameModeChoice}");
+                                break;
+
+                            case ActionInstruction.SkipTurn:
+                                _output.WriteLine($"\nThe computer has been skipped!");
+                                break;
+
+                            case ActionInstruction.DrawFour:
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    Card drawnCard = gameDeck.DealCard()!;
+                                    computer.PickupCard(drawnCard);
+                                }
+                                
+                                _output.WriteLine($"\nThe computer just picked up 4 cards.");
+                                break;
+
+                            case ActionInstruction.DrawTwo:
+                                for (int i = 0; i < 2; i++)
+                                {
+                                    Card drawnCard = gameDeck.DealCard()!;
+                                    computer.PickupCard(drawnCard);
+                                }                                    
+                                
+                                _output.WriteLine("The computer just picked up 2 cards");
+                                break;
+                        };
+                    }
+                    else
+                    {
+                        isPlayerTurn = false;
+                    }
+                }
+                else
+                {
+                    Card? cardPlayed = _computerTurnHandler.HandleTurn(ref currentCard, penaltyCard); // Execute the computer's turn, updating the current card
+                    if (cardPlayed != null)
+                    {
+                        ActionInstruction message = GameMethods.SpecialCardAction(cardPlayed);
+                        switch (message)
+                        {
+                            case ActionInstruction.DoNothing:
+                                isPlayerTurn = true;
+                                break;
+
+                            case ActionInstruction.ChangeOrder:
+                                GameModeChoice = GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
+                                _output.WriteLine("---------------------------------------------------------------------"); // Print turn separator
+                                _output.WriteLine($"\nThe game mode is now {GameModeChoice}");
+                                break;
+
+                            case ActionInstruction.SkipTurn:
+                                _output.WriteLine("---------------------------------------------------------------------"); // Print turn separator
+                                _output.WriteLine($"\nYou have been skipped!");
+                                break;
+
+                            case ActionInstruction.DrawFour:
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    Card drawnCard = gameDeck.DealCard()!;
+                                    player.PickupCard(drawnCard);
+                                }
+                                
+                                _output.WriteLine("---------------------------------------------------------------------"); // Print turn separator
+                                _output.WriteLine($"\nYou had to pick up 4 cards");
+                                break;
+
+                            case ActionInstruction.DrawTwo:
+                                for (int i = 0; i < 2; i++)
+                                {
+                                    Card drawnCard = gameDeck.DealCard()!;
+                                    player.PickupCard(drawnCard);
+                                }
+
+                                _output.WriteLine("---------------------------------------------------------------------"); // Print turn separator
+                                _output.WriteLine($"\nYou had to pick up 2 cards");
+                                break;
+                        };
+                    }
+                    else 
+                    {
+                        isPlayerTurn = true;
+                    }
+                }
             }
-
-            /* --------------------- WIN CONDITION ---------------------- */
-
-            _output.WriteLine("\n\n\n-------------------------------------------------------------"); // Print a separator for clarity
-            _output.WriteLine("Game Over!"); // Announce the end of the game
-
-            // Determine and announce the winner based on who ran out of cards first
-            if(computer.Hand.Count == 0) // If computer has no cards left, player loses
-            {
-                _output.WriteLine("\nYou Lose! You've been bested by the machine :("); // Output loss message
-                return computer; // Return computer as the winner
-            }
-            else if(player.Hand.Count == 0) // If player has no cards left, player wins
-            {
-                _output.WriteLine("\nYou Win! You beat the computer! Congrats! :)"); // Output win message
-                return player; // Return player as the winner
-            }
-
-            return null; // No winner (should not occur in normal play)
+            GameOverStats();
         }
 
         /* --------------------- INTRO CONVERSATION ---------------------- */
@@ -88,7 +170,7 @@
         /// Entry point for the application. Starts the game introduction and setup sequence.
         /// </summary>
         /// <param name="args">Command-line arguments (not used).</param>
-        static void Main(string[] args)
+        static void Main()
         {
             GameIntroduction.ShowGameIntroduction(); // Start the game introduction and setup
         }
@@ -100,7 +182,8 @@
         /// </summary>
         public void ShowHand()
         {
-            _output.WriteLine("\nYour Hand: "); // Print a header for the hand display
+            _output.WriteLine("\n---------------------------------------------------------------------");
+            _output.WriteLine("Your Hand: "); // Print a header for the hand display
 
             int index = 0; // Initialize card index for display
             foreach (Card card in player.Hand) // Loop through each card in the player's hand
@@ -108,6 +191,28 @@
                 _output.WriteLine($"   {index + 1}) {card}"); // Print the card with its position (1-based index)
                 index++; // Move to the next card index
             }
+        }
+
+        public Player? GameOverStats()
+        {
+            /* --------------------- WIN CONDITION ---------------------- */
+
+            _output.WriteLine("\n\n\n-------------------------------------------------------------"); // Print a separator for clarity
+            _output.WriteLine("Game Over!"); // Announce the end of the game
+
+            // Determine and announce the winner based on who ran out of cards first
+            if (computer.Hand.Count == 0) // If computer has no cards left, player loses
+            {
+                _output.WriteLine("\nYou Lose! You've been bested by the machine :("); // Output loss message
+                return computer; // Return computer as the winner
+            }
+            else if (player.Hand.Count == 0) // If player has no cards left, player wins
+            {
+                _output.WriteLine("\nYou Win! You beat the computer! Congrats! :)"); // Output win message
+                return player; // Return player as the winner
+            }
+
+            return null; // No winner (should not occur in normal play)
         }
     }
 }

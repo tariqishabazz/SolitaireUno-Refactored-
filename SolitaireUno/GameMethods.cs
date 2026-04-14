@@ -80,5 +80,32 @@ namespace SolitaireUno
             else
                 return 0;
         }
+
+        public static ActionInstruction SpecialCardAction(Card currentCard)
+        {
+            if (currentCard is SpecialCard specialCard)
+            {
+                if (specialCard.CardType.Equals(SpecialCardType.Skip))
+                {
+                    return ActionInstruction.SkipTurn;
+                }
+                else if (specialCard.CardType.Equals(SpecialCardType.ChangeOrder))
+                {
+                    return ActionInstruction.ChangeOrder;
+                }
+                else if(specialCard.CardType.Equals(SpecialCardType.DrawFour))
+                {
+                    return ActionInstruction.DrawFour;
+                }
+                else
+                {
+                    return ActionInstruction.DrawTwo;
+                }
+            }
+            else
+            {
+                return ActionInstruction.DoNothing;
+            }
+        }
     }
 }
