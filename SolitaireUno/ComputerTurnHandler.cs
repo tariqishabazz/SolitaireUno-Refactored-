@@ -30,14 +30,16 @@ namespace SolitaireUno
         }
 
         /// <summary>
-        /// Handles the logic for a single computer turn, including AI move selection and penalty handling.
+        /// 
         /// </summary>
-        /// <param name="currentCard">Reference to the current card in play (may be updated).</param>
-        /// <param name="penaltyCard">The penalty card for special rules.</param>
-        public Card? HandleTurn(ref Card currentCard, Card penaltyCard)
+        /// <param name="currentCard"></param>
+        /// <param name="penaltyCard"></param>
+        /// <param name="opponentHandSize"></param>
+        /// <returns></returns>
+        public Card? HandleTurn(ref Card currentCard, Card penaltyCard, int opponentHandSize)
         {
 
-            Card? potentialComputerPlay = _computer.MakeMove(currentCard); // Let the computer try to play a card
+            Card? potentialComputerPlay = _computer.MakeMove(currentCard, opponentHandSize); // Let the computer try to play a card
 
             if (potentialComputerPlay != null) // If a valid move was made
             {
@@ -49,7 +51,7 @@ namespace SolitaireUno
                 _output.WriteLine($"\nComputer played: {potentialComputerPlay}"); // Announce the move
                 _computer.PlayCard(potentialComputerPlay);
 
-                _output.WriteLine($"\nThe Computer now has {_computer.Hand.Count} cards");
+                _deck.AddToDiscardPile(potentialComputerPlay);
 
                 return potentialComputerPlay;
             }
@@ -81,8 +83,6 @@ namespace SolitaireUno
                 {
                     _output.WriteLine("\nComputer couldn't play a move and couldn't pick up... so it passed"); // No cards left to pick up
                 }
-                
-                _output.WriteLine($"\nThe Computer now has {_computer.Hand.Count} cards");
 
                 return null;
             }

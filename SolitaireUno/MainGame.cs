@@ -77,11 +77,11 @@
 
                             case ActionInstruction.ChangeOrder:
                                 GameModeChoice = GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
-                                _output.WriteLine($"\nThe game mode is now {GameModeChoice}");
+                                _output.WriteLine($"The game mode is now {GameModeChoice}");
                                 break;
 
                             case ActionInstruction.SkipTurn:
-                                _output.WriteLine($"\nThe computer has been skipped!");
+                                _output.WriteLine($"The computer has been skipped!");
                                 break;
 
                             case ActionInstruction.DrawFour:
@@ -91,7 +91,7 @@
                                     computer.PickupCard(drawnCard);
                                 }
                                 
-                                _output.WriteLine($"\nThe computer just picked up 4 cards.");
+                                _output.WriteLine($"The computer just picked up 4 cards.");
                                 break;
 
                             case ActionInstruction.DrawTwo:
@@ -112,7 +112,7 @@
                 }
                 else
                 {
-                    Card? cardPlayed = _computerTurnHandler.HandleTurn(ref currentCard, penaltyCard); // Execute the computer's turn, updating the current card
+                    Card? cardPlayed = _computerTurnHandler.HandleTurn(ref currentCard, penaltyCard, player.Hand.Count); // Execute the computer's turn, updating the current card
                     if (cardPlayed != null)
                     {
                         ActionInstruction message = GameMethods.SpecialCardAction(cardPlayed);
@@ -191,6 +191,9 @@
                 _output.WriteLine($"   {index + 1}) {card}"); // Print the card with its position (1-based index)
                 index++; // Move to the next card index
             }
+            
+            _output.WriteLine($"\nYou now have {player.Hand.Count} cards");
+            _output.WriteLine($"The Computer now has {computer.Hand.Count} cards");
         }
 
         public Player? GameOverStats()

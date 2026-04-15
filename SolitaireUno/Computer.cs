@@ -23,7 +23,7 @@ namespace SolitaireUno
         /// </remarks>
         /// <param name="currentCard">The card currently in play. Used to determine which cards in the computer's hand are valid to play.</param>
         /// <returns>The card played from the computer's hand if a valid move is found; otherwise, null if no valid card can be played.</returns>
-        public Card? MakeMove(Card currentCard)
+        public Card? MakeMove(Card currentCard, int opponentHandSize)
         {
             List<Card> validMoves = []; // List to store valid moves
 
@@ -34,14 +34,45 @@ namespace SolitaireUno
                     validMoves.Add(card); // Add to valid moves
                 }
             }
-            if (validMoves.Count > 0) // If there are valid moves
+
+            if(validMoves.Count == 0)
+            {
+                return null;
+            }
+
+            List<Card> regularMoves = validMoves.Where(card => card is RegularCard).ToList();
+            List<Card> specialMoves = validMoves.Where(card => card is SpecialCard).ToList();
+
+            if(opponentHandSize <= 3)
             {
                 Random random = new();
-                Card randomValidMove = validMoves[random.Next(validMoves.Count)];
-
-                return randomValidMove;              
+                
+                if (specialMoves.Count > 0)
+                {
+                    Card randomSpecialMove = specialMoves[random.Next(specialMoves.Count)];
+                    return randomSpecialMove;
+                }
+                else
+                {
+                    Card randomRegularMove = regularMoves[random.Next(regularMoves.Count)];
+                    return randomRegularMove;
+                }
             }
-            return null; // No valid move found
+            else
+            {
+                Random random = new();
+
+                if(regularMoves.Count > 0)
+                {
+                    Card randomRegularMove = regularMoves[random.Next(regularMoves.Count)];
+                    return randomRegularMove;
+                }
+                else
+                {
+                    Card randomSpecialMove = specialMoves[random.Next(specialMoves.Count)];
+                    return randomSpecialMove;
+                }
+            }
         }
     }
 }

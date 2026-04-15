@@ -58,6 +58,8 @@ namespace SolitaireUno
                             {
                                 player.PlayCard(potentialCard); // Play the card
 
+                                deck.AddToDiscardPile(potentialCard);
+
                                 if (potentialCard is RegularCard)
                                     currentCard = potentialCard; // Update current card
                               //  else
@@ -101,8 +103,6 @@ namespace SolitaireUno
                             {
                                 output.WriteLine("\n---------------------------------------------------------------------");
                                 output.WriteLine("You decided to pick up!");
-                                output.WriteLine("---------------------------------------------------------------------"); // Print turn separator
-
                             }
 
                             for (int i = 0; i < playerPotentialPenaltyCount; i++) // Add penalty cards

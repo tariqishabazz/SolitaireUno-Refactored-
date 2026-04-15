@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 namespace SolitaireUno
 {
@@ -13,8 +14,8 @@ namespace SolitaireUno
     {
         Random random = new(); // Random number generator for shuffling and penalty card placement
         
-        private readonly List<Card>? gameDeck = [];
-        private readonly Stack<Card> transformedDeck = [];
+        private List<Card> gameDeck = [];
+        private List<Card> discardPile = [];
 
         /// <summary>
         /// Constructs a new deck, shuffles it, and inserts the penalty card (Queen of Spades) at a random safe position.
@@ -56,10 +57,6 @@ namespace SolitaireUno
             int randomPosition = random.Next(20, 45); // Pick a safe random index
             gameDeck.Insert(randomPosition, penaltyCard); // Insert penalty card at the chosen position
 
-            foreach(Card card in gameDeck)
-                transformedDeck.Push(card);
-
-            gameDeck = null; // the list verson of deck no longer needed
         }
 
         /// <summary>
@@ -77,31 +74,65 @@ namespace SolitaireUno
             }
         }
 
-
         /// <summary>
         /// Returns the number of cards remaining in the deck.
         /// </summary>
-        public int Length() => transformedDeck.Count;
+        public int Length()
+        {
+            if(gameDeck is not null)
+                return gameDeck.Count;
+            return 0;
+        }
 
-        /// <summary>
-        /// Removes and returns the top card from the deck. If the deck is empty, returns null.
-        /// </summary>
-        /// <returns>The dealt card, or null if the deck is empty.</returns>
+
         public Card? DealCard()
         {
-            if (transformedDeck.Count != 0) // If the deck isn't empty
-                return transformedDeck.Pop(); // return a card
+            if (gameDeck is not null)
+            {
+                if (gameDeck.Count != 0)
+                {
+                    Card dealtCard = gameDeck[0];
+                    gameDeck.RemoveAt(0);
+                    
+                    return dealtCard;
+                }
+                else
+                {
+                    int lastCardIndex = discardPile.Count - 1;
+                    Card lastCardOnTable = discardPile[lastCardIndex];
+                    discardPile.RemoveAt(lastCardIndex);
+
+                    gameDeck.AddRange(discardPile);
+                    discardPile.Clear();
+
+                    InHouseShuffle();
+                    discardPile.Add(lastCardOnTable);
+                    
+                    return DealCard();
+                }
+            }
             else
-                return null; // else return null
+            {
+                return null;
+            }
         }
 
         /// <summary>
         /// Constructs a deck from a pre-made list of cards (used for testing or custom setups).
         /// </summary>
         /// <param name="preMadeDeck">A list of cards to use as the deck.</param>
-        public Deck(Stack<Card> preMadeDeck)
+        public Deck(List<Card> preMadeDeck)
         {
-            transformedDeck = preMadeDeck; // Use the provided list as the deck
+            gameDeck = preMadeDeck; // Use the provided list as the deck
+        }
+
+        /// <summary>
+        /// Takes a card that was placed on table and adds it to the discard pile for later reshuffling if needed
+        /// </summary>
+        /// <param name="card"></param>
+        public void AddToDiscardPile(Card card)
+        {
+            discardPile.Add(card);
         }
     }
 }
