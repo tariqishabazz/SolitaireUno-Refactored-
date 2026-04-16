@@ -3,88 +3,62 @@ using System.Data.SqlTypes;
 
 namespace SolitaireUno
 {
-    /// <summary>
-    /// Represents a standard deck of playing cards, supporting shuffling, dealing, and special penalty card logic.
-    /// </summary>
-    /// <remarks>
-    /// The Deck class builds a full deck, shuffles it, and ensures the penalty card (Queen of Spades) is inserted
-    /// at a random position between indexes 20 and 45 to avoid early draws by either player.
-    /// </remarks>
     public class Deck
     {
-        Random random = new(); // Random number generator for shuffling and penalty card placement
-        
+        Random random = new();
         private List<Card> gameDeck = [];
         private List<Card> discardPile = [];
-
-        /// <summary>
-        /// Constructs a new deck, shuffles it, and inserts the penalty card (Queen of Spades) at a random safe position.
-        /// </summary>
         public Deck()
         {
-            // Build the deck: add every combination of value and suit
             foreach (Values value in Enum.GetValues<Values>())
             {
                 foreach (Suits suit in Enum.GetValues<Suits>())
                 {
-                    gameDeck.Add(new RegularCard(suit, value)); // Add each unique card
+                    gameDeck.Add(new RegularCard(suit, value));
                 }
             }
-            
             foreach(SpecialCardType specialCard in Enum.GetValues<SpecialCardType>())
             {
                 gameDeck.Add(new SpecialCard(specialCard));
             }
-
-            RegularCard penaltyCard = new (Suits.Spades, Values.Queen); // Define the penalty card (Queen of Spades)
             
-            // Find the index of the penalty card in the shuffled deck
+            RegularCard penaltyCard = new(Suits.Spades, Values.Queen);
+            
+            InHouseShuffle();
+        
             int index = 0;
             foreach (Card card in gameDeck)
             {
                 if (card is RegularCard regularCard)
                     if (regularCard.IsEqual(penaltyCard))
-                        break;            
-                index++; // Move to next card
+                        break;           
+                index++;
             }
             
-            InHouseShuffle(); // Shuffle the deck to randomize order
-
-            gameDeck.RemoveAt(index); // Remove the penalty card from its current position
-            
-            // Insert the penalty card at a random position between 20 and 45
-            // This ensures neither player can draw it during the initial deal
-            int randomPosition = random.Next(20, 45); // Pick a safe random index
-            gameDeck.Insert(randomPosition, penaltyCard); // Insert penalty card at the chosen position
-
+            gameDeck.RemoveAt(index);
+            int randomPosition = random.Next(22, 45);
+            gameDeck.Insert(randomPosition, penaltyCard);
         }
-
-        /// <summary>
-        /// Randomizes the order of the cards in the deck using an in-place shuffle algorithm.
-        /// </summary>
+        
         public void InHouseShuffle()
         {
             if (gameDeck is not null)
             {
                 for (int i = gameDeck.Count - 1; i > 0; i--)
                 {
-                    int randomIndex = random.Next(0, i + 1); // Pick a random index
-                    (gameDeck[randomIndex], gameDeck[i]) = (gameDeck[i], gameDeck[randomIndex]); // Store the card at i
+                    int randomIndex = random.Next(0, i + 1);
+                    (gameDeck[randomIndex], gameDeck[i]) = (gameDeck[i], gameDeck[randomIndex]);
                 }
             }
         }
-
-        /// <summary>
-        /// Returns the number of cards remaining in the deck.
-        /// </summary>
+        
         public int Length()
         {
             if(gameDeck is not null)
                 return gameDeck.Count;
             return 0;
         }
-
-
+        
         public Card? DealCard()
         {
             if (gameDeck is not null)
@@ -93,7 +67,6 @@ namespace SolitaireUno
                 {
                     Card dealtCard = gameDeck[0];
                     gameDeck.RemoveAt(0);
-                    
                     return dealtCard;
                 }
                 else
@@ -116,20 +89,12 @@ namespace SolitaireUno
                 return null;
             }
         }
-
-        /// <summary>
-        /// Constructs a deck from a pre-made list of cards (used for testing or custom setups).
-        /// </summary>
-        /// <param name="preMadeDeck">A list of cards to use as the deck.</param>
+        
         public Deck(List<Card> preMadeDeck)
         {
-            gameDeck = preMadeDeck; // Use the provided list as the deck
+            gameDeck = preMadeDeck;
         }
-
-        /// <summary>
-        /// Takes a card that was placed on table and adds it to the discard pile for later reshuffling if needed
-        /// </summary>
-        /// <param name="card"></param>
+        
         public void AddToDiscardPile(Card card)
         {
             discardPile.Add(card);

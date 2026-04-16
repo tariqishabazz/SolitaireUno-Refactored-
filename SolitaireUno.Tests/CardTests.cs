@@ -11,28 +11,18 @@ namespace SolitaireUno.Tests
         [Fact]
         public void IsEqual_ReturnsTrue_ForIndenticalCards()
         {
-            // Arrange
             var card1 = new RegularCard(Suits.Spades, Values.Queen);
             var card2 = new RegularCard(Suits.Spades, Values.Queen);
-
-            // Act
             bool areEqual = card1.IsEqual(card2);
-
-            // Assert
             Assert.True(areEqual);
         }
 
         [Fact]
         public void IsEqual_ReturnsFalse_DifferentSuits()
         {
-            // Arrange
             var card1 = new RegularCard(Suits.Spades, Values.Queen);
             var card2 = new RegularCard(Suits.Diamonds, Values.Queen);
-
-            // Act 
             bool areEqual = card1.IsEqual(card2);
-
-            // Assert
             Assert.False(areEqual);
         }
     }

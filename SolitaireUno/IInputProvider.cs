@@ -10,5 +10,4 @@ namespace SolitaireUno
     {
         string GetInput();
     }
-}
- 
+} 

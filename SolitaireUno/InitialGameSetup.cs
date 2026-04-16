@@ -6,27 +6,16 @@ using System.Threading.Tasks;
 
 namespace SolitaireUno
 {
-    /// <summary>
-    /// Handles the initial setup of the game, including dealing cards to players and preparing the deck.
-    /// </summary>
     public static class InitialGameSetup
     {
-        /// <summary>
-        /// Sets up the game by dealing cards to the player and computer and shuffling the deck.
-        /// </summary>
-        /// <param name="player">The human player to receive cards.</param>
-        /// <param name="computer">The computer player to receive cards.</param>
-        /// <param name="deck">The deck to deal cards from.</param>
         public static void SetupGame(Player player, Computer computer, Deck deck)
         {
-            // Deal 10 cards to the human and computer players
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 7; i++)
             {
-                Card playerCard = deck.DealCard()!; // Deal a card from the deck
-                player.PickupCard(playerCard); // Add the card to the player's hand
-
-                Card computerCard = deck.DealCard()!; // Deal a card from the deck
-                computer.PickupCard(computerCard); // Add the card to the computer's hand
+                Card playerCard = deck.DealCard()!;
+                player.PickupCard(playerCard);
+                Card computerCard = deck.DealCard()!;
+                computer.PickupCard(computerCard);
             }
         }
     }
