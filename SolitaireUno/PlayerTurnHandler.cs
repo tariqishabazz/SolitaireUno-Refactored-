@@ -86,7 +86,7 @@ namespace SolitaireUno
                     }
                     else if (playerDecision == "p.u" || playerDecision == "pu" || playerDecision == "pick up" || playerDecision == "pickup") // Pick up
                     {
-                        if (deck.Length() > 0)
+                        if (deck.Length() > 0 || deck.Length() == 0 && !Deck.deckReshuffled)
                         {
                             Card card = deck.DealCard()!; // Draw a card
                             player.PickupCard(card); // Add to hand
@@ -115,8 +115,10 @@ namespace SolitaireUno
 
                         else if(deck.Length() == 0 && Deck.deckReshuffled)
                         {
+                            output.WriteLine("\n---------------------------------------------------------------------");
                             output.WriteLine("There are no more cards in the deck, either pass or play!");
                         }
+                        
                     }
                     else if (playerDecision == "pass" || playerDecision == "p") // Pass
                     {
@@ -132,6 +134,7 @@ namespace SolitaireUno
                     }
                     else
                     {
+                        output.WriteLine("\n---------------------------------------------------------------------");
                         output.WriteLine("That is not a valid decision, please try again");
                     }
                 }

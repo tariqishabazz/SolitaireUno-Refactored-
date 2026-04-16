@@ -6,6 +6,7 @@ namespace SolitaireUno
     public class Deck
     {
         Random random = new();
+        
         private List<Card> gameDeck = [];
         private List<Card> discardPile = [];
         
@@ -22,29 +23,35 @@ namespace SolitaireUno
                     gameDeck.Add(new RegularCard(suit, value));
                 }
             }
-            foreach(SpecialCardType specialCard in Enum.GetValues<SpecialCardType>())
+
+            foreach (SpecialCardType specialCard in Enum.GetValues<SpecialCardType>())
             {
                 gameDeck.Add(new SpecialCard(specialCard));
             }
-            
+
             RegularCard penaltyCard = new(Suits.Spades, Values.Queen);
-            
+
             InHouseShuffle();
-        
+
             int index = 0;
             foreach (Card card in gameDeck)
             {
                 if (card is RegularCard regularCard)
                     if (regularCard.IsEqual(penaltyCard))
-                        break;           
+                        break;
                 index++;
             }
-            
+
             gameDeck.RemoveAt(index);
             int randomPosition = random.Next(22, 45);
             gameDeck.Insert(randomPosition, penaltyCard);
         }
         
+        public void AddRange(List<Card> cardsToAdd)
+        {
+            gameDeck.AddRange(cardsToAdd);
+        }
+
         public void InHouseShuffle()
         {
             if (gameDeck is not null)
@@ -56,12 +63,10 @@ namespace SolitaireUno
                 }
             }
         }
-        
+
         public int Length()
         {
-            if(gameDeck is not null)
-                return gameDeck.Count;
-            return 0;
+            return gameDeck.Count;
         }
         
         public Card? DealCard()

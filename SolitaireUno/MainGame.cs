@@ -2,46 +2,66 @@
 {
     public class MainGame
     {
-        Player player = new();
-        Computer computer = new();
-        Deck gameDeck = new();
+        public static Player player = new();
+        public static Computer computer = new();
+        public Deck gameDeck = new();
         
-        private readonly IInputProvider _input;
-        private readonly IOutputProvider _output;
-        private readonly PlayerTurnHandler _playerTurnHandler;
-        private readonly ComputerTurnHandler _computerTurnHandler;
+        internal static IInputProvider Input { get; set; }
+        internal static IOutputProvider Output { get; set; }
+        
+        internal PlayerTurnHandler _playerTurnHandler;
+        internal ComputerTurnHandler _computerTurnHandler;
         
         internal static GameMode GameModeChoice { get; set; }
         internal static bool SuitEnforcement { get; set; }
 
         public MainGame(IInputProvider input, IOutputProvider output, Deck deck, GameMode gameModeChoice, bool suitEnforcement)
         {
-            _input = input;
-            _output = output;
+            Input = input;
+            Output = output;
             gameDeck = deck;
             GameModeChoice = gameModeChoice;
             SuitEnforcement = suitEnforcement;
 
-            _playerTurnHandler = new(player, gameDeck, _input, _output);
-            _computerTurnHandler = new(computer, gameDeck, _output);
+            _playerTurnHandler = new(player, gameDeck, Input, Output);
+            _computerTurnHandler = new(computer, gameDeck, Output);
 
             InitialGameSetup.SetupGame(player, computer, gameDeck);
         }
 
         public void StartGame()
         {
+            bool isPlayerTurn = true;
+
             RegularCard penaltyCard = new(Suits.Spades, Values.Queen);
+
+
             Card currentCard = gameDeck.DealCard()!;
 
-            bool isPlayerTurn = true;
+            if (currentCard is not null)
+            {
+                List<Card> temporarySpecialCards = [];
+
+                while (currentCard is SpecialCard)
+                {
+                    temporarySpecialCards.Add(currentCard);
+
+                    if (gameDeck.Length() > 0)
+                    {
+                        currentCard = gameDeck.DealCard()!;
+                    }
+                    gameDeck.AddRange(temporarySpecialCards);
+                    gameDeck.InHouseShuffle();
+
+                }
+            }
 
             while (player.Hand.Count > 0 && computer.Hand.Count > 0)
             {
                 if (isPlayerTurn)
-                    ShowHand();
-
-                if (isPlayerTurn)
                 {
+                    GameMethods.ShowHand();
+
                     Card? cardPlayed = _playerTurnHandler.HandleTurn(ref currentCard, penaltyCard);
                     if (cardPlayed != null)
                     {
@@ -54,31 +74,47 @@
 
                             case ActionInstruction.ChangeOrder:
                                 GameModeChoice = GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
-                                _output.WriteLine($"\nThe game mode is now {GameModeChoice}");
+                                Output.WriteLine($"\nThe game mode is now {GameModeChoice}");
+                                
+                                isPlayerTurn = false;
                                 break;
 
                             case ActionInstruction.SkipTurn:
-                                _output.WriteLine($"\nThe computer has been skipped!");
+                                Output.WriteLine($"\nThe computer has been skipped!");
                                 break;
 
                             case ActionInstruction.DrawFour:
                                 for (int i = 0; i < 4; i++)
                                 {
-                                    Card drawnCard = gameDeck.DealCard()!;
-                                    computer.PickupCard(drawnCard);
+                                    Card? drawnCard = gameDeck.DealCard();
+                                    if (drawnCard is not null)
+                                    {
+                                        computer.PickupCard(drawnCard);
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
                                 }
 
-                                _output.WriteLine($"\nThe computer just picked up 4 cards.");
+                                Output.WriteLine($"\nThe computer just picked up 4 cards.");
                                 break;
 
                             case ActionInstruction.DrawTwo:
                                 for (int i = 0; i < 2; i++)
                                 {
-                                    Card drawnCard = gameDeck.DealCard()!;
-                                    computer.PickupCard(drawnCard);
+                                    Card? drawnCard = gameDeck.DealCard();
+                                    if (drawnCard is not null)
+                                    {
+                                        computer.PickupCard(drawnCard);
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
                                 }
 
-                                _output.WriteLine("\nThe computer just picked up 2 cards");
+                                Output.WriteLine("\nThe computer just picked up 2 cards");
                                 break;
                         };
                     }
@@ -101,35 +137,51 @@
 
                             case ActionInstruction.ChangeOrder:
                                 GameModeChoice = GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
-                                _output.WriteLine("\n---------------------------------------------------------------------");
-                                _output.WriteLine($"\nThe game mode is now {GameModeChoice}");
+                                Output.WriteLine("\n---------------------------------------------------------------------");
+                                Output.WriteLine($"\nThe game mode is now {GameModeChoice}");
+                                
+                                isPlayerTurn = true;
                                 break;
 
                             case ActionInstruction.SkipTurn:
-                                _output.WriteLine("\n---------------------------------------------------------------------");
-                                _output.WriteLine($"\nYou have been skipped!");
+                                Output.WriteLine("\n---------------------------------------------------------------------");
+                                Output.WriteLine($"\nYou have been skipped!");
                                 break;
 
                             case ActionInstruction.DrawFour:
                                 for (int i = 0; i < 4; i++)
                                 {
-                                    Card drawnCard = gameDeck.DealCard()!;
-                                    player.PickupCard(drawnCard);
+                                    Card? drawnCard = gameDeck.DealCard();
+                                    if (drawnCard is not null)
+                                    {
+                                        player.PickupCard(drawnCard);
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
                                 }
 
-                                _output.WriteLine("\n---------------------------------------------------------------------");
-                                _output.WriteLine($"\nYou had to pick up 4 cards");
+                                Output.WriteLine("\n---------------------------------------------------------------------");
+                                Output.WriteLine($"\nYou had to pick up 4 cards");
                                 break;
 
                             case ActionInstruction.DrawTwo:
                                 for (int i = 0; i < 2; i++)
                                 {
-                                    Card drawnCard = gameDeck.DealCard()!;
-                                    player.PickupCard(drawnCard);
+                                    Card? drawnCard = gameDeck.DealCard();
+                                    if (drawnCard is not null)
+                                    {
+                                        player.PickupCard(drawnCard);
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
                                 }
 
-                                _output.WriteLine("\n---------------------------------------------------------------------");
-                                _output.WriteLine($"\nYou had to pick up 2 cards");
+                                Output.WriteLine("\n---------------------------------------------------------------------");
+                                Output.WriteLine($"\nYou had to pick up 2 cards");
                                 break;
                         };
                     }
@@ -139,7 +191,7 @@
                     }
                 }
             }
-            GameOverStats();
+            GameMethods.GameOverStats();
         }
 
         static void Main()
@@ -147,39 +199,5 @@
             GameIntroduction.ShowGameIntroduction();
         }
 
-        public void ShowHand()
-        {
-            _output.WriteLine("\n---------------------------------------------------------------------");
-            _output.WriteLine("Your Hand: ");
-
-            int index = 0;
-            foreach (Card card in player.Hand)
-            {
-                _output.WriteLine($"   {index + 1}) {card}");
-                index++;
-            }
-
-            _output.WriteLine($"\nYou now have {player.Hand.Count} cards");
-            _output.WriteLine($"The Computer now has {computer.Hand.Count} cards");
-        }
-
-        public Player? GameOverStats()
-        {
-            _output.WriteLine("\n\n\n-------------------------------------------------------------");
-            _output.WriteLine("Game Over!");
-
-            if (computer.Hand.Count == 0)
-            {
-                _output.WriteLine("\nYou Lose! You've been bested by the machine :(");
-                return computer;
-            }
-            else if (player.Hand.Count == 0)
-            {
-                _output.WriteLine("\nYou Win! You beat the computer! Congrats! :)");
-                return player;
-            }
-
-            return null;
-        }
     }
 }

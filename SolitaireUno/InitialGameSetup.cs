@@ -10,10 +10,11 @@ namespace SolitaireUno
     {
         public static void SetupGame(Player player, Computer computer, Deck deck)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Card playerCard = deck.DealCard()!;
                 player.PickupCard(playerCard);
+                
                 Card computerCard = deck.DealCard()!;
                 computer.PickupCard(computerCard);
             }

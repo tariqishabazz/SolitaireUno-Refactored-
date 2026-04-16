@@ -32,7 +32,7 @@ namespace SolitaireUno
                 ");
             
             realOutput.Write("Are You Ready to Play? ");
-            string playerChoice = realInput.GetInput().ToLower();
+            string playerChoice = realInput.GetInput().ToLower().Trim();
             
             if (playerChoice == "yes" || playerChoice == "y")
             {
@@ -40,7 +40,7 @@ namespace SolitaireUno
                 while (!validSuitEnforcementChoice)
                 {
                     realOutput.Write("\nOkay, Would You Like to Enable Suit Enforcement? ");
-                    SuitEnforcementChoice = realInput.GetInput().ToLower();
+                    SuitEnforcementChoice = realInput.GetInput().ToLower().Trim();
 
                     if (SuitEnforcementChoice.Equals("yes") || SuitEnforcementChoice.Equals("y"))
                     {
@@ -65,7 +65,7 @@ namespace SolitaireUno
                 while (!validModeChoice)
                 {
                     realOutput.Write("\nNow... Would You Like to Play the Cards in Ascending (a) or Descending (d) Order? >> ");
-                    PlayerGameModeChoice = realInput.GetInput().ToLower();
+                    PlayerGameModeChoice = realInput.GetInput().ToLower().Trim();
                     
                     if (PlayerGameModeChoice.Equals("ascending") || PlayerGameModeChoice.Equals("descending") || PlayerGameModeChoice.Equals("a") || PlayerGameModeChoice.Equals("d"))
                     {

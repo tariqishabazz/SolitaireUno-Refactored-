@@ -14,11 +14,17 @@ namespace SolitaireUno
         private readonly IOutputProvider _output = output;
         public Card? HandleTurn(ref Card currentCard, Card penaltyCard, int opponentHandSize)
         {
+            //_output.WriteLine("\n                 Computer is Thinking...");
+            
+            // Random random = new();
+            // Thread.Sleep(random.Next(3000) + 1000);
+
             Card? potentialComputerPlay = _computer.MakeMove(currentCard, opponentHandSize);
             if (potentialComputerPlay != null)
             {
                 if (potentialComputerPlay is RegularCard)
                     currentCard = potentialComputerPlay;
+                
                 _output.WriteLine($"\nComputer played: {potentialComputerPlay}");
                 
                 _computer.PlayCard(potentialComputerPlay);

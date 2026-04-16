@@ -1,7 +1,9 @@
 ﻿using SolitaireUno;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +12,7 @@ namespace SolitaireUno
 {
     public class GameMethods
     {
-        
+
         public static bool ValidCard(Card potentialPlay, Card currentlyShown, GameMode gameMode)
         {
             bool isValidSequence = false;
@@ -103,6 +105,41 @@ namespace SolitaireUno
             bool isSecondCardRed = (secondRegularCard.Suit.Equals(Suits.Hearts) || secondRegularCard.Suit.Equals(Suits.Diamonds));
 
             return isFirstCardRed != isSecondCardRed;
-        } 
+        }
+
+        public static void ShowHand()
+        {
+            MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
+            MainGame.Output.WriteLine("Your Hand: ");
+
+            int index = 0;
+            foreach (Card card in MainGame.player.Hand)
+            {
+                MainGame.Output.WriteLine($"   {index + 1}) {card}");
+                index++;
+            }
+
+            MainGame.Output.WriteLine($"\nYou now have {MainGame.player.Hand.Count} cards");
+            MainGame.Output.WriteLine($"The Computer now has {MainGame.computer.Hand.Count} cards");
+        }
+
+        public static Player? GameOverStats()
+        {
+            MainGame.Output.WriteLine("\n\n\n-------------------------------------------------------------");
+            MainGame.Output.WriteLine("Game Over!");
+
+            if (MainGame.computer.Hand.Count == 0)
+            {
+                MainGame.Output.WriteLine("\nYou Lose! You've been bested by the machine :(");
+                return MainGame.computer;
+            }
+            else if (MainGame.player.Hand.Count == 0)
+            {
+                MainGame.Output.WriteLine("\nYou Win! You beat the computer! Congrats! :)");
+                return MainGame.player;
+            }
+
+            return null;
+        }
     }
 }
