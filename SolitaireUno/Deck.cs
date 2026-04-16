@@ -8,6 +8,11 @@ namespace SolitaireUno
         Random random = new();
         private List<Card> gameDeck = [];
         private List<Card> discardPile = [];
+        
+        private ConsoleOutput output = new();
+
+        internal static bool deckReshuffled = false;
+
         public Deck()
         {
             foreach (Values value in Enum.GetValues<Values>())
@@ -67,21 +72,34 @@ namespace SolitaireUno
                 {
                     Card dealtCard = gameDeck[0];
                     gameDeck.RemoveAt(0);
+
                     return dealtCard;
                 }
                 else
                 {
-                    int lastCardIndex = discardPile.Count - 1;
-                    Card lastCardOnTable = discardPile[lastCardIndex];
-                    discardPile.RemoveAt(lastCardIndex);
+                    if (!deckReshuffled)
+                    {
+                        int lastCardIndex = discardPile.Count - 1;
+                        Card lastCardOnTable = discardPile[lastCardIndex];
+                        discardPile.RemoveAt(lastCardIndex);
 
-                    gameDeck.AddRange(discardPile);
-                    discardPile.Clear();
+                        discardPile.RemoveAll(card => card is SpecialCard specialCard && specialCard.CardType.Equals(SpecialCardType.ChangeOrder));
 
-                    InHouseShuffle();
-                    discardPile.Add(lastCardOnTable);
-                    
-                    return DealCard();
+                        gameDeck.AddRange(discardPile);
+                        discardPile.Clear();
+
+                        InHouseShuffle();
+                        discardPile.Add(lastCardOnTable);
+
+                        output.WriteLine("\nDeck has been reshuffled!");
+                        deckReshuffled = true;
+
+                        return DealCard();
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
             else

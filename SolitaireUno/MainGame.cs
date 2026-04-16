@@ -101,12 +101,12 @@
 
                             case ActionInstruction.ChangeOrder:
                                 GameModeChoice = GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
-                                _output.WriteLine("---------------------------------------------------------------------");
+                                _output.WriteLine("\n---------------------------------------------------------------------");
                                 _output.WriteLine($"\nThe game mode is now {GameModeChoice}");
                                 break;
 
                             case ActionInstruction.SkipTurn:
-                                _output.WriteLine("---------------------------------------------------------------------");
+                                _output.WriteLine("\n---------------------------------------------------------------------");
                                 _output.WriteLine($"\nYou have been skipped!");
                                 break;
 
@@ -117,7 +117,7 @@
                                     player.PickupCard(drawnCard);
                                 }
 
-                                _output.WriteLine("---------------------------------------------------------------------");
+                                _output.WriteLine("\n---------------------------------------------------------------------");
                                 _output.WriteLine($"\nYou had to pick up 4 cards");
                                 break;
 
@@ -128,7 +128,7 @@
                                     player.PickupCard(drawnCard);
                                 }
 
-                                _output.WriteLine("---------------------------------------------------------------------");
+                                _output.WriteLine("\n---------------------------------------------------------------------");
                                 _output.WriteLine($"\nYou had to pick up 2 cards");
                                 break;
                         };
