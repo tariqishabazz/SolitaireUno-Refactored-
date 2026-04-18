@@ -42,7 +42,7 @@ namespace SolitaireUno
                 if (computerPotentialPenaltyCount > 0)
                 {
                     _output.WriteLine("\nThe computer decided to pick up and recieved the Queen of Spades!");
-                    _output.WriteLine("It recieved 5 additional cards because... why not...");
+                    _output.WriteLine("It recieved 4 additional cards because... why not...");
 
                     for (int i = 0; i < computerPotentialPenaltyCount; i++)
                     {

@@ -20,6 +20,11 @@ namespace SolitaireUno
             {
                 foreach (Suits suit in Enum.GetValues<Suits>())
                 {
+                  /*  if(suit == Suits.Hearts)
+                    {
+                        
+                    }
+                  */
                     gameDeck.Add(new RegularCard(suit, value));
                 }
             }
@@ -96,7 +101,7 @@ namespace SolitaireUno
                         InHouseShuffle();
                         discardPile.Add(lastCardOnTable);
 
-                        output.WriteLine("\nDeck has been reshuffled!");
+                        output.WriteLine("\n              Deck has been reshuffled!");
                         deckReshuffled = true;
 
                         return DealCard();

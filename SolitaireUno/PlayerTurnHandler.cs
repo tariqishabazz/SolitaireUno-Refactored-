@@ -30,19 +30,6 @@ namespace SolitaireUno
 
             while (!playerChoiceValid)
             {
-                output.WriteLine("---------------------------------------------------------------------"); // Print turn separator
-                output.WriteLine($"\n            The Current Card is... {currentCard}"); // Show the current card
-
-
-                if (deck.Length() > 0)
-                {
-                    output.WriteLine($"\n                There are {deck.Length()} cards in the deck!"); // Show deck size
-                }
-                else if(deck.Length() == 0 && Deck.deckReshuffled)
-                {
-                    output.WriteLine("\nThere are no more cards in the deck!"); // Deck is empty
-                }
-
                 output.Write("\nPlay a Card (1 - # of Cards in Hand), Pick-Up (p.u), or Pass (p) >> "); // Prompt for action
                 string playerDecision = input.GetInput().ToLower(); // Get and normalize input
 
@@ -96,7 +83,7 @@ namespace SolitaireUno
                             {
                                 output.WriteLine("\n---------------------------------------------------------------------");
                                 output.WriteLine("\nYou decided to pick up and recieved the Queen of Spades! HAHAHAHA");
-                                output.WriteLine("You recieved 5 additional cards because... why not...");
+                                output.WriteLine("You recieved 4 additional cards because... why not...");
                             }
                             else
                             {
@@ -129,6 +116,7 @@ namespace SolitaireUno
                         }
                         else
                         {
+                            output.WriteLine("You decided to pass!");
                             playerChoiceValid = true; // End turn
                         }
                     }

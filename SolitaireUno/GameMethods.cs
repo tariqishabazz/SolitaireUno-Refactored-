@@ -8,19 +8,20 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
+//Console.OutputEncoding = System.Text.Encoding.UTF8;
+
 namespace SolitaireUno
 {
     public class GameMethods
     {
-
         public static bool ValidCard(Card potentialPlay, Card currentlyShown, GameMode gameMode)
         {
             bool isValidSequence = false;
 
             if (potentialPlay is RegularCard firstRegularCard && currentlyShown is RegularCard secondRegularCard)
             {
-                isValidSequence = gameMode == GameMode.Descending 
-                    ? IsValidDescending(potentialPlay, currentlyShown) 
+                isValidSequence = gameMode == GameMode.Descending
+                    ? IsValidDescending(potentialPlay, currentlyShown)
                     : IsValidAscending(potentialPlay, currentlyShown);
 
                 if (!isValidSequence)
@@ -36,25 +37,25 @@ namespace SolitaireUno
                 return IsSpecialCard(potentialPlay);
             }
         }
-        
+
         private static bool IsValidDescending(Card potentialPlay, Card currentlyShown)
         {
             if (potentialPlay is RegularCard potentialCard && currentlyShown is RegularCard currentCard)
                 if ((int)potentialCard.Value == (int)currentCard.Value - 1)
                     return true;
-            
+
             return IsWrapAround(potentialPlay, currentlyShown, GameMode.Descending);
         }
-        
+
         private static bool IsValidAscending(Card potentialPlay, Card currentlyShown)
         {
-            if(potentialPlay is RegularCard potentialCard && currentlyShown is RegularCard currentCard)
+            if (potentialPlay is RegularCard potentialCard && currentlyShown is RegularCard currentCard)
                 if ((int)potentialCard.Value == (int)currentCard.Value + 1)
                     return true;
-            
+
             return IsWrapAround(potentialPlay, currentlyShown, GameMode.Ascending);
         }
-        
+
         private static bool IsWrapAround(Card potentalPlay, Card currentlyShown, GameMode gameMode)
         {
             if (potentalPlay is RegularCard potentialCard && currentlyShown is RegularCard currentCard)
@@ -65,31 +66,32 @@ namespace SolitaireUno
             else
                 return false;
         }
-        
-        public static bool IsSpecialCard(Card potentialPlay) =>  potentialPlay is SpecialCard;
 
-        private const int PenaltyCardCount = 5;
+        public static bool IsSpecialCard(Card potentialPlay) => potentialPlay is SpecialCard;
+
         public static int GetPenaltyCount(Card dealtCard, Card penaltyCard)
         {
+            const int PenaltyCardCount = 4;
+
             if (dealtCard is RegularCard regularCard)
                 return regularCard.IsEqual(penaltyCard) ? PenaltyCardCount : 0;
             else
                 return 0;
         }
-        
+
         public static ActionInstruction SpecialCardAction(Card currentCard)
         {
             if (currentCard is SpecialCard specialCard)
             {
                 if (specialCard.CardType.Equals(SpecialCardType.Skip))
                     return ActionInstruction.SkipTurn;
-                
+
                 else if (specialCard.CardType.Equals(SpecialCardType.ChangeOrder))
                     return ActionInstruction.ChangeOrder;
-                
-                else if(specialCard.CardType.Equals(SpecialCardType.DrawFour))
+
+                else if (specialCard.CardType.Equals(SpecialCardType.DrawFour))
                     return ActionInstruction.DrawFour;
-                
+
                 else
                     return ActionInstruction.DrawTwo;
             }
@@ -140,6 +142,150 @@ namespace SolitaireUno
             }
 
             return null;
+        }
+
+        public static bool PotentialPlayerAction()
+        {
+            bool computerSkipped = false;
+
+            if (MainGame.LastPlayedCard is not null)
+            {
+                ActionInstruction message = SpecialCardAction(MainGame.LastPlayedCard);
+                switch (message)
+                {
+                    case ActionInstruction.DoNothing:
+                        MainGame.IsPlayerTurn = false;
+                        break;
+
+                    case ActionInstruction.ChangeOrder:
+                        MainGame.GameModeChoice = MainGame.GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
+                        MainGame.Output.WriteLine($"\nThe game mode is now {MainGame.GameModeChoice}");
+
+                        MainGame.IsPlayerTurn = false;
+                        break;
+
+                    case ActionInstruction.SkipTurn:
+                        MainGame.Output.WriteLine($"\nThe computer has been skipped!");
+                        computerSkipped = true;
+                        break;
+
+                    case ActionInstruction.DrawFour:
+                        for (int i = 0; i < 4; i++)
+                        {
+                            Card? drawnCard = MainGame.gameDeck.DealCard();
+                            if (drawnCard is not null)
+                            {
+                                MainGame.computer.PickupCard(drawnCard);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        MainGame.Output.WriteLine($"\nThe computer just picked up 4 cards.");
+                        break;
+
+                    case ActionInstruction.DrawTwo:
+                        for (int i = 0; i < 2; i++)
+                        {
+                            Card? drawnCard = MainGame.gameDeck.DealCard();
+                            if (drawnCard is not null)
+                            {
+                                MainGame.computer.PickupCard(drawnCard);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        MainGame.Output.WriteLine("\nThe computer just picked up 2 cards");
+                        break;
+                };
+            }
+            return computerSkipped;
+        }
+        public static bool PotentialComputerAction()
+        {
+            bool playerSkipped = false;
+
+            if (MainGame.LastPlayedCard is not null)
+            {
+                ActionInstruction message = SpecialCardAction(MainGame.LastPlayedCard);
+                switch (message)
+                {
+                    case ActionInstruction.DoNothing:
+                        MainGame.IsPlayerTurn = true;
+                        break;
+
+                    case ActionInstruction.ChangeOrder:
+                        MainGame.GameModeChoice = MainGame.GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
+                        MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
+                        MainGame.Output.WriteLine($"\nThe game mode is now {MainGame.GameModeChoice}");
+
+                        MainGame.IsPlayerTurn = true;
+                        break;
+
+                    case ActionInstruction.SkipTurn:
+                        MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
+                        MainGame.Output.WriteLine($"\nYou have been skipped!");
+                        
+                        playerSkipped = true;
+                        break;
+
+                    case ActionInstruction.DrawFour:
+                        for (int i = 0; i < 4; i++)
+                        {
+                            Card? drawnCard = MainGame.gameDeck.DealCard();
+
+                            if (drawnCard is not null)
+                                MainGame.player.PickupCard(drawnCard);
+                            else
+                                break;
+                        }
+
+                        MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
+                        MainGame.Output.WriteLine($"\nYou had to pick up 4 cards");
+
+                        break;
+
+                    case ActionInstruction.DrawTwo:
+                        for (int i = 0; i < 2; i++)
+                        {
+                            Card? drawnCard = MainGame.gameDeck.DealCard();
+
+                            if (drawnCard is not null)
+                                MainGame.player.PickupCard(drawnCard);
+                            else
+                                break;
+                        }
+
+                        MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
+                        MainGame.Output.WriteLine($"\nYou had to pick up 2 cards");
+
+                        break;
+                }
+                ;
+            }
+            return playerSkipped;
+        }
+
+        public static void ShowRoundSummary(Card currentCard)
+        {
+            MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
+            MainGame.Output.WriteLine($"\nCurrent Card: {currentCard}");
+            
+            int deckLength = MainGame.gameDeck.Length();
+            
+            if (deckLength > 0)
+                MainGame.Output.WriteLine($"\nDeck has {deckLength} cards remaining.");
+            
+            else if (Deck.deckReshuffled)
+                MainGame.Output.WriteLine("\nNo more cards in the deck!");
+            
+            else
+                MainGame.Output.WriteLine("No more cards in the deck, but someone can pick up to reshuffle!");
         }
     }
 }
