@@ -30,7 +30,32 @@ namespace SolitaireUno
 
             while (!playerChoiceValid)
             {
+                // Show current card and deck info ONCE at the start of the turn
+                output.WriteLine("\n---------------------------------------------------------------------");
+                output.WriteLine($"\n                  Current Card | {currentCard}");
+                
+                output.WriteLine($"\n                       Order = {MainGame.GameModeChoice}");
+
+                int deckLength = MainGame.GameDeck.Length();
+                
+                string message = deckLength switch
+                {
+                    1 => $"Deck has {deckLength} card remaining!",
+                    > 0 => $"Deck has {deckLength} cards remaining!",
+                    _ when Deck.deckReshuffled => "No more cards in the deck!",
+                    _ => "No more cards in the deck, but someone can pick up to reshuffle!"
+                };
+
+                if(Deck.deckReshuffled && MainGame.GameDeck.Length() > 0)
+                    output.WriteLine($"\n\nDeck has been reshuffled with {MainGame.GameDeck.Length()} cards remaining");
+                else
+                    output.WriteLine($"\n\n{message}");
+
+
+                GameMethods.ShowHand();
+
                 output.Write("\nPlay a Card (1 - # of Cards in Hand), Pick-Up (p.u), or Pass (p) >> "); // Prompt for action
+                
                 string playerDecision = input.GetInput().ToLower(); // Get and normalize input
 
                 if (playerDecision != null)
@@ -53,7 +78,7 @@ namespace SolitaireUno
                                 }
 
                                 output.WriteLine("---------------------------------------------------------------------");
-                                output.WriteLine($"\nYou played {potentialCard}, so...");
+                                output.WriteLine($"\nYou played {potentialCard}, but...");
                                 
                                 playerChoiceValid = true; // End turn
 
@@ -62,13 +87,13 @@ namespace SolitaireUno
                             else
                             {
                                 output.WriteLine("\n---------------------------------------------------------------------");
-                                output.WriteLine("That is not a valid play, please choose again"); // Invalid move
+                                output.WriteLine("\nThat is not a valid play, please choose again"); // Invalid move
                             }
                         }
                         else
                         {
                             output.WriteLine("\n---------------------------------------------------------------------");
-                            output.WriteLine("That is an invalid input based on your current cards, please choose again."); // Invalid index
+                            output.WriteLine("\nThat is an invalid input based on your current cards, please choose again."); // Invalid index
                         }
                     }
                     else if (playerDecision == "p.u" || playerDecision == "pu" || playerDecision == "pick up" || playerDecision == "pickup") // Pick up
@@ -82,13 +107,13 @@ namespace SolitaireUno
                             if (playerPotentialPenaltyCount > 0)
                             {
                                 output.WriteLine("\n---------------------------------------------------------------------");
-                                output.WriteLine("\nYou decided to pick up and recieved the Queen of Spades! HAHAHAHA");
-                                output.WriteLine("You recieved 4 additional cards because... why not...");
+                                output.WriteLine("\nYou decided to pick up and received the Queen of Spades! HAHAHAHA");
+                                output.WriteLine("You received 4 additional cards because... why not...");
                             }
                             else
                             {
                                 output.WriteLine("---------------------------------------------------------------------");
-                                output.WriteLine("\nYou decided to pick up!");
+                                output.WriteLine("\nYou decided to pick up so...");
                             }
 
                             for (int i = 0; i < playerPotentialPenaltyCount; i++) // Add penalty cards
@@ -103,7 +128,7 @@ namespace SolitaireUno
                         else if(deck.Length() == 0 && Deck.deckReshuffled)
                         {
                             output.WriteLine("\n---------------------------------------------------------------------");
-                            output.WriteLine("There are no more cards in the deck, either pass or play!");
+                            output.WriteLine("\nThere are no more cards in the deck, either pass or play!");
                         }
                         
                     }
@@ -112,24 +137,25 @@ namespace SolitaireUno
                         if (deck.Length() > 0)
                         {
                             output.WriteLine("\n---------------------------------------------------------------------");
-                            output.WriteLine("There are still cards in the deck, either play or pick up!"); // Can't pass yet
+                            output.WriteLine("\nThere are still cards in the deck, either play or pick up!"); // Can't pass yet
                         }
                         else
                         {
-                            output.WriteLine("You decided to pass!");
+                            output.WriteLine("\n---------------------------------------------------------------------");
+                            output.WriteLine("\nYou decided to pass so...");
                             playerChoiceValid = true; // End turn
                         }
                     }
                     else
                     {
                         output.WriteLine("\n---------------------------------------------------------------------");
-                        output.WriteLine("That is not a valid decision, please try again");
+                        output.WriteLine("\nThat is not a valid decision, please try again");
                     }
                 }
                 else
                 {
                     output.WriteLine("\n---------------------------------------------------------------------");
-                    output.WriteLine("You did not make a decision, please try again"); // No input
+                    output.WriteLine("\nYou did not make a decision, please try again"); // No input
                 }
             }
             return null;

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SolitaireUno
 {
-    public static class InitialGameSetup
+    public static class GameSetup
     {
         public static void SetupGame(Player player, Computer computer, Deck deck)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Card playerCard = deck.DealCard()!;
                 player.PickupCard(playerCard);

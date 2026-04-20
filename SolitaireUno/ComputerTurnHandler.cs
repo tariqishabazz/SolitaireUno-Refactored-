@@ -25,7 +25,7 @@ namespace SolitaireUno
                 if (potentialComputerPlay is RegularCard)
                     currentCard = potentialComputerPlay;
                 
-                _output.WriteLine($"\nComputer played: {potentialComputerPlay}");
+                _output.WriteLine($"\nthe Computer played: {potentialComputerPlay}");
                 
                 _computer.PlayCard(potentialComputerPlay);
                 
@@ -41,7 +41,7 @@ namespace SolitaireUno
                 int computerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard);
                 if (computerPotentialPenaltyCount > 0)
                 {
-                    _output.WriteLine("\nThe computer decided to pick up and recieved the Queen of Spades!");
+                    _output.WriteLine("\nthe computer decided to pick up and recieved the Queen of Spades!");
                     _output.WriteLine("It recieved 4 additional cards because... why not...");
 
                     for (int i = 0; i < computerPotentialPenaltyCount; i++)
@@ -51,12 +51,12 @@ namespace SolitaireUno
                 }
                 else
                 {
-                    _output.WriteLine("\nComputer couldn't make a move... and picked up");
+                    _output.WriteLine("\nthe Computer couldn't make a move... and picked up");
                 }
             }
             else if (_deck.Length() == 0 && Deck.deckReshuffled)
             {
-                _output.WriteLine("\nThe Computer couldn't play or pickup, so it passed..."); 
+                _output.WriteLine("\nthe Computer couldn't play or pickup, so it passed..."); 
             }
             
             return null;

@@ -127,8 +127,7 @@ namespace SolitaireUno
 
         public static Player? GameOverStats()
         {
-            MainGame.Output.WriteLine("\n\n\n-------------------------------------------------------------");
-            MainGame.Output.WriteLine("Game Over!");
+            MainGame.Output.WriteLine("\n\n------------------------------------ GAME OVER! ------------------------------------");
 
             if (MainGame.computer.Hand.Count == 0)
             {
@@ -140,7 +139,6 @@ namespace SolitaireUno
                 MainGame.Output.WriteLine("\nYou Win! You beat the computer! Congrats! :)");
                 return MainGame.player;
             }
-
             return null;
         }
 
@@ -172,7 +170,7 @@ namespace SolitaireUno
                     case ActionInstruction.DrawFour:
                         for (int i = 0; i < 4; i++)
                         {
-                            Card? drawnCard = MainGame.gameDeck.DealCard();
+                            Card? drawnCard = MainGame.GameDeck.DealCard();
                             if (drawnCard is not null)
                             {
                                 MainGame.computer.PickupCard(drawnCard);
@@ -189,7 +187,7 @@ namespace SolitaireUno
                     case ActionInstruction.DrawTwo:
                         for (int i = 0; i < 2; i++)
                         {
-                            Card? drawnCard = MainGame.gameDeck.DealCard();
+                            Card? drawnCard = MainGame.GameDeck.DealCard();
                             if (drawnCard is not null)
                             {
                                 MainGame.computer.PickupCard(drawnCard);
@@ -237,7 +235,7 @@ namespace SolitaireUno
                     case ActionInstruction.DrawFour:
                         for (int i = 0; i < 4; i++)
                         {
-                            Card? drawnCard = MainGame.gameDeck.DealCard();
+                            Card? drawnCard = MainGame.GameDeck.DealCard();
 
                             if (drawnCard is not null)
                                 MainGame.player.PickupCard(drawnCard);
@@ -253,7 +251,7 @@ namespace SolitaireUno
                     case ActionInstruction.DrawTwo:
                         for (int i = 0; i < 2; i++)
                         {
-                            Card? drawnCard = MainGame.gameDeck.DealCard();
+                            Card? drawnCard = MainGame.GameDeck.DealCard();
 
                             if (drawnCard is not null)
                                 MainGame.player.PickupCard(drawnCard);
@@ -274,18 +272,28 @@ namespace SolitaireUno
         public static void ShowRoundSummary(Card currentCard)
         {
             MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
-            MainGame.Output.WriteLine($"\nCurrent Card: {currentCard}");
+            MainGame.Output.WriteLine($"\n                  Current Card: {currentCard}");
             
-            int deckLength = MainGame.gameDeck.Length();
-            
-            if (deckLength > 0)
-                MainGame.Output.WriteLine($"\nDeck has {deckLength} cards remaining.");
-            
-            else if (Deck.deckReshuffled)
-                MainGame.Output.WriteLine("\nNo more cards in the deck!");
-            
-            else
-                MainGame.Output.WriteLine("No more cards in the deck, but someone can pick up to reshuffle!");
+            int deckLength = MainGame.GameDeck.Length();
+
+            switch (deckLength)
+            {
+                case > 0:
+                    if (deckLength > 1)
+                        MainGame.Output.WriteLine($"\n                 The deck has {deckLength} cards remaining.");
+                    else if (deckLength == 1)
+                        MainGame.Output.WriteLine($"\n                 The deck has {deckLength} card remaining.");
+                    break;
+                
+                default:
+                    if (Deck.deckReshuffled)
+                        MainGame.Output.WriteLine("\n                   No more cards in the deck!");
+                    else
+                        MainGame.Output.WriteLine("\n     No more cards in the deck, but someone can pick up to reshuffle!");
+                    break;
+            }
+
+            MainGame.Output.WriteLine($"\n                        Order: {MainGame.GameModeChoice}");
         }
     }
 }

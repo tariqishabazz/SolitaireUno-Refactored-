@@ -1,5 +1,7 @@
 ﻿using Xunit;
 using SolitaireUno;
+using System;
+using System.IO;
 
 namespace SolitaireUno.Tests
 {
@@ -9,19 +11,38 @@ namespace SolitaireUno.Tests
         public void DeckReshufflesCorrectly()
         {
             // arrange 
-            string simulatedPickup;
+            string simulatedPickup = "pu";
             
-            Deck newDeck = new Deck();
+            using var stringReader = new StringReader(simulatedPickup);
+            
+            var originalIn = Console.In;
+            
+            Console.SetIn(stringReader);
 
-            // act
-            for(int i = 0; i < newDeck.Length() - 1; i++)
+            try
             {
-                newDeck.DealCard();
+                Deck newDeck = new Deck();
+                List<Card> discardPile = [];
+
+                int setDeckLength = newDeck.Length();
+
+                // act
+                for (int i = 0; i < setDeckLength; i++)
+                {
+                    Card? dealtCard = newDeck.DealCard();
+                    
+                    if(dealtCard is not null)
+                        discardPile.Add(dealtCard);
+                }
+
+                // assert
+                Assert.Equal(discardPile.Count, newDeck.Length());
             }
-
-            simulatedPickup = MockInput.SimulatedPickUp();
-
-            // assert
+            finally
+            {
+                // Restore original input stream
+                Console.SetIn(originalIn);
+            }
         }
     }
 }

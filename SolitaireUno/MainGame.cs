@@ -1,10 +1,12 @@
-﻿namespace SolitaireUno
+﻿using System.Text;
+
+namespace SolitaireUno
 {
     public class MainGame
     {
-        public static Player player = new();
-        public static Computer computer = new();
-        public static Deck gameDeck = new();
+        public static readonly Player player = new();
+        public static readonly Computer computer = new();
+        internal static Deck GameDeck { get; set; }
 
         internal static IInputProvider Input { get; set; }
         internal static IOutputProvider Output { get; set; }
@@ -15,27 +17,29 @@
         internal static GameMode GameModeChoice { get; set; }
         internal static bool SuitEnforcement { get; set; }
 
-        public static Card? LastPlayedCard { get; private set; }
-        public static bool IsPlayerTurn { get; set; }
+        internal static Card? LastPlayedCard { get; private set; }
+        internal static bool IsPlayerTurn { get; set; }
 
         public MainGame(IInputProvider input, IOutputProvider output, Deck deck, GameMode gameModeChoice, bool suitEnforcement)
         {
             Input = input;
             Output = output;
-            gameDeck = deck;
+            GameDeck = deck;
             GameModeChoice = gameModeChoice;
             SuitEnforcement = suitEnforcement;
 
-            _playerTurnHandler = new(player, gameDeck, Input, Output);
-            _computerTurnHandler = new(computer, gameDeck, Output);
+            _playerTurnHandler = new(player, GameDeck, Input, Output);
+            _computerTurnHandler = new(computer, GameDeck, Output);
 
-            InitialGameSetup.SetupGame(player, computer, gameDeck);
+            GameSetup.SetupGame(player, computer, GameDeck);
         }
 
         public void StartGame()
         {
-            RegularCard penaltyCard = new(Suits.Spades, Values.Queen);
-            Card currentCard = gameDeck.DealCard()!;
+            RegularCard penaltyCard = new(Suits.Spades, Values.Queen);            
+            Card currentCard = GameDeck.DealCard()!;
+
+            GameDeck.AddToDiscardPile(currentCard);
 
             if (currentCard is not null)
             {
@@ -45,30 +49,25 @@
                 {
                     temporarySpecialCards.Add(currentCard);
 
-                    if (gameDeck.Length() > 0)
-                        currentCard = gameDeck.DealCard()!;
+                    if (GameDeck.Length() > 0)
+                        currentCard = GameDeck.DealCard()!;
 
-                    gameDeck.AddRange(temporarySpecialCards);
-                    gameDeck.InHouseShuffle();
+                    GameDeck.AddRange(temporarySpecialCards);
+                    GameDeck.InHouseShuffle();
                 }
             }
 
             IsPlayerTurn = true;
-
+            
             do
             {
-                if (currentCard is not null)
-                    GameMethods.ShowRoundSummary(currentCard);
-
                 if (IsPlayerTurn && currentCard is not null)
-                {
-                    GameMethods.ShowHand();
-
+                {                    
                     Card? cardPlayed = _playerTurnHandler.HandleTurn(ref currentCard, penaltyCard);
+                    
                     if (cardPlayed is not null)
                     {
                         LastPlayedCard = cardPlayed;
-                        
                         bool computerSkipped = GameMethods.PotentialPlayerAction();
                         
                         if (computerSkipped)
@@ -82,12 +81,12 @@
                 else if (!IsPlayerTurn && currentCard is not null)
                 {
                     Card? cardPlayed = _computerTurnHandler.HandleTurn(ref currentCard, penaltyCard, player.Hand.Count);
+                    
                     if (cardPlayed is not null)
                     {
                         LastPlayedCard = cardPlayed;
-                        
                         bool playerSkipped = GameMethods.PotentialComputerAction();
-                        
+
                         if (playerSkipped)
                             continue;
                     }
@@ -96,7 +95,6 @@
                         IsPlayerTurn = true;
                     }
                 }
-
             }
             while (player.Hand.Count > 0 && computer.Hand.Count > 0);
 
@@ -105,8 +103,8 @@
 
         static void Main()
         {
+            Console.OutputEncoding = Encoding.UTF8;
             GameIntroduction.ShowGameIntroduction();
         }
-
     }
 }

@@ -5,12 +5,14 @@ namespace SolitaireUno
 {
     public class Deck
     {
-        Random random = new();
+        private readonly Random random = new();
+     
+        private readonly List<Card> gameDeck = [];
+        private readonly List<Card> discardPile = [];
         
-        private List<Card> gameDeck = [];
-        private List<Card> discardPile = [];
-        
-        private ConsoleOutput output = new();
+        private readonly ConsoleOutput output = new();
+
+        private readonly int addtionalSpecialCards = 1;
 
         internal static bool deckReshuffled = false;
 
@@ -20,11 +22,11 @@ namespace SolitaireUno
             {
                 foreach (Suits suit in Enum.GetValues<Suits>())
                 {
-                  /*  if(suit == Suits.Hearts)
-                    {
-                        
-                    }
-                  */
+                    /*  if(suit == Suits.Hearts)
+                      {
+
+                      }
+                    */
                     gameDeck.Add(new RegularCard(suit, value));
                 }
             }
@@ -32,6 +34,14 @@ namespace SolitaireUno
             foreach (SpecialCardType specialCard in Enum.GetValues<SpecialCardType>())
             {
                 gameDeck.Add(new SpecialCard(specialCard));
+
+                if (specialCard != SpecialCardType.ChangeOrder)
+                {
+                    for (int i = 0; i < addtionalSpecialCards; i++)
+                    {
+                        gameDeck.Add(new SpecialCard(specialCard));
+                    }
+                }
             }
 
             RegularCard penaltyCard = new(Suits.Spades, Values.Queen);
@@ -50,8 +60,9 @@ namespace SolitaireUno
             gameDeck.RemoveAt(index);
             int randomPosition = random.Next(22, 45);
             gameDeck.Insert(randomPosition, penaltyCard);
+
         }
-        
+
         public void AddRange(List<Card> cardsToAdd)
         {
             gameDeck.AddRange(cardsToAdd);
@@ -91,9 +102,11 @@ namespace SolitaireUno
                     {
                         int lastCardIndex = discardPile.Count - 1;
                         Card lastCardOnTable = discardPile[lastCardIndex];
+
                         discardPile.RemoveAt(lastCardIndex);
 
                         discardPile.RemoveAll(card => card is SpecialCard specialCard && specialCard.CardType.Equals(SpecialCardType.ChangeOrder));
+
 
                         gameDeck.AddRange(discardPile);
                         discardPile.Clear();
@@ -101,7 +114,6 @@ namespace SolitaireUno
                         InHouseShuffle();
                         discardPile.Add(lastCardOnTable);
 
-                        output.WriteLine("\n              Deck has been reshuffled!");
                         deckReshuffled = true;
 
                         return DealCard();
