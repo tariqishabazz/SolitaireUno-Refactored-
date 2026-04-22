@@ -22,11 +22,6 @@ namespace SolitaireUno
             {
                 foreach (Suits suit in Enum.GetValues<Suits>())
                 {
-                    /*  if(suit == Suits.Hearts)
-                      {
-
-                      }
-                    */
                     gameDeck.Add(new RegularCard(suit, value));
                 }
             }
@@ -87,46 +82,46 @@ namespace SolitaireUno
         
         public Card? DealCard()
         {
-            if (gameDeck is not null)
+            switch (gameDeck)
             {
-                if (gameDeck.Count != 0)
-                {
-                    Card dealtCard = gameDeck[0];
-                    gameDeck.RemoveAt(0);
-
-                    return dealtCard;
-                }
-                else
-                {
-                    if (!deckReshuffled)
+                case not null:
                     {
-                        int lastCardIndex = discardPile.Count - 1;
-                        Card lastCardOnTable = discardPile[lastCardIndex];
+                        if (gameDeck.Count != 0)
+                        {
+                            Card dealtCard = gameDeck[0];
+                            gameDeck.RemoveAt(0);
 
-                        discardPile.RemoveAt(lastCardIndex);
+                            return dealtCard;
+                        }
+                        else
+                        {
+                            if (!deckReshuffled)
+                            {
+                                int lastCardIndex = discardPile.Count - 1;
+                                Card lastCardOnTable = discardPile[lastCardIndex];
 
-                        discardPile.RemoveAll(card => card is SpecialCard specialCard && specialCard.CardType.Equals(SpecialCardType.ChangeOrder));
+                                discardPile.RemoveAt(lastCardIndex);
+                                discardPile.RemoveAll(card => card is SpecialCard specialCard && specialCard.CardType.Equals(SpecialCardType.ChangeOrder));
 
+                                gameDeck.AddRange(discardPile);
+                                discardPile.Clear();
 
-                        gameDeck.AddRange(discardPile);
-                        discardPile.Clear();
+                                InHouseShuffle();
+                                discardPile.Add(lastCardOnTable);
 
-                        InHouseShuffle();
-                        discardPile.Add(lastCardOnTable);
+                                deckReshuffled = true;
 
-                        deckReshuffled = true;
-
-                        return DealCard();
+                                return DealCard();
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
                     }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
-            else
-            {
-                return null;
+
+                default:
+                    return null;
             }
         }
         

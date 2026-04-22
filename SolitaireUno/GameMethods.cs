@@ -144,6 +144,7 @@ namespace SolitaireUno
         public static bool PotentialPlayerAction()
         {
             bool computerSkipped = false;
+            int actualPickupCount = 0;
 
             if (MainGame.LastPlayedCard is not null)
             {
@@ -162,17 +163,18 @@ namespace SolitaireUno
                         break;
 
                     case ActionInstruction.SkipTurn:
-                        MainGame.Output.WriteLine($"\nThe computer has been skipped!");
+                        MainGame.Output.WriteLine($"\nthe Computer has been skipped!");
                         computerSkipped = true;
                         break;
 
-                    case ActionInstruction.DrawFour:
+                    case ActionInstruction.DrawFour:                        
                         for (int i = 0; i < 4; i++)
                         {
                             Card? drawnCard = MainGame.GameDeck.DealCard();
                             if (drawnCard is not null)
                             {
                                 MainGame.computer.PickupCard(drawnCard);
+                                actualPickupCount++;
                             }
                             else
                             {
@@ -180,7 +182,12 @@ namespace SolitaireUno
                             }
                         }
 
-                        MainGame.Output.WriteLine($"\nThe computer just picked up 4 cards.");
+                        if (actualPickupCount == 1)
+                            MainGame.Output.WriteLine($"\nthe Computer just picked up {actualPickupCount} card");
+
+                        else if (actualPickupCount > 1)
+                            MainGame.Output.WriteLine($"\nthe Computer just picked up {actualPickupCount} cards");
+                        
                         break;
 
                     case ActionInstruction.DrawTwo:
@@ -190,14 +197,20 @@ namespace SolitaireUno
                             if (drawnCard is not null)
                             {
                                 MainGame.computer.PickupCard(drawnCard);
+                                actualPickupCount++;
                             }
                             else
                             {
                                 break;
                             }
                         }
+                        
+                        if (actualPickupCount == 1)
+                            MainGame.Output.WriteLine($"\nthe Computer just picked up {actualPickupCount} card");
+                        
+                        else if (actualPickupCount > 1)
+                            MainGame.Output.WriteLine($"\nthe Computer just picked up {actualPickupCount} cards");
 
-                        MainGame.Output.WriteLine("\nThe computer just picked up 2 cards");
                         break;
                     
                     default:
@@ -210,6 +223,7 @@ namespace SolitaireUno
         public static bool PotentialComputerAction()
         {
             bool playerSkipped = false;
+            int actualPickupCount = 0;
 
             if (MainGame.LastPlayedCard is not null)
             {
@@ -241,14 +255,24 @@ namespace SolitaireUno
                             Card? drawnCard = MainGame.GameDeck.DealCard();
 
                             if (drawnCard is not null)
+                            {
                                 MainGame.player.PickupCard(drawnCard);
+                                actualPickupCount++;
+                            }
                             else
+                            {
                                 break;
+                            }
                         }
 
                         MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
-                        MainGame.Output.WriteLine($"\nYou had to pick up 4 cards");
-
+                        
+                        if (actualPickupCount == 1)
+                            MainGame.Output.WriteLine($"\nYou had to pick up {actualPickupCount} card");
+                        
+                        else if (actualPickupCount > 1)
+                            MainGame.Output.WriteLine($"\nYou had to pick up {actualPickupCount} cards");
+                        
                         break;
 
                     case ActionInstruction.DrawTwo:
@@ -257,13 +281,23 @@ namespace SolitaireUno
                             Card? drawnCard = MainGame.GameDeck.DealCard();
 
                             if (drawnCard is not null)
+                            {
                                 MainGame.player.PickupCard(drawnCard);
+                                actualPickupCount++;
+                            }
                             else
+                            {
                                 break;
+                            }
                         }
 
                         MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
-                        MainGame.Output.WriteLine($"\nYou had to pick up 2 cards");
+
+                        if (actualPickupCount == 1)
+                            MainGame.Output.WriteLine($"\nYou had to pick up {actualPickupCount} card");
+                        
+                        else if(actualPickupCount > 1)
+                            MainGame.Output.WriteLine($"\nYou had to pick up {actualPickupCount} cards");
 
                         break;
                     

@@ -33,7 +33,7 @@ namespace SolitaireUno
             SuitEnforcement = suitEnforcement;
 
             _playerTurnHandler = new PlayerTurnHandler(player, GameDeck, Input, Output);
-            _computerTurnHandler = new ComputerTurnHandler(computer, GameDeck, GameDifficulty, Output);
+            _computerTurnHandler = new ComputerTurnHandler(computer, GameDeck, Output);
 
             GameSetup.SetupGame(player, computer, GameDeck);
         }

@@ -86,23 +86,38 @@ namespace SolitaireUno
                             player.PickupCard(card); // Add to hand
 
                             int playerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard); // Check penalty
-                            if (playerPotentialPenaltyCount > 0)
+
+                            switch (playerPotentialPenaltyCount)
                             {
-                                output.WriteLine("\n---------------------------------------------------------------------");
-                                output.WriteLine("\nYou decided to pick up and received the Queen of Spades! HAHAHAHA");
-                                output.WriteLine("You received 4 additional cards because... why not...");
-                            }
-                            else
-                            {
-                                output.WriteLine("---------------------------------------------------------------------");
-                                output.WriteLine("\nYou decided to pick up so...");
+                                case > 0:
+                                    int actualPickupCount = 0;
+
+                                    output.WriteLine("\n---------------------------------------------------------------------");
+                                    output.WriteLine("\nYou decided to pick up and received the Queen of Spades! [Insert Evil Laugh]");
+
+                                    for (int i = 0; i < playerPotentialPenaltyCount; i++) // Add penalty cards
+                                    {
+                                        Card? additionalPenaltyCard = deck.DealCard();
+
+                                        if (additionalPenaltyCard is not null)
+                                        {
+                                            player.PickupCard(additionalPenaltyCard);
+                                            actualPickupCount++;
+                                        }
+                                    } 
+                                                                        
+                                    output.WriteLine($"You received {actualPickupCount} additional cards!");
+
+                                    break;
+                                
+                                default:
+                                    output.WriteLine("---------------------------------------------------------------------");
+                                    output.WriteLine("\nYou decided to pick up so...");
+                                    
+                                    break;
                             }
 
-                            for (int i = 0; i < playerPotentialPenaltyCount; i++) // Add penalty cards
-                            {
-                                player.PickupCard(deck.DealCard()!);
-                            }
-
+                          
                             playerChoiceValid = true; // End turn
                             return null;
                         }

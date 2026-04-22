@@ -4,19 +4,26 @@
     {
         public Suits Suit { get; } = suit;
         public Values Value { get; } = value;
-        
+
         public override string ToString()
         {
-            return $"{Value} of {Suit}";
+
+            string suitEmoji = Suit switch
+            {
+                Suits.Hearts => "♥️",
+                Suits.Clubs => "♣️",
+                Suits.Diamonds => "♦️",
+                Suits.Spades => "♠️",
+
+                _ => ""
+            };
+
+            return $"{Value} of {Suit} {suitEmoji}";
         }
-        
+
         public bool IsEqual(Card otherCard)
         {
-            if (otherCard != null && otherCard is RegularCard regularCard)
-            {
-                return this.Value == regularCard.Value && this.Suit == regularCard.Suit;
-            }
-            return false;
+            return otherCard is not null and RegularCard regularCard && this.Value == regularCard.Value && this.Suit == regularCard.Suit;
         }
     }
 }
