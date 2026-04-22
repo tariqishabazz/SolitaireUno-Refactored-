@@ -24,7 +24,7 @@ namespace SolitaireUno
         /// </summary>
         /// <param name="currentCard">Reference to the current card in play (may be updated).</param>
         /// <param name="penaltyCard">The penalty card for special rules.</param>
-        public Card? HandleTurn(ref Card currentCard, Card penaltyCard)
+        public Card? HandleTurn(ref Card logicCard, ref Card visualCard, Card penaltyCard)
         {
             bool playerChoiceValid = false; // Tracks if the player made a valid move
 
@@ -32,9 +32,11 @@ namespace SolitaireUno
             {
                 // Show current card and deck info ONCE at the start of the turn
                 output.WriteLine("\n---------------------------------------------------------------------");
-                output.WriteLine($"\n                  Current Card | {currentCard}");
-                
-                output.WriteLine($"\n                       Order = {MainGame.GameModeChoice}");
+                output.WriteLine(visualCard is not SpecialCard
+                                     ? $"\n                  Current Card = {visualCard}"
+                                    : $"\n                  Current Card = {visualCard}\n                  Last Logical Card = {logicCard}");
+
+                output.WriteLine($"\n                  Order is {MainGame.GameModeChoice}");
 
                 int deckLength = MainGame.GameDeck.Length();
                 
@@ -66,19 +68,21 @@ namespace SolitaireUno
                         {
                             Card potentialCard = player.Hand[decisionAsNumber - 1]; // Get selected card
 
-                            if (GameMethods.ValidCard(potentialCard, currentCard, MainGame.GameModeChoice)) // Validate move
+                            if (GameMethods.ValidCard(potentialCard, logicCard, MainGame.GameModeChoice)) // Validate move
                             {
                                 player.PlayCard(potentialCard); // Play the card
 
                                 deck.AddToDiscardPile(potentialCard);
+                                
+                                visualCard = potentialCard;
 
                                 if (potentialCard is RegularCard)
                                 {
-                                    currentCard = potentialCard; // Update current card
+                                    logicCard = potentialCard; // Update current card
                                 }
 
                                 output.WriteLine("---------------------------------------------------------------------");
-                                output.WriteLine($"\nYou played {potentialCard}, but...");
+                                output.WriteLine($"\nYou played {potentialCard}, so...");
                                 
                                 playerChoiceValid = true; // End turn
 

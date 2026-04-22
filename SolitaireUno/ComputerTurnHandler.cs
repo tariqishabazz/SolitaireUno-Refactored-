@@ -12,23 +12,24 @@ namespace SolitaireUno
         private readonly Computer _computer = computer;
         private readonly Deck _deck = deck;
         private readonly IOutputProvider _output = output;
-        public Card? HandleTurn(ref Card currentCard, Card penaltyCard, int opponentHandSize)
+        public Card? HandleTurn(ref Card logicCard, ref Card visualCard, Card penaltyCard, int opponentHandSize)
         {
             //_output.WriteLine("\n                 Computer is Thinking...");
             
             // Random random = new();
             // Thread.Sleep(random.Next(3000) + 1000);
 
-            Card? potentialComputerPlay = _computer.MakeMove(currentCard, opponentHandSize);
+            Card? potentialComputerPlay = _computer.MakeMove(logicCard, opponentHandSize);
             if (potentialComputerPlay != null)
             {
+                visualCard = potentialComputerPlay;
+
                 if (potentialComputerPlay is RegularCard)
-                    currentCard = potentialComputerPlay;
-                
+                    logicCard = potentialComputerPlay;
+
                 _output.WriteLine($"\nthe Computer played: {potentialComputerPlay}");
-                
+
                 _computer.PlayCard(potentialComputerPlay);
-                
                 _deck.AddToDiscardPile(potentialComputerPlay);
 
                 return potentialComputerPlay;
@@ -39,26 +40,29 @@ namespace SolitaireUno
                 _computer.PickupCard(card);
 
                 int computerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard);
-                if (computerPotentialPenaltyCount > 0)
+                switch (computerPotentialPenaltyCount)
                 {
-                    _output.WriteLine("\nthe computer decided to pick up and recieved the Queen of Spades!");
-                    _output.WriteLine("It recieved 4 additional cards because... why not...");
+                    case > 0:
+                        {
+                            _output.WriteLine("\nthe computer decided to pick up and recieved the Queen of Spades!");
+                            _output.WriteLine("It recieved 4 additional cards because... why not...");
 
-                    for (int i = 0; i < computerPotentialPenaltyCount; i++)
-                    {
-                        _computer.PickupCard(_deck.DealCard()!);
-                    }
-                }
-                else
-                {
-                    _output.WriteLine("\nthe Computer couldn't make a move... and picked up");
+                            for (int i = 0; i < computerPotentialPenaltyCount; i++)
+                            {
+                                _computer.PickupCard(_deck.DealCard()!);
+                            }
+                            break;
+                        }
+
+                    default:
+                        _output.WriteLine("\nthe Computer couldn't make a move... and picked up");
+                        break;
                 }
             }
             else if (_deck.Length() == 0 && Deck.deckReshuffled)
             {
-                _output.WriteLine("\nthe Computer couldn't play or pickup, so it passed..."); 
+                _output.WriteLine("\nthe Computer couldn't play or pickup, so it passed...");
             }
-            
             return null;
         }
     }

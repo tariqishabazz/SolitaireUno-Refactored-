@@ -36,21 +36,24 @@ namespace SolitaireUno
 
         public void StartGame()
         {
-            RegularCard penaltyCard = new(Suits.Spades, Values.Queen);            
-            Card currentCard = GameDeck.DealCard()!;
+            RegularCard penaltyCard = new(Suits.Spades, Values.Queen);
+            Card logicCard = GameDeck.DealCard()!;
+            Card visualCard = logicCard;
 
-            GameDeck.AddToDiscardPile(currentCard);
+            GameDeck.AddToDiscardPile(logicCard);
 
-            if (currentCard is not null)
+            if (logicCard is not null)
             {
                 List<Card> temporarySpecialCards = [];
 
-                while (currentCard is SpecialCard)
+                while (logicCard is SpecialCard)
                 {
-                    temporarySpecialCards.Add(currentCard);
+                    temporarySpecialCards.Add(logicCard);
 
                     if (GameDeck.Length() > 0)
-                        currentCard = GameDeck.DealCard()!;
+                        logicCard = GameDeck.DealCard()!;
+
+                    visualCard = logicCard;
 
                     GameDeck.AddRange(temporarySpecialCards);
                     GameDeck.InHouseShuffle();
@@ -61,9 +64,9 @@ namespace SolitaireUno
             
             do
             {
-                if (IsPlayerTurn && currentCard is not null)
+                if (IsPlayerTurn && logicCard is not null)
                 {                    
-                    Card? cardPlayed = _playerTurnHandler.HandleTurn(ref currentCard, penaltyCard);
+                    Card? cardPlayed = _playerTurnHandler.HandleTurn(ref logicCard, ref visualCard, penaltyCard);
                     
                     if (cardPlayed is not null)
                     {
@@ -78,9 +81,9 @@ namespace SolitaireUno
                         IsPlayerTurn = false;
                     }
                 }
-                else if (!IsPlayerTurn && currentCard is not null)
+                else if (!IsPlayerTurn && logicCard is not null)
                 {
-                    Card? cardPlayed = _computerTurnHandler.HandleTurn(ref currentCard, penaltyCard, player.Hand.Count);
+                    Card? cardPlayed = _computerTurnHandler.HandleTurn(ref logicCard, ref visualCard, penaltyCard, player.Hand.Count);
                     
                     if (cardPlayed is not null)
                     {

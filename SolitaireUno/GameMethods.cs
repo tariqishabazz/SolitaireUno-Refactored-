@@ -14,15 +14,15 @@ namespace SolitaireUno
 {
     public class GameMethods
     {
-        public static bool ValidCard(Card potentialPlay, Card currentlyShown, GameMode gameMode)
+        public static bool ValidCard(Card potentialPlay, Card logicCardShown, GameMode gameMode)
         {
             bool isValidSequence = false;
 
-            if (potentialPlay is RegularCard firstRegularCard && currentlyShown is RegularCard secondRegularCard)
+            if (potentialPlay is RegularCard firstRegularCard && logicCardShown is RegularCard secondRegularCard)
             {
                 isValidSequence = gameMode == GameMode.Descending
-                    ? IsValidDescending(potentialPlay, currentlyShown)
-                    : IsValidAscending(potentialPlay, currentlyShown);
+                    ? IsValidDescending(potentialPlay, logicCardShown)
+                    : IsValidAscending(potentialPlay, logicCardShown);
 
                 if (!isValidSequence)
                 {
@@ -81,23 +81,22 @@ namespace SolitaireUno
 
         public static ActionInstruction SpecialCardAction(Card currentCard)
         {
-            if (currentCard is SpecialCard specialCard)
+            switch (currentCard)
             {
-                if (specialCard.CardType.Equals(SpecialCardType.Skip))
-                    return ActionInstruction.SkipTurn;
+                case SpecialCard specialCard:
+                    if (specialCard.CardType.Equals(SpecialCardType.Skip))
+                        return ActionInstruction.SkipTurn;
 
-                else if (specialCard.CardType.Equals(SpecialCardType.ChangeOrder))
-                    return ActionInstruction.ChangeOrder;
+                    else if (specialCard.CardType.Equals(SpecialCardType.ChangeOrder))
+                        return ActionInstruction.ChangeOrder;
 
-                else if (specialCard.CardType.Equals(SpecialCardType.DrawFour))
-                    return ActionInstruction.DrawFour;
+                    else if (specialCard.CardType.Equals(SpecialCardType.DrawFour))
+                        return ActionInstruction.DrawFour;
 
-                else
-                    return ActionInstruction.DrawTwo;
-            }
-            else
-            {
-                return ActionInstruction.DoNothing;
+                    else
+                        return ActionInstruction.DrawTwo;
+                default:
+                    return ActionInstruction.DoNothing;
             }
         }
 
@@ -200,7 +199,11 @@ namespace SolitaireUno
 
                         MainGame.Output.WriteLine("\nThe computer just picked up 2 cards");
                         break;
-                };
+                    
+                    default:
+                        break;
+                }
+                ;
             }
             return computerSkipped;
         }
@@ -228,7 +231,7 @@ namespace SolitaireUno
                     case ActionInstruction.SkipTurn:
                         MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
                         MainGame.Output.WriteLine($"\nYou have been skipped!");
-                        
+
                         playerSkipped = true;
                         break;
 
@@ -262,6 +265,9 @@ namespace SolitaireUno
                         MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
                         MainGame.Output.WriteLine($"\nYou had to pick up 2 cards");
 
+                        break;
+                    
+                    default:
                         break;
                 }
                 ;
