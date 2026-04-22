@@ -5,49 +5,98 @@ namespace SolitaireUno
 {
     public class Computer : Player
     {
-        public Card? MakeMove(Card currentCard, int opponentHandSize)
+        public Card? MakeMove(Card currentCard, int opponentHandSize, GameDifficulty gameDifficulty)
         {
-            List<Card> validMoves = [];
-            foreach (Card card in Hand)
-            {
-                if (GameMethods.ValidCard(card, currentCard, MainGame.GameModeChoice))
-                {
-                    validMoves.Add(card);
-                }
-            }
-            if(validMoves.Count == 0)
-            {
+            Random random = new();
+            List<Card> validMoves = new List<Card>();
+            
+            validMoves.AddRange(from Card card in Hand
+                                where GameMethods.ValidCard(card, currentCard, MainGame.GameModeChoice)
+                                select card);
+            
+            if (validMoves.Count == 0)
                 return null;
-            }
+            
             List<Card> regularMoves = validMoves.Where(card => card is RegularCard).ToList();
             List<Card> specialMoves = validMoves.Where(card => card is SpecialCard).ToList();
-            if(opponentHandSize <= 3)
+
+            switch (gameDifficulty)
             {
-                Random random = new();
-                if (specialMoves.Count > 0)
-                {
-                    Card randomSpecialMove = specialMoves[random.Next(specialMoves.Count)];
-                    return randomSpecialMove;
-                }
-                else
-                {
-                    Card randomRegularMove = regularMoves[random.Next(regularMoves.Count)];
-                    return randomRegularMove;
-                }
-            }
-            else
-            {
-                Random random = new();
-                if(regularMoves.Count > 0)
-                {
-                    Card randomRegularMove = regularMoves[random.Next(regularMoves.Count)];
-                    return randomRegularMove;
-                }
-                else
-                {
-                    Card randomSpecialMove = specialMoves[random.Next(specialMoves.Count)];
-                    return randomSpecialMove;
-                }
+                case GameDifficulty.Easy:
+                    Card randomEasyMove = validMoves[random.Next(validMoves.Count)];
+                    return randomEasyMove;
+
+                case GameDifficulty.Medium:
+                    switch (opponentHandSize)
+                    {
+                        case <= 5:
+                            {
+                                if (specialMoves.Count > 0)
+                                {   
+                                    Card randomSpecialMove = specialMoves[random.Next(specialMoves.Count)];
+
+                                    if (validMoves.Count == 1 && validMoves[0] is SpecialCard specialCard && specialCard.CardType == SpecialCardType.Skip)
+                                        return null;
+
+                                    return randomSpecialMove;
+                                }
+                                else
+                                {
+                                    Card randomRegularMove = regularMoves[random.Next(regularMoves.Count)];
+                                    return randomRegularMove;
+                                }
+                            }
+
+                        default:
+                            {
+                                if (regularMoves.Count > 0)
+                                {
+                                    Card randomRegularMove = regularMoves[random.Next(regularMoves.Count)];
+                                    return randomRegularMove;
+                                }
+                                else
+                                {
+                                    return null;
+                                }
+                            }
+                    }
+                
+                case GameDifficulty.Hard:
+                    switch (opponentHandSize)
+                    {
+                        case <= 2:
+                            {
+                                if (specialMoves.Count > 0)
+                                {
+                                    Card randomSpecialMove = specialMoves[random.Next(specialMoves.Count)];
+
+                                    if (validMoves.Count == 1 && validMoves[0] is SpecialCard specialCard && specialCard.CardType == SpecialCardType.Skip)
+                                        return null;
+
+                                    return randomSpecialMove;
+                                }
+                                else
+                                {
+                                    Card randomRegularMove = regularMoves[random.Next(regularMoves.Count)];
+                                    return randomRegularMove;
+                                }
+                            }
+                        default:
+                            {
+                                if (regularMoves.Count > 0)
+                                {
+                                    Card randomRegularMove = regularMoves[random.Next(regularMoves.Count)];
+                                    return randomRegularMove;
+                                }
+                                else
+                                {
+                                    return null;
+                                }
+                            }
+                    }
+
+                default:
+                    return null;
             }
         }
     }

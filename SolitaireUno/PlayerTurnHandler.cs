@@ -31,32 +31,11 @@ namespace SolitaireUno
             while (!playerChoiceValid)
             {
                 // Show current card and deck info ONCE at the start of the turn
-                output.WriteLine("\n---------------------------------------------------------------------");
-                output.WriteLine(visualCard is not SpecialCard
-                                     ? $"\n                  Current Card = {visualCard}"
-                                    : $"\n                  Current Card = {visualCard}\n                  Last Logical Card = {logicCard}");
-
-                output.WriteLine($"\n                  Order is {MainGame.GameModeChoice}");
-
-                int deckLength = MainGame.GameDeck.Length();
-                
-                string message = deckLength switch
-                {
-                    1 => $"Deck has {deckLength} card remaining!",
-                    > 0 => $"Deck has {deckLength} cards remaining!",
-                    _ when Deck.deckReshuffled => "No more cards in the deck!",
-                    _ => "No more cards in the deck, but someone can pick up to reshuffle!"
-                };
-
-                if(Deck.deckReshuffled && MainGame.GameDeck.Length() > 0)
-                    output.WriteLine($"\n\nDeck has been reshuffled with {MainGame.GameDeck.Length()} cards remaining");
-                else
-                    output.WriteLine($"\n\n{message}");
-
-
+                GameMethods.ShowRoundSummary(visualCard, logicCard);
                 GameMethods.ShowHand();
 
-                output.Write("\nPlay a Card (1 - # of Cards in Hand), Pick-Up (p.u), or Pass (p) >> "); // Prompt for action
+                output.WriteLine("---------------------------------------------------------------------");
+                output.Write("\nPlay a Card \n(1 - Maximum # of Cards in Hand), Pick-Up (p.u), or Pass (p)... "); // Prompt for action
                 
                 string playerDecision = input.GetInput().ToLower(); // Get and normalize input
 
@@ -71,7 +50,6 @@ namespace SolitaireUno
                             if (GameMethods.ValidCard(potentialCard, logicCard, MainGame.GameModeChoice)) // Validate move
                             {
                                 player.PlayCard(potentialCard); // Play the card
-
                                 deck.AddToDiscardPile(potentialCard);
                                 
                                 visualCard = potentialCard;

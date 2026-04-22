@@ -15,28 +15,32 @@ namespace SolitaireUno
         internal ComputerTurnHandler _computerTurnHandler;
 
         internal static GameMode GameModeChoice { get; set; }
-        internal static bool SuitEnforcement { get; set; }
+        internal static GameDifficulty GameDifficulty { get; set; }
 
-        internal static Card? LastPlayedCard { get; private set; }
         internal static bool IsPlayerTurn { get; set; }
+        internal static bool SuitEnforcement { get; private set; }
+        
+        internal static Card? LastPlayedCard { get; private set; }
 
-        public MainGame(IInputProvider input, IOutputProvider output, Deck deck, GameMode gameModeChoice, bool suitEnforcement)
+
+        public MainGame(IInputProvider input, IOutputProvider output, Deck deck, GameMode gameModeChoice, bool suitEnforcement, GameDifficulty gameDifficulty)
         {
             Input = input;
             Output = output;
             GameDeck = deck;
             GameModeChoice = gameModeChoice;
+            GameDifficulty = gameDifficulty;
             SuitEnforcement = suitEnforcement;
 
-            _playerTurnHandler = new(player, GameDeck, Input, Output);
-            _computerTurnHandler = new(computer, GameDeck, Output);
+            _playerTurnHandler = new PlayerTurnHandler(player, GameDeck, Input, Output);
+            _computerTurnHandler = new ComputerTurnHandler(computer, GameDeck, GameDifficulty, Output);
 
             GameSetup.SetupGame(player, computer, GameDeck);
         }
 
         public void StartGame()
         {
-            RegularCard penaltyCard = new(Suits.Spades, Values.Queen);
+            RegularCard penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
             Card logicCard = GameDeck.DealCard()!;
             Card visualCard = logicCard;
 

@@ -275,31 +275,33 @@ namespace SolitaireUno
             return playerSkipped;
         }
 
-        public static void ShowRoundSummary(Card currentCard)
+        public static void ShowRoundSummary(Card visualCard, Card logicCard)
         {
             MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
-            MainGame.Output.WriteLine($"\n                  Current Card: {currentCard}");
-            
+            MainGame.Output.WriteLine(visualCard is not SpecialCard
+                                 ? $"\n                  Current Card = {visualCard}"
+                                : $"\n                  Current Card = {visualCard}\n                  Last Logical Card = {logicCard}");
+
+            MainGame.Output.WriteLine($"\n                  Order is {MainGame.GameModeChoice}");
+
             int deckLength = MainGame.GameDeck.Length();
 
-            switch (deckLength)
+            string message = deckLength switch
             {
-                case > 0:
-                    if (deckLength > 1)
-                        MainGame.Output.WriteLine($"\n                 The deck has {deckLength} cards remaining.");
-                    else if (deckLength == 1)
-                        MainGame.Output.WriteLine($"\n                 The deck has {deckLength} card remaining.");
-                    break;
-                
-                default:
-                    if (Deck.deckReshuffled)
-                        MainGame.Output.WriteLine("\n                   No more cards in the deck!");
-                    else
-                        MainGame.Output.WriteLine("\n     No more cards in the deck, but someone can pick up to reshuffle!");
-                    break;
-            }
+                1 => $"Deck has {deckLength} card remaining!",
+                > 0 => $"Deck has {deckLength} cards remaining!",
+                _ when Deck.deckReshuffled => "No more cards in the deck!",
+                _ => "No more cards in the deck, but someone can pick up to reshuffle!"
+            };
 
-            MainGame.Output.WriteLine($"\n                        Order: {MainGame.GameModeChoice}");
+            if (Deck.deckReshuffled && MainGame.GameDeck.Length() == 1)
+                MainGame.Output.WriteLine($"\n\nDeck has been reshuffled with {MainGame.GameDeck.Length()} card remaining");
+            
+            else if(Deck.deckReshuffled && MainGame.GameDeck.Length() > 0)
+                MainGame.Output.WriteLine($"\n\nDeck has been reshuffled with {MainGame.GameDeck.Length()} cards remaining");
+            
+            else
+                MainGame.Output.WriteLine($"\n\n{message}");
         }
     }
 }

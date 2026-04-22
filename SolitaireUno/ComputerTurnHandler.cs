@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace SolitaireUno
 {
-    public class ComputerTurnHandler(Computer computer, Deck deck, IOutputProvider output)
+    public class ComputerTurnHandler(Computer computer, Deck deck, GameDifficulty chosenGameDifficulty, IOutputProvider output)
     {
         private readonly Computer _computer = computer;
         private readonly Deck _deck = deck;
         private readonly IOutputProvider _output = output;
+        private readonly GameDifficulty _gameDifficulty = chosenGameDifficulty;
+
         public Card? HandleTurn(ref Card logicCard, ref Card visualCard, Card penaltyCard, int opponentHandSize)
         {
             //_output.WriteLine("\n                 Computer is Thinking...");
@@ -19,7 +21,7 @@ namespace SolitaireUno
             // Random random = new();
             // Thread.Sleep(random.Next(3000) + 1000);
 
-            Card? potentialComputerPlay = _computer.MakeMove(logicCard, opponentHandSize);
+            Card? potentialComputerPlay = _computer.MakeMove(logicCard, opponentHandSize, chosenGameDifficulty);
             if (potentialComputerPlay != null)
             {
                 visualCard = potentialComputerPlay;
