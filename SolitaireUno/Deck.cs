@@ -12,7 +12,7 @@ namespace SolitaireUno
         
         private readonly int addtionalSpecialCards = 1;
 
-        internal static bool deckReshuffled = false;
+        public bool deckReshuffled = false;
 
         public Deck()
         {

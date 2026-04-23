@@ -328,18 +328,37 @@ namespace SolitaireUno
             {
                 1 => $"Deck has {deckLength} card remaining!",
                 > 0 => $"Deck has {deckLength} cards remaining!",
-                _ when Deck.deckReshuffled => "No more cards in the deck!",
+                _ when MainGame.GameDeck.deckReshuffled => "No more cards in the deck!",
                 _ => "No more cards in the deck, but someone can pick up to reshuffle!"
             };
 
-            if (Deck.deckReshuffled && MainGame.GameDeck.Length() == 1)
+            if (MainGame.GameDeck.deckReshuffled && MainGame.GameDeck.Length() == 1)
                 MainGame.Output.WriteLine($"\n\nDeck has been reshuffled with {MainGame.GameDeck.Length()} card remaining");
             
-            else if(Deck.deckReshuffled && MainGame.GameDeck.Length() > 0)
+            else if(MainGame.GameDeck.deckReshuffled && MainGame.GameDeck.Length() > 0)
                 MainGame.Output.WriteLine($"\n\nDeck has been reshuffled with {MainGame.GameDeck.Length()} cards remaining");
             
             else
                 MainGame.Output.WriteLine($"\n\n{message}");
+        }
+
+        public static void PreventInitalSpecialCard(Card logicCard) 
+        {
+            if (logicCard is not null)
+            {
+                while (logicCard is SpecialCard)
+                {
+                    List<Card> temporarySpecialCards = [];
+                    temporarySpecialCards.Add(logicCard);
+
+                    if (MainGame.GameDeck.Length() > 0)
+                        logicCard = MainGame.GameDeck.DealCard()!;
+
+                    MainGame.GameDeck.AddRange(temporarySpecialCards);
+                    MainGame.GameDeck.InHouseShuffle();
+                }
+            }
+
         }
     }
 }

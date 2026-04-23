@@ -42,41 +42,27 @@ namespace SolitaireUno
         {
             RegularCard penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
             Card logicCard = GameDeck.DealCard()!;
-            Card visualCard = logicCard;
+            Card visualCard;
 
             GameDeck.AddToDiscardPile(logicCard);
 
-            if (logicCard is not null)
-            {
-                List<Card> temporarySpecialCards = [];
+            GameMethods.PreventInitalSpecialCard(logicCard);
 
-                while (logicCard is SpecialCard)
-                {
-                    temporarySpecialCards.Add(logicCard);
-
-                    if (GameDeck.Length() > 0)
-                        logicCard = GameDeck.DealCard()!;
-
-                    visualCard = logicCard;
-
-                    GameDeck.AddRange(temporarySpecialCards);
-                    GameDeck.InHouseShuffle();
-                }
-            }
+            visualCard = logicCard;
 
             IsPlayerTurn = true;
-            
+
             do
             {
                 if (IsPlayerTurn && logicCard is not null)
-                {                    
+                {
                     Card? cardPlayed = _playerTurnHandler.HandleTurn(ref logicCard, ref visualCard, penaltyCard);
-                    
+
                     if (cardPlayed is not null)
                     {
                         LastPlayedCard = cardPlayed;
                         bool computerSkipped = GameMethods.PotentialPlayerAction();
-                        
+
                         if (computerSkipped)
                             continue;
                     }
@@ -88,7 +74,7 @@ namespace SolitaireUno
                 else if (!IsPlayerTurn && logicCard is not null)
                 {
                     Card? cardPlayed = _computerTurnHandler.HandleTurn(ref logicCard, ref visualCard, penaltyCard, player.Hand.Count);
-                    
+
                     if (cardPlayed is not null)
                     {
                         LastPlayedCard = cardPlayed;

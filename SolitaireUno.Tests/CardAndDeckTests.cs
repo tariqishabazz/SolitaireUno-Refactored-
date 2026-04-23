@@ -12,21 +12,40 @@ namespace SolitaireUno.Tests
         {
             // arrange
             Deck gameDeck = new Deck();
-          
             int startingDeckLength = gameDeck.Length();
 
             // act
             for (int i = 0; i < startingDeckLength; i++)
             {
-                gameDeck.AddToDiscardPile(gameDeck.DealCard());
+                Card? dealtCard = gameDeck.DealCard();
+                
+                if(dealtCard is not null)
+                    gameDeck.AddToDiscardPile(dealtCard);
             }
 
             Card? rescueCard = gameDeck.DealCard();
             int reshuffledLength = gameDeck.Length();
 
             // assert
-   
             Assert.Equal(56, reshuffledLength);
+        }
+
+        [Fact]
+        public void InitialCardIsNotSpecialCard()
+        {
+            // arrange
+            Deck gameDeck = new Deck();
+            Card? dealtCard = gameDeck.DealCard();
+
+
+            // act
+            if (dealtCard is not null)
+                GameMethods.PreventInitalSpecialCard(dealtCard);
+
+            bool result = dealtCard is SpecialCard;
+
+            // assert
+            Assert.False(result);
         }
     }
 }

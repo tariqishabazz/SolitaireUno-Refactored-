@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SolitaireUno
 {
-    internal enum SpecialCardType
+    public enum SpecialCardType
     {
         Skip, DrawTwo, DrawFour, // ChangeOrder
     }

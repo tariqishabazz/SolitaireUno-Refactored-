@@ -37,7 +37,7 @@ namespace SolitaireUno
                 return potentialComputerPlay;
             }
             
-            else if (_deck.Length() > 0 || _deck.Length() == 0 && !Deck.deckReshuffled)
+            else if (_deck.Length() > 0 || _deck.Length() == 0 && !_deck.deckReshuffled)
             {
                 Card card = _deck.DealCard()!;
 
@@ -73,7 +73,7 @@ namespace SolitaireUno
                 }
             }
             
-            else if (_deck.Length() == 0 && Deck.deckReshuffled)
+            else if (_deck.Length() == 0 && _deck.deckReshuffled)
             {
                 _output.WriteLine("\nthe Computer couldn't play or pickup, so it passed...");
             }
