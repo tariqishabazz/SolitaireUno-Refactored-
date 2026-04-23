@@ -10,20 +10,29 @@
 
             string suitEmoji = Suit switch
             {
-                Suits.Hearts => "♥️",
-                Suits.Clubs => "♣️",
-                Suits.Diamonds => "♦️",
+                Suits.Hearts => "❤️",
+                Suits.Clubs => "♣",
+                Suits.Diamonds => "🔷",
                 Suits.Spades => "♠️",
 
                 _ => ""
             };
 
-            return $"{Value} of {Suit} {suitEmoji}";
+            string rankEmoji = Value switch
+            {
+                Values.Queen => "👑",
+                Values.King => "👑",
+                
+                _ => ""
+            };
+
+            return $"{Value} of {Suit} {rankEmoji}{suitEmoji}";
         }
 
         public bool IsEqual(Card otherCard)
         {
-            return otherCard is not null and RegularCard regularCard && this.Value == regularCard.Value && this.Suit == regularCard.Suit;
+            return otherCard is not null and RegularCard regularCard 
+                && this.Value == regularCard.Value && this.Suit == regularCard.Suit;
         }
     }
 }

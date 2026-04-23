@@ -10,39 +10,23 @@ namespace SolitaireUno.Tests
         [Fact]
         public void DeckReshufflesCorrectly()
         {
-            // arrange 
-            string simulatedPickup = "pu";
-            
-            using var stringReader = new StringReader(simulatedPickup);
-            
-            var originalIn = Console.In;
-            
-            Console.SetIn(stringReader);
+            // arrange
+            Deck gameDeck = new Deck();
+          
+            int startingDeckLength = gameDeck.Length();
 
-            try
+            // act
+            for (int i = 0; i < startingDeckLength; i++)
             {
-                Deck newDeck = new Deck();
-                List<Card> discardPile = [];
-
-                int setDeckLength = newDeck.Length();
-
-                // act
-                for (int i = 0; i < setDeckLength; i++)
-                {
-                    Card? dealtCard = newDeck.DealCard();
-                    
-                    if(dealtCard is not null)
-                        discardPile.Add(dealtCard);
-                }
-
-                // assert
-                Assert.Equal(discardPile.Count, newDeck.Length());
+                gameDeck.AddToDiscardPile(gameDeck.DealCard());
             }
-            finally
-            {
-                // Restore original input stream
-                Console.SetIn(originalIn);
-            }
+
+            Card? rescueCard = gameDeck.DealCard();
+            int reshuffledLength = gameDeck.Length();
+
+            // assert
+   
+            Assert.Equal(56, reshuffledLength);
         }
     }
 }

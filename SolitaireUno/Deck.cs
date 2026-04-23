@@ -10,8 +10,6 @@ namespace SolitaireUno
         private readonly List<Card> gameDeck = [];
         private readonly List<Card> discardPile = [];
         
-        private readonly ConsoleOutput output = new();
-
         private readonly int addtionalSpecialCards = 1;
 
         internal static bool deckReshuffled = false;
