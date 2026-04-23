@@ -5,9 +5,9 @@ namespace SolitaireUno
 {
     public class Computer : Player
     {
-        public Card? MakeMove(Card currentCard, int opponentHandSize, GameDifficulty gameDifficulty)
+        public Card? MakeMove(Card currentCard, int opponentHandSize, int currentDeckSize, GameDifficulty gameDifficulty)
         {
-            Random random = new();
+            Random random = new Random();
             List<Card> validMoves = new List<Card>();
             
             validMoves.AddRange(from Card card in Hand
@@ -23,13 +23,21 @@ namespace SolitaireUno
             switch (gameDifficulty)
             {
                 case GameDifficulty.Easy:
+                    
                     Card randomEasyMove = validMoves[random.Next(validMoves.Count)];
                     return randomEasyMove;
 
                 case GameDifficulty.Medium:
+                    
+                    if(currentDeckSize <= 7 && specialMoves.Count > 0)
+                    {
+                        Card randomSpecialMove = specialMoves[random.Next(specialMoves.Count)];
+                        return randomSpecialMove;
+                    }
+
                     switch (opponentHandSize)
                     {
-                        case <= 5:
+                        case <= 4:
                             {
                                 if (specialMoves.Count > 0)
                                 {   
@@ -62,6 +70,13 @@ namespace SolitaireUno
                     }
                 
                 case GameDifficulty.Hard:
+
+                    if (currentDeckSize <= 7 && specialMoves.Count > 0)
+                    {
+                        Card randomSpecialMove = specialMoves[random.Next(specialMoves.Count)];
+                        return randomSpecialMove;
+                    }
+
                     switch (opponentHandSize)
                     {
                         case <= 2:

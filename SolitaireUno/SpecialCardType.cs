@@ -8,6 +8,6 @@ namespace SolitaireUno
 {
     internal enum SpecialCardType
     {
-        Skip, DrawTwo = 2, DrawFour = 4, ChangeOrder
+        Skip, DrawTwo, DrawFour, // ChangeOrder
     }
 }

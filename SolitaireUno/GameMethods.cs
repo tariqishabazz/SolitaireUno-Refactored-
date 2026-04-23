@@ -16,11 +16,9 @@ namespace SolitaireUno
     {
         public static bool ValidCard(Card potentialPlay, Card logicCardShown, GameMode gameMode)
         {
-            bool isValidSequence = false;
-
             if (potentialPlay is RegularCard firstRegularCard && logicCardShown is RegularCard secondRegularCard)
             {
-                isValidSequence = gameMode == GameMode.Descending
+                bool isValidSequence = gameMode == GameMode.Descending
                     ? IsValidDescending(potentialPlay, logicCardShown)
                     : IsValidAscending(potentialPlay, logicCardShown);
 
@@ -87,9 +85,11 @@ namespace SolitaireUno
                     if (specialCard.CardType.Equals(SpecialCardType.Skip))
                         return ActionInstruction.SkipTurn;
 
+                    /*
                     else if (specialCard.CardType.Equals(SpecialCardType.ChangeOrder))
                         return ActionInstruction.ChangeOrder;
-
+                    */
+                    
                     else if (specialCard.CardType.Equals(SpecialCardType.DrawFour))
                         return ActionInstruction.DrawFour;
 
@@ -155,12 +155,14 @@ namespace SolitaireUno
                         MainGame.IsPlayerTurn = false;
                         break;
 
+/*
                     case ActionInstruction.ChangeOrder:
                         MainGame.GameModeChoice = MainGame.GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
                         MainGame.Output.WriteLine($"\nThe game mode is now {MainGame.GameModeChoice}");
 
                         MainGame.IsPlayerTurn = false;
                         break;
+*/
 
                     case ActionInstruction.SkipTurn:
                         MainGame.Output.WriteLine($"\nthe Computer has been skipped!");
@@ -233,7 +235,8 @@ namespace SolitaireUno
                     case ActionInstruction.DoNothing:
                         MainGame.IsPlayerTurn = true;
                         break;
-
+                
+                /*
                     case ActionInstruction.ChangeOrder:
                         MainGame.GameModeChoice = MainGame.GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
                         MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
@@ -241,7 +244,8 @@ namespace SolitaireUno
 
                         MainGame.IsPlayerTurn = true;
                         break;
-
+                */
+                    
                     case ActionInstruction.SkipTurn:
                         MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
                         MainGame.Output.WriteLine($"\nYou have been skipped!");

@@ -13,7 +13,7 @@ namespace SolitaireUno
         private readonly Deck _deck = deck;
         private readonly IOutputProvider _output = output;
         private readonly GameDifficulty _gameDifficulty = MainGame.GameDifficulty;
-
+    
         public Card? HandleTurn(ref Card logicCard, ref Card visualCard, Card penaltyCard, int opponentHandSize)
         {
             //_output.WriteLine("\n                 Computer is Thinking...");
@@ -21,7 +21,7 @@ namespace SolitaireUno
             // Random random = new();
             // Thread.Sleep(random.Next(3000) + 1000);
 
-            Card? potentialComputerPlay = _computer.MakeMove(logicCard, opponentHandSize, _gameDifficulty);
+            Card? potentialComputerPlay = _computer.MakeMove(logicCard, opponentHandSize, _deck.Length(), _gameDifficulty);
             if (potentialComputerPlay != null)
             {
                 visualCard = potentialComputerPlay;
@@ -51,7 +51,7 @@ namespace SolitaireUno
                         {
                             int actualPickupCount = 0;
                             
-                            _output.WriteLine("\nthe computer decided to pick up and recieved the Queen of Spades!");
+                            _output.WriteLine("\nthe Computer decided to pick up and recieved the Queen of Spades!");
 
                             for (int i = 0; i < computerPotentialPenaltyCount; i++)
                             {

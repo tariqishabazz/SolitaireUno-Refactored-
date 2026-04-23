@@ -30,13 +30,14 @@ namespace SolitaireUno
             {
                 gameDeck.Add(new SpecialCard(specialCard));
 
-                if (specialCard != SpecialCardType.ChangeOrder)
-                {
+               
+                //if (specialCard != SpecialCardType.ChangeOrder)
+                //{
                     for (int i = 0; i < addtionalSpecialCards; i++)
                     {
                         gameDeck.Add(new SpecialCard(specialCard));
                     }
-                }
+                //}
             }
 
             RegularCard penaltyCard = new(Suits.Spades, Values.Queen);
@@ -101,7 +102,7 @@ namespace SolitaireUno
                                 Card lastCardOnTable = discardPile[lastCardIndex];
 
                                 discardPile.RemoveAt(lastCardIndex);
-                                discardPile.RemoveAll(card => card is SpecialCard specialCard && specialCard.CardType.Equals(SpecialCardType.ChangeOrder));
+                               // discardPile.RemoveAll(card => card is SpecialCard specialCard && specialCard.CardType.Equals(SpecialCardType.ChangeOrder));
 
                                 gameDeck.AddRange(discardPile);
                                 discardPile.Clear();
