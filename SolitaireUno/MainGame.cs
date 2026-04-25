@@ -14,7 +14,7 @@ namespace SolitaireUno
         internal PlayerTurnHandler _playerTurnHandler;
         internal ComputerTurnHandler _computerTurnHandler;
 
-        internal static GameMode GameModeChoice { get; set; }
+        public static GameMode GameModeChoice { get; set; }
         internal static GameDifficulty GameDifficulty { get; set; }
 
         internal static bool IsPlayerTurn { get; set; }

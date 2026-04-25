@@ -52,8 +52,8 @@ namespace SolitaireUno.Tests
         [Fact]
         public static void IsSpecialCardLogicFunctional()
         {
-            Card specialCard = new SpecialCard(SpecialCardType.Skip);
 
+            Card specialCard = new SpecialCard(SpecialCardType.Skip);
             bool result = GameMethods.IsSpecialCard(specialCard);
 
             Assert.True(result);

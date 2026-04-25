@@ -37,7 +37,7 @@ namespace SolitaireUno
 
                     switch (opponentHandSize)
                     {
-                        case <= 4:
+                        case <= 8:
                             {
                                 if (specialMoves.Count > 0)
                                 {   
@@ -79,7 +79,7 @@ namespace SolitaireUno
 
                     switch (opponentHandSize)
                     {
-                        case <= 2:
+                        case <= 5:
                             {
                                 if (specialMoves.Count > 0)
                                 {

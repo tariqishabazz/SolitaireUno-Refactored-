@@ -89,7 +89,7 @@ namespace SolitaireUno
                     else if (specialCard.CardType.Equals(SpecialCardType.ChangeOrder))
                         return ActionInstruction.ChangeOrder;
                     */
-                    
+
                     else if (specialCard.CardType.Equals(SpecialCardType.DrawFour))
                         return ActionInstruction.DrawFour;
 
@@ -145,6 +145,7 @@ namespace SolitaireUno
         {
             bool computerSkipped = false;
             int actualPickupCount = 0;
+            Card penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
 
             if (MainGame.LastPlayedCard is not null)
             {
@@ -155,26 +156,46 @@ namespace SolitaireUno
                         MainGame.IsPlayerTurn = false;
                         break;
 
-/*
-                    case ActionInstruction.ChangeOrder:
-                        MainGame.GameModeChoice = MainGame.GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
-                        MainGame.Output.WriteLine($"\nThe game mode is now {MainGame.GameModeChoice}");
+                    /*
+                                        case ActionInstruction.ChangeOrder:
+                                            MainGame.GameModeChoice = MainGame.GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
+                                            MainGame.Output.WriteLine($"\nThe game mode is now {MainGame.GameModeChoice}");
 
-                        MainGame.IsPlayerTurn = false;
-                        break;
-*/
+                                            MainGame.IsPlayerTurn = false;
+                                            break;
+                    */
 
                     case ActionInstruction.SkipTurn:
                         MainGame.Output.WriteLine($"\nthe Computer has been skipped!");
                         computerSkipped = true;
                         break;
 
-                    case ActionInstruction.DrawFour:                        
+                    case ActionInstruction.DrawFour:
                         for (int i = 0; i < 4; i++)
                         {
                             Card? drawnCard = MainGame.GameDeck.DealCard();
                             if (drawnCard is not null)
                             {
+                                if (GetPenaltyCount(drawnCard, penaltyCard) > 0)
+                                {
+                                    MainGame.Output.WriteLine($"\nthe Computer picked up the Queen of Spades during the Draw 4\n" +
+                                        $"and must pick up addtional cards");
+
+                                    for (int j = 0; j < GetPenaltyCount(drawnCard, penaltyCard); j++)
+                                    {
+                                        Card? penaltyDrawnCard = MainGame.GameDeck.DealCard();
+                                        if (penaltyDrawnCard is not null)
+                                        {
+                                            MainGame.computer.PickupCard(penaltyDrawnCard);
+                                            actualPickupCount++;
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+
                                 MainGame.computer.PickupCard(drawnCard);
                                 actualPickupCount++;
                             }
@@ -189,6 +210,9 @@ namespace SolitaireUno
 
                         else if (actualPickupCount > 1)
                             MainGame.Output.WriteLine($"\nthe Computer just picked up {actualPickupCount} cards");
+                        
+                        else
+                            MainGame.Output.WriteLine($"\nthe Computer just picked up {actualPickupCount} cards, because there aren't anymore!");
                         
                         break;
 
@@ -198,6 +222,26 @@ namespace SolitaireUno
                             Card? drawnCard = MainGame.GameDeck.DealCard();
                             if (drawnCard is not null)
                             {
+                                if (GetPenaltyCount(drawnCard, penaltyCard) > 0)
+                                {
+                                    MainGame.Output.WriteLine($"\nthe Computer picked up the Queen of Spades during the Draw 2\n" +
+                                        $"and must pick up addtional cards");
+
+                                    for (int j = 0; j < GetPenaltyCount(drawnCard, penaltyCard); j++)
+                                    {
+                                        Card? penaltyDrawnCard = MainGame.GameDeck.DealCard();
+                                        if (penaltyDrawnCard is not null)
+                                        {
+                                            MainGame.computer.PickupCard(penaltyDrawnCard);
+                                            actualPickupCount++;
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+
                                 MainGame.computer.PickupCard(drawnCard);
                                 actualPickupCount++;
                             }
@@ -206,15 +250,19 @@ namespace SolitaireUno
                                 break;
                             }
                         }
-                        
+
                         if (actualPickupCount == 1)
                             MainGame.Output.WriteLine($"\nthe Computer just picked up {actualPickupCount} card");
-                        
+
                         else if (actualPickupCount > 1)
                             MainGame.Output.WriteLine($"\nthe Computer just picked up {actualPickupCount} cards");
+                        
+                        else
+                            MainGame.Output.WriteLine($"\nthe Computer just picked up {actualPickupCount} cards, because there aren't anymore!");
+
 
                         break;
-                    
+
                     default:
                         break;
                 }
@@ -226,6 +274,7 @@ namespace SolitaireUno
         {
             bool playerSkipped = false;
             int actualPickupCount = 0;
+            Card penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
 
             if (MainGame.LastPlayedCard is not null)
             {
@@ -235,17 +284,17 @@ namespace SolitaireUno
                     case ActionInstruction.DoNothing:
                         MainGame.IsPlayerTurn = true;
                         break;
-                
-                /*
-                    case ActionInstruction.ChangeOrder:
-                        MainGame.GameModeChoice = MainGame.GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
-                        MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
-                        MainGame.Output.WriteLine($"\nThe game mode is now {MainGame.GameModeChoice}");
 
-                        MainGame.IsPlayerTurn = true;
-                        break;
-                */
-                    
+                    /*
+                        case ActionInstruction.ChangeOrder:
+                            MainGame.GameModeChoice = MainGame.GameModeChoice == GameMode.Ascending ? GameMode.Descending : GameMode.Ascending;
+                            MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
+                            MainGame.Output.WriteLine($"\nThe game mode is now {MainGame.GameModeChoice}");
+
+                            MainGame.IsPlayerTurn = true;
+                            break;
+                    */
+
                     case ActionInstruction.SkipTurn:
                         MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
                         MainGame.Output.WriteLine($"\nYou have been skipped!");
@@ -260,6 +309,26 @@ namespace SolitaireUno
 
                             if (drawnCard is not null)
                             {
+                                if (GetPenaltyCount(drawnCard, penaltyCard)  > 0)
+                                {
+                                    MainGame.Output.WriteLine($"\nYou picked up the Queen of Spades during the Draw 4\n" +
+                                        $"and must pick up addtional cards");
+
+                                    for (int j = 0; j < GetPenaltyCount(drawnCard, penaltyCard); j++)
+                                    {
+                                        Card? penaltyDrawnCard = MainGame.GameDeck.DealCard();
+                                        if (penaltyDrawnCard is not null)
+                                        {
+                                            MainGame.player.PickupCard(penaltyDrawnCard);
+                                            actualPickupCount++;
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+
                                 MainGame.player.PickupCard(drawnCard);
                                 actualPickupCount++;
                             }
@@ -270,13 +339,16 @@ namespace SolitaireUno
                         }
 
                         MainGame.Output.WriteLine("\n---------------------------------------------------------------------");
-                        
+
                         if (actualPickupCount == 1)
                             MainGame.Output.WriteLine($"\nYou had to pick up {actualPickupCount} card");
-                        
+
                         else if (actualPickupCount > 1)
                             MainGame.Output.WriteLine($"\nYou had to pick up {actualPickupCount} cards");
                         
+                        else
+                            MainGame.Output.WriteLine($"\nYou just picked up {actualPickupCount} cards, because there aren't anymore!");
+
                         break;
 
                     case ActionInstruction.DrawTwo:
@@ -286,6 +358,26 @@ namespace SolitaireUno
 
                             if (drawnCard is not null)
                             {
+                                if (GetPenaltyCount(drawnCard, penaltyCard) > 0)
+                                {
+                                    MainGame.Output.WriteLine($"\nYou picked up the Queen of Spades during the Draw 2\n" +
+                                        $"and must pick up addtional cards");
+
+                                    for (int j = 0; j < GetPenaltyCount(drawnCard, penaltyCard); j++)
+                                    {
+                                        Card? penaltyDrawnCard = MainGame.GameDeck.DealCard();
+                                        if (penaltyDrawnCard is not null)
+                                        {
+                                            MainGame.player.PickupCard(penaltyDrawnCard);
+                                            actualPickupCount++;
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+
                                 MainGame.player.PickupCard(drawnCard);
                                 actualPickupCount++;
                             }
@@ -299,12 +391,16 @@ namespace SolitaireUno
 
                         if (actualPickupCount == 1)
                             MainGame.Output.WriteLine($"\nYou had to pick up {actualPickupCount} card");
-                        
-                        else if(actualPickupCount > 1)
+
+                        else if (actualPickupCount > 1)
                             MainGame.Output.WriteLine($"\nYou had to pick up {actualPickupCount} cards");
+                        
+                        else
+                            MainGame.Output.WriteLine($"\nYou just picked up {actualPickupCount} cards, because there aren't anymore!");
+
 
                         break;
-                    
+
                     default:
                         break;
                 }
@@ -334,15 +430,15 @@ namespace SolitaireUno
 
             if (MainGame.GameDeck.deckReshuffled && MainGame.GameDeck.Length() == 1)
                 MainGame.Output.WriteLine($"\n\nDeck has been reshuffled with {MainGame.GameDeck.Length()} card remaining");
-            
-            else if(MainGame.GameDeck.deckReshuffled && MainGame.GameDeck.Length() > 0)
+
+            else if (MainGame.GameDeck.deckReshuffled && MainGame.GameDeck.Length() > 0)
                 MainGame.Output.WriteLine($"\n\nDeck has been reshuffled with {MainGame.GameDeck.Length()} cards remaining");
-            
+
             else
                 MainGame.Output.WriteLine($"\n\n{message}");
         }
 
-        public static void PreventInitalSpecialCard(Card logicCard) 
+        public static void PreventInitalSpecialCard(Card logicCard)
         {
             if (logicCard is not null)
             {
