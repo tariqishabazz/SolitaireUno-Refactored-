@@ -452,9 +452,10 @@ namespace SolitaireUno
 
                     MainGame.GameDeck.AddRange(temporarySpecialCards);
                     MainGame.GameDeck.InHouseShuffle();
+                    
+                    visualCard = logicCard;
                 } 
-                visualCard = logicCard;
-                
+                 
                 return visualCard;
             }
             else
