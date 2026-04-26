@@ -438,7 +438,7 @@ namespace SolitaireUno
                 MainGame.Output.WriteLine($"\n\n{message}");
         }
 
-        public static Card? PreventInitalSpecialCard(Card logicCard, Card visualCard)
+        public static Card? PreventInitialSpecialCard(Card logicCard)
         {
             if (logicCard is not null)
             {
@@ -453,10 +453,9 @@ namespace SolitaireUno
                     MainGame.GameDeck.AddRange(temporarySpecialCards);
                     MainGame.GameDeck.InHouseShuffle();
                     
-                    visualCard = logicCard;
                 } 
                  
-                return visualCard;
+                return logicCard;
             }
             else
             {

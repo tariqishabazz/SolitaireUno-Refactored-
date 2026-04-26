@@ -42,13 +42,11 @@ namespace SolitaireUno
         {
             RegularCard penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
             Card logicCard = GameDeck.DealCard()!;
-            Card visualCard = logicCard;
-
             GameDeck.AddToDiscardPile(logicCard);
 
-           
-            Card? updatedCard = GameMethods.PreventInitalSpecialCard(logicCard, visualCard);
+            Card? updatedCard = GameMethods.PreventInitialSpecialCard(logicCard);
 
+            Card visualCard;
             if (updatedCard is not null)
             {
                 logicCard = updatedCard;
@@ -56,7 +54,7 @@ namespace SolitaireUno
             }
             else
             {
-                visualCard = logicCard;
+                return;
             }
 
             IsPlayerTurn = true;
