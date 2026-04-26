@@ -6,10 +6,7 @@ namespace SolitaireUno
     {
         public static readonly Player player = new();
         public static readonly Computer computer = new();
-        internal static Deck GameDeck { get; set; }
-
-        internal static IInputProvider Input { get; set; }
-        internal static IOutputProvider Output { get; set; }
+        public static Deck GameDeck { get; set; }
 
         internal PlayerTurnHandler _playerTurnHandler;
         internal ComputerTurnHandler _computerTurnHandler;
@@ -17,96 +14,86 @@ namespace SolitaireUno
         public static GameMode GameModeChoice { get; set; }
         internal static GameDifficulty GameDifficulty { get; set; }
 
-        internal static bool IsPlayerTurn { get; set; }
+        public static bool IsPlayerTurn { get; set; }
         internal static bool SuitEnforcement { get; private set; }
-        
-        internal static Card? LastPlayedCard { get; private set; }
+
+        public static Card? LastPlayedCard { get; private set; }
+        public static Card LogicCard;
+        public static Card VisualCard;
+        internal static RegularCard PenaltyCard = new RegularCard(Suits.Spades, Values.Queen);
 
 
-        public MainGame(IInputProvider input, IOutputProvider output, Deck deck, GameMode gameModeChoice, bool suitEnforcement, GameDifficulty gameDifficulty)
+        public MainGame(Deck deck, GameMode gameModeChoice, bool suitEnforcement, GameDifficulty gameDifficulty)
         {
-            Input = input;
-            Output = output;
             GameDeck = deck;
             GameModeChoice = gameModeChoice;
             GameDifficulty = gameDifficulty;
             SuitEnforcement = suitEnforcement;
 
-            _playerTurnHandler = new PlayerTurnHandler(player, GameDeck, Input, Output);
-            _computerTurnHandler = new ComputerTurnHandler(computer, GameDeck, Output);
+            _playerTurnHandler = new PlayerTurnHandler(player, GameDeck);
+            _computerTurnHandler = new ComputerTurnHandler(computer, GameDeck);
 
             GameSetup.SetupGame(player, computer, GameDeck);
         }
 
         public void StartGame()
         {
-            RegularCard penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
-            Card logicCard = GameDeck.DealCard()!;
-            Card visualCard = logicCard;
+            LogicCard = GameDeck.DealCard()!;
 
-            GameDeck.AddToDiscardPile(logicCard);
+            GameDeck.AddToDiscardPile(LogicCard);
 
-           
-            Card? updatedCard = GameMethods.PreventInitalSpecialCard(logicCard, visualCard);
+
+            Card? updatedCard = GameMethods.PreventInitalSpecialCard(LogicCard);
 
             if (updatedCard is not null)
             {
-                logicCard = updatedCard;
-                visualCard = updatedCard;
+                LogicCard = updatedCard;
+                VisualCard = updatedCard;
             }
             else
             {
-                visualCard = logicCard;
+                VisualCard = LogicCard;
             }
 
             IsPlayerTurn = true;
+        }
+        public void AdvanceTurn(string playerDecision = "")
+        {
 
-            do
+            if (IsPlayerTurn && LogicCard is not null)
             {
-                if (IsPlayerTurn && logicCard is not null)
+                Card? cardPlayed = _playerTurnHandler.HandleTurn(ref LogicCard, ref VisualCard, PenaltyCard, playerDecision);
+
+                if (cardPlayed is not null)
                 {
-                    Card? cardPlayed = _playerTurnHandler.HandleTurn(ref logicCard, ref visualCard, penaltyCard);
+                    LastPlayedCard = cardPlayed;
+                    bool computerSkipped = GameMethods.PotentialPlayerAction();
 
-                    if (cardPlayed is not null)
-                    {
-                        LastPlayedCard = cardPlayed;
-                        bool computerSkipped = GameMethods.PotentialPlayerAction();
-
-                        if (computerSkipped)
-                            continue;
-                    }
-                    else
-                    {
-                        IsPlayerTurn = false;
-                    }
-                }
-                else if (!IsPlayerTurn && logicCard is not null)
-                {
-                    Card? cardPlayed = _computerTurnHandler.HandleTurn(ref logicCard, ref visualCard, penaltyCard, player.Hand.Count);
-
-                    if (cardPlayed is not null)
-                    {
-                        LastPlayedCard = cardPlayed;
-                        bool playerSkipped = GameMethods.PotentialComputerAction();
-
-                        if (playerSkipped)
-                            continue;
-                    }
-                    else
-                    {
-                        IsPlayerTurn = true;
-                    }
+                    if (computerSkipped)
+                        return;
                 }
             }
-            while (player.Hand.Count > 0 && computer.Hand.Count > 0);
+            else if (!IsPlayerTurn && LogicCard is not null)
+            {
+                Card? cardPlayed = _computerTurnHandler.HandleTurn(ref LogicCard, ref VisualCard, PenaltyCard, player.Hand.Count);
 
-            GameMethods.GameOverStats();
-        }
+                if (cardPlayed is not null)
+                {
+                    LastPlayedCard = cardPlayed;
+                    bool playerSkipped = GameMethods.PotentialComputerAction();
 
-        static void Main()
-        {
-            Console.OutputEncoding = Encoding.UTF8;
-            GameIntroduction.ShowGameIntroduction();
+                    if (playerSkipped)
+                        return;
+                }
+                else
+                {
+                    IsPlayerTurn = true;
+                }
+            }
+
+            if (player.Hand.Count == 0 || computer.Hand.Count == 0)
+                GameMethods.GameOverStats();
+
         }
     }
 }
