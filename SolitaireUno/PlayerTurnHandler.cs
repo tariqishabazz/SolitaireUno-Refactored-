@@ -49,7 +49,6 @@ namespace SolitaireUno
                                 logicCard = potentialCard; // Update current card
                             }
 
-                            MainGame.IsPlayerTurn = false;
                             return potentialCard;
                         }
                         else
@@ -93,7 +92,6 @@ namespace SolitaireUno
                                 break;
                         }
 
-                        MainGame.IsPlayerTurn = false;
                         return null;
                     }
 
@@ -109,7 +107,6 @@ namespace SolitaireUno
                     }
                     else
                     {
-                        MainGame.IsPlayerTurn = false;
                     }
                 }
                 else

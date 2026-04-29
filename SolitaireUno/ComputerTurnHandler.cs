@@ -15,11 +15,6 @@ namespace SolitaireUno
 
         public Card? HandleTurn(ref Card logicCard, ref Card visualCard, Card penaltyCard, int opponentHandSize)
         {
-            //_output.WriteLine("\n                 Computer is Thinking...");
-
-            // Random random = new();
-            // Thread.Sleep(random.Next(3000) + 1000);
-
             Card? potentialComputerPlay = _computer.MakeMove(logicCard, opponentHandSize, _deck.Length(), _gameDifficulty);
             if (potentialComputerPlay != null)
             {

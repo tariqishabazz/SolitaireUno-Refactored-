@@ -123,7 +123,7 @@ namespace SolitaireUno
 
         public static bool PotentialPlayerAction()
         {
-            bool computerSkipped = false;
+            MainGame.ComputerSkipped = false;
             int actualPickupCount = 0;
             Card penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
 
@@ -146,7 +146,7 @@ namespace SolitaireUno
                     */
 
                     case ActionInstruction.SkipTurn:
-                        computerSkipped = true;
+                        MainGame.ComputerSkipped = true;
                         break;
 
                     case ActionInstruction.DrawFour:
@@ -157,7 +157,9 @@ namespace SolitaireUno
                             {
                                 if (GetPenaltyCount(drawnCard, penaltyCard) > 0)
                                 {
-                                    for (int j = 0; j < GetPenaltyCount(drawnCard, penaltyCard); j++)
+                                    int awardedPenalty = GetPenaltyCount(drawnCard, penaltyCard);
+
+                                    for (int j = 0; j < awardedPenalty; j++)
                                     {
                                         Card? penaltyDrawnCard = MainGame.GameDeck.DealCard();
                                         if (penaltyDrawnCard is not null)
@@ -191,7 +193,9 @@ namespace SolitaireUno
                             {
                                 if (GetPenaltyCount(drawnCard, penaltyCard) > 0)
                                 {
-                                    for (int j = 0; j < GetPenaltyCount(drawnCard, penaltyCard); j++)
+                                    int awardedPenalty = GetPenaltyCount(drawnCard, penaltyCard);
+
+                                    for (int j = 0; j < awardedPenalty; j++)
                                     {
                                         Card? penaltyDrawnCard = MainGame.GameDeck.DealCard();
                                         if (penaltyDrawnCard is not null)
@@ -222,7 +226,7 @@ namespace SolitaireUno
                 }
                 ;
             }
-            return computerSkipped;
+            return MainGame.ComputerSkipped;
         }
         public static bool PotentialComputerAction()
         {
@@ -262,7 +266,9 @@ namespace SolitaireUno
                             {
                                 if (GetPenaltyCount(drawnCard, penaltyCard) > 0)
                                 {
-                                    for (int j = 0; j < GetPenaltyCount(drawnCard, penaltyCard); j++)
+                                    int awardedPenalty = GetPenaltyCount(drawnCard, penaltyCard);
+
+                                    for (int j = 0; j < awardedPenalty; j++)
                                     {
                                         Card? penaltyDrawnCard = MainGame.GameDeck.DealCard();
                                         if (penaltyDrawnCard is not null)
@@ -297,7 +303,9 @@ namespace SolitaireUno
                             {
                                 if (GetPenaltyCount(drawnCard, penaltyCard) > 0)
                                 {
-                                    for (int j = 0; j < GetPenaltyCount(drawnCard, penaltyCard); j++)
+                                    int awardedPenalty = GetPenaltyCount(drawnCard, penaltyCard);
+                                    
+                                    for (int j = 0; j < awardedPenalty; j++)
                                     {
                                         Card? penaltyDrawnCard = MainGame.GameDeck.DealCard();
                                         if (penaltyDrawnCard is not null)

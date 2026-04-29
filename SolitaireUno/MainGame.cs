@@ -16,6 +16,7 @@ namespace SolitaireUno
 
         public static bool IsPlayerTurn { get; set; }
         internal static bool SuitEnforcement { get; private set; }
+        public static bool ComputerSkipped { get; set; }
 
         public static Card? LastPlayedCard { get; private set; }
         public static Card LogicCard;
@@ -59,7 +60,6 @@ namespace SolitaireUno
         }
         public void AdvanceTurn(string playerDecision = "")
         {
-
             if (IsPlayerTurn && LogicCard is not null)
             {
                 Card? cardPlayed = _playerTurnHandler.HandleTurn(ref LogicCard, ref VisualCard, PenaltyCard, playerDecision);
@@ -67,12 +67,17 @@ namespace SolitaireUno
                 if (cardPlayed is not null)
                 {
                     LastPlayedCard = cardPlayed;
-                    bool computerSkipped = GameMethods.PotentialPlayerAction();
+                    ComputerSkipped = GameMethods.PotentialPlayerAction();
 
-                    if (computerSkipped)
+                    if (ComputerSkipped)
                         return;
                 }
+                else
+                {
+                    IsPlayerTurn = false;
+                }
             }
+            
             else if (!IsPlayerTurn && LogicCard is not null)
             {
                 Card? cardPlayed = _computerTurnHandler.HandleTurn(ref LogicCard, ref VisualCard, PenaltyCard, player.Hand.Count);
