@@ -108,22 +108,8 @@ namespace SolitaireUno
             return isFirstCardRed != isSecondCardRed;
         }
 
-        public static Player? GameOverStats()
-        {
-            if (MainGame.computer.Hand.Count == 0)
-            {
-                return MainGame.computer;
-            }
-            else if (MainGame.player.Hand.Count == 0)
-            {
-                return MainGame.player;
-            }
-            return null;
-        }
-
         public static bool PotentialPlayerAction()
         {
-            MainGame.ComputerSkipped = false;
             int actualPickupCount = 0;
             Card penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
 
@@ -133,7 +119,6 @@ namespace SolitaireUno
                 switch (message)
                 {
                     case ActionInstruction.DoNothing:
-                        MainGame.IsPlayerTurn = false;
                         break;
 
                     /*
@@ -182,7 +167,8 @@ namespace SolitaireUno
                                 break;
                             }
                         }
-
+                        
+                        MainGame.ComputerSkipped = true;
                         break;
 
                     case ActionInstruction.DrawTwo:
@@ -218,7 +204,7 @@ namespace SolitaireUno
                                 break;
                             }
                         }
-
+                        MainGame.ComputerSkipped = true;
                         break;
 
                     default:
@@ -230,7 +216,6 @@ namespace SolitaireUno
         }
         public static bool PotentialComputerAction()
         {
-            bool playerSkipped = false;
             int actualPickupCount = 0;
             Card penaltyCard = new RegularCard(Suits.Spades, Values.Queen);
 
@@ -240,7 +225,6 @@ namespace SolitaireUno
                 switch (message)
                 {
                     case ActionInstruction.DoNothing:
-                        MainGame.IsPlayerTurn = true;
                         break;
 
                     /*
@@ -254,14 +238,14 @@ namespace SolitaireUno
                     */
 
                     case ActionInstruction.SkipTurn:
-                        playerSkipped = true;
+                        MainGame.PlayerSkipped = true;
                         break;
 
                     case ActionInstruction.DrawFour:
                         for (int i = 0; i < 4; i++)
                         {
                             Card? drawnCard = MainGame.GameDeck.DealCard();
-
+                            
                             if (drawnCard is not null)
                             {
                                 if (GetPenaltyCount(drawnCard, penaltyCard) > 0)
@@ -292,6 +276,7 @@ namespace SolitaireUno
                             }
                         }
 
+                        MainGame.PlayerSkipped = true;
                         break;
 
                     case ActionInstruction.DrawTwo:
@@ -328,6 +313,8 @@ namespace SolitaireUno
                                 break;
                             }
                         }
+
+                        MainGame.PlayerSkipped = true;
                         break;
 
                     default:
@@ -335,10 +322,8 @@ namespace SolitaireUno
                 }
                 ;
             }
-            return playerSkipped;
+            return MainGame.PlayerSkipped;
         }
-
-
 
         public static Card? PreventInitalSpecialCard(Card logicCard)
         {

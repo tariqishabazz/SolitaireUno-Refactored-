@@ -24,7 +24,7 @@ namespace SolitaireUno
         /// </summary>
         /// <param name="currentCard">Reference to the current card in play (may be updated).</param>
         /// <param name="penaltyCard">The penalty card for special rules.</param>
-        public Card? HandleTurn(ref Card logicCard, ref Card visualCard, Card penaltyCard, string playerDecision)
+        public (bool sucessfulMove, string message, Card? playedCard) HandleTurn(ref Card logicCard, ref Card visualCard, Card penaltyCard, string playerDecision)
         {
 
             playerDecision = playerDecision?.ToLower().Trim() ?? "";
@@ -45,21 +45,17 @@ namespace SolitaireUno
                             visualCard = potentialCard;
 
                             if (potentialCard is RegularCard)
-                            {
                                 logicCard = potentialCard; // Update current card
-                            }
 
-                            return potentialCard;
+                            return (true, $" You played {potentialCard}!", potentialCard);
                         }
                         else
                         {
-
+                            return (false, "That is not a valid move", null);
                         }
                     }
-                    else
-                    {
-                    }
                 }
+               
                 else if (playerDecision == "p.u" || playerDecision == "pu" || playerDecision == "pick up" || playerDecision == "pickup") // Pick up
                 {
                     if (deck.Length() > 0 || deck.Length() == 0 && !deck.deckReshuffled)
@@ -84,19 +80,18 @@ namespace SolitaireUno
                                         actualPickupCount++;
                                     }
                                 }
-
                                 break;
 
                             default:
-
                                 break;
                         }
 
-                        return null;
+                        return (true, "You decided to pick up!", null);
                     }
 
                     else if (deck.Length() == 0 && deck.deckReshuffled)
                     {
+                        return (false, "Deck has already been reshuffled.\n Either pass or play!", null);
                     }
 
                 }
@@ -104,20 +99,20 @@ namespace SolitaireUno
                 {
                     if (deck.Length() > 0)
                     {
+                        return (false, "The deck still has cards!\n Either pick up or play!", null);
+                    }
+                    else if(deck.Length() == 0 && !deck.deckReshuffled)
+                    {
+                        return (false, "The deck hasn't been reshuffled! You can still pick up!", null);   
                     }
                     else
                     {
+                        return (true, "You decided to pass!", null);
                     }
                 }
-                else
-                {
-                }
-            }
-            else
-            {
             }
 
-            return null;
+            return(false, "You didn't a decision", null);
         }
     }
 }

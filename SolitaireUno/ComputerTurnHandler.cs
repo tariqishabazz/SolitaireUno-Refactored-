@@ -13,7 +13,7 @@ namespace SolitaireUno
         private readonly Deck _deck = deck;
         private readonly GameDifficulty _gameDifficulty = MainGame.GameDifficulty;
 
-        public Card? HandleTurn(ref Card logicCard, ref Card visualCard, Card penaltyCard, int opponentHandSize)
+        public (string message, Card? playedCard) HandleTurn(ref Card logicCard, ref Card visualCard, Card penaltyCard, int opponentHandSize)
         {
             Card? potentialComputerPlay = _computer.MakeMove(logicCard, opponentHandSize, _deck.Length(), _gameDifficulty);
             if (potentialComputerPlay != null)
@@ -26,17 +26,15 @@ namespace SolitaireUno
                 _computer.PlayCard(potentialComputerPlay);
                 _deck.AddToDiscardPile(potentialComputerPlay);
 
-                return potentialComputerPlay;
+                return ($"The Computer decided to play: {potentialComputerPlay}!", potentialComputerPlay);
             }
 
             else if (_deck.Length() > 0 || _deck.Length() == 0 && !_deck.deckReshuffled)
             {
                 Card card = _deck.DealCard()!;
-
                 _computer.PickupCard(card);
 
                 int computerPotentialPenaltyCount = GameMethods.GetPenaltyCount(card, penaltyCard);
-
                 switch (computerPotentialPenaltyCount)
                 {
                     case > 0:
@@ -53,19 +51,21 @@ namespace SolitaireUno
                                     actualPickupCount++;
                                 }
                             }
-                            break;
+                            return($"The Computer decided to pick up and found the {penaltyCard}!" +
+                                        $" It picked up {actualPickupCount} additional cards!", null);
                         }
 
                     default:
-                        break;
+                        return ("The Computer decided to pick up!", null);
                 }
             }
 
             else if (_deck.Length() == 0 && _deck.deckReshuffled)
             {
+                return ("The Computer decided to pass!", null);
             }
 
-            return null;
+            return ("The Computer got scared...", null);
         }
     }
 }

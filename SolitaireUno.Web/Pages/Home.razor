@@ -108,21 +108,15 @@
                 <option value="@GameDifficulty.Hard">Hard</option>
             </select>
 
-            <!--
-            Modify to allow user to choose backing color
-
+            
             <label class="form-label fw-bold text-dark text-start">Card Backing Color</label>
-            <select class="form-select mb-4" >
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-
+            <select class="form-select mb-4" @bind="selectedCardColor" >
+                <option value="yellow">Yellow</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
             </select>
-            -->
+            
 
             <div class="form-check mb-4 text-start">
                 <input class="form-check-input" type="checkbox" id="suitEnforcement" @bind="suitEnforcement" />
@@ -137,18 +131,18 @@
     else
     {
         <div class="game-board mt-4">
-            <h5 class="text-danger mb-3">Opponent Cards: @MainGame.computer.Hand.Count</h5>
-
-            <div class="alert alert-light border shadow-sm" role="alert" style="font-size: 1.1rem;">
-                @actionLog
-            </div>
 
             <div class="p-5 my-4 d-flex flex-column align-items-center" style="background-color: #35654d; border-radius: 12px; box-shadow: inset 0 0 30px rgba(0,0,0,0.6);">
+				<h5 class="text-danger mb-3">Opponent Cards: @MainGame.computer.Hand.Count</h5>
 
+				<div class="alert alert-light border shadow-sm" role="alert" style="font-size: 1.1rem;">
+					@actionLog
+				</div>
+                
                 <div class="d-flex justify-content-center align-items-center gap-5 my-2">
                     <div class="text-center">
                         <div class="solitaire-deck" @onclick='() => PlayTurn("p.u")' style="padding: 0; border: none; background: transparent; box-shadow: none;">
-                            <img src="images/cards/yellow_backing.png" alt="Deck" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; image-rendering: pixelated;" />
+                            <img src=@($"images/cards/{selectedCardColor}_backing.png") alt="Deck" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; image-rendering: pixelated;" />
                         </div>
                     </div>
 
@@ -211,6 +205,7 @@
 
     private GameMode selectedMode = GameMode.Ascending;
     private GameDifficulty selectedDifficulty = GameDifficulty.Easy;
+    private string selectedCardColor = "yellow";
 
     private void StartNewGame()
     {
@@ -227,9 +222,13 @@
         if (isComputerThinking || gameOverMessage != "")
             return;
 
-        int previousComputerHandSize = MainGame.computer.Hand.Count;
+        // -------------------------- PLAYER'S TURN ---------------------------------
 
-        gameEngine?.AdvanceTurn(decision);
+        string turnResult = gameEngine?.AdvanceTurn(decision) ?? "";
+        if(!string.IsNullOrEmpty(turnResult))
+        {
+            actionLog = turnResult;
+        }
 
         if (MainGame.player.Hand.Count == 0)
         {
@@ -237,9 +236,7 @@
             return;
         }
 
-        if (MainGame.ComputerSkipped)
-            return;
-
+        // -------------------------- COMPUTER'S TURN ---------------------------------
 
         while (!MainGame.IsPlayerTurn && MainGame.computer.Hand.Count > 0)
         {
@@ -269,24 +266,11 @@
                     break;
             }
 
-            gameEngine?.AdvanceTurn("");
+            turnResult = gameEngine?.AdvanceTurn("") ?? "";
+            
+            if(!string.IsNullOrEmpty(turnResult))
+                actionLog = turnResult;
 
-            if (MainGame.computer.Hand.Count < previousComputerHandSize)
-            {
-                actionLog = $"Opponent played a card!";
-            }
-
-            else if (MainGame.computer.Hand.Count > previousComputerHandSize)
-            {
-                actionLog = "Opponent drew from the deck.";
-            }
-
-            else
-            {
-                actionLog = "Opponent passed.";
-            }
-
-            previousComputerHandSize = MainGame.computer.Hand.Count;
 
             if (MainGame.computer.Hand.Count == 0)
             {
@@ -297,7 +281,9 @@
         }
 
         isComputerThinking = false;
-        if (MainGame.IsPlayerTurn) actionLog += " Your turn.";
+        
+        if (MainGame.IsPlayerTurn)
+            actionLog += "\nYour turn.";
     }
 
     /// <summary>
@@ -333,17 +319,15 @@
             switch (specialCard.CardType)
             {
                 case SpecialCardType.DrawFour:
-
                     return $"images/cards/drawfour.png";
 
                 case SpecialCardType.DrawTwo:
-                    return "images/cards/yellow_draw_two.png";
+                    return $"images/cards/{selectedCardColor}_draw_two.png";
 
                 case SpecialCardType.Skip:
-                    return "images/cards/yellow_skip.png";
+                    return $"images/cards/{selectedCardColor}_skip.png";
             }
         }
-
-        return $"images/cards/yellow_backing.png";
+        return $"images/cards/{selectedCardColor}_backing.png";
     } 
 }

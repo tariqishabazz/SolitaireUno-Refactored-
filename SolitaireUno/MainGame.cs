@@ -17,6 +17,7 @@ namespace SolitaireUno
         public static bool IsPlayerTurn { get; set; }
         internal static bool SuitEnforcement { get; private set; }
         public static bool ComputerSkipped { get; set; }
+        public static bool PlayerSkipped { get; set; }
 
         public static Card? LastPlayedCard { get; private set; }
         public static Card LogicCard;
@@ -40,12 +41,9 @@ namespace SolitaireUno
         public void StartGame()
         {
             LogicCard = GameDeck.DealCard()!;
-
             GameDeck.AddToDiscardPile(LogicCard);
 
-
             Card? updatedCard = GameMethods.PreventInitalSpecialCard(LogicCard);
-
             if (updatedCard is not null)
             {
                 LogicCard = updatedCard;
@@ -58,47 +56,49 @@ namespace SolitaireUno
 
             IsPlayerTurn = true;
         }
-        public void AdvanceTurn(string playerDecision = "")
+        public string AdvanceTurn(string playerDecision = "")
         {
+            PlayerSkipped = false;
+            ComputerSkipped = false;
+
+            string uiMessage = "";
+
             if (IsPlayerTurn && LogicCard is not null)
             {
-                Card? cardPlayed = _playerTurnHandler.HandleTurn(ref LogicCard, ref VisualCard, PenaltyCard, playerDecision);
+                var (isSuccessful, message, cardPlayed) = _playerTurnHandler.HandleTurn(ref LogicCard, ref VisualCard, PenaltyCard, playerDecision);
 
-                if (cardPlayed is not null)
-                {
-                    LastPlayedCard = cardPlayed;
-                    ComputerSkipped = GameMethods.PotentialPlayerAction();
+                uiMessage = message;
 
-                    if (ComputerSkipped)
-                        return;
-                }
-                else
+                if (isSuccessful)
                 {
-                    IsPlayerTurn = false;
+                    if (cardPlayed is not null)
+                    {
+                        LastPlayedCard = cardPlayed;
+                        ComputerSkipped = GameMethods.PotentialPlayerAction();
+                    }
+
+                    if(!ComputerSkipped)
+                        IsPlayerTurn = false;
                 }
             }
-            
+
             else if (!IsPlayerTurn && LogicCard is not null)
             {
-                Card? cardPlayed = _computerTurnHandler.HandleTurn(ref LogicCard, ref VisualCard, PenaltyCard, player.Hand.Count);
+                var (message, cardPlayed) = _computerTurnHandler.HandleTurn(ref LogicCard, ref VisualCard, PenaltyCard, player.Hand.Count);
+
+                uiMessage = message;
 
                 if (cardPlayed is not null)
                 {
                     LastPlayedCard = cardPlayed;
-                    bool playerSkipped = GameMethods.PotentialComputerAction();
-
-                    if (playerSkipped)
-                        return;
+                    PlayerSkipped = GameMethods.PotentialComputerAction();
                 }
-                else
-                {
+
+                if(!PlayerSkipped)
                     IsPlayerTurn = true;
-                }
             }
-
-            if (player.Hand.Count == 0 || computer.Hand.Count == 0)
-                GameMethods.GameOverStats();
-
+            
+            return uiMessage;
         }
     }
 }
